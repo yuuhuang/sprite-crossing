@@ -57,7 +57,7 @@ module.exports = {
         'curly': 'error',
         'default-case': 'error',
         'default-param-last': 'error',
-        'dot-location': 'error',
+        'dot-location': 'off',
         'dot-notation': 'error',
         'eol-last': 'off',
         'eqeqeq': 'error',

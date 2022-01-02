@@ -1,8 +1,20 @@
 <template>
-  <div id="app">
+  <v-app>
     <nav-bar></nav-bar>
-    <router-view></router-view>
-  </div>
+    <v-main class="grey lighten-3">
+      <v-container>
+        <v-sheet
+          min-height="70vh"
+          rounded="lg"
+        >
+          {{$route.name}}
+          {{$vuetify.breakpoint.name}}
+          {{$vuetify.breakpoint.width}}
+          <router-view></router-view>
+        </v-sheet>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
