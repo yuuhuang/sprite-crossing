@@ -50,7 +50,7 @@ module.exports = {
         'comma-dangle': 'off',
         'comma-spacing': 'error',
         'comma-style': 'error',
-        'complexity': 'error',
+        'complexity': 'off',
         'computed-property-spacing': 'error',
         'consistent-return': 'error',
         'consistent-this': 'error',
@@ -111,7 +111,7 @@ module.exports = {
         'max-statements': 'off',
         'max-statements-per-line': 'error',
         'multiline-comment-style': 'off',
-        'multiline-ternary': 'error',
+        'multiline-ternary': 'off',
         'new-cap': 'error',
         'new-parens': 'error',
         'newline-after-var': 'off',
@@ -191,7 +191,7 @@ module.exports = {
         'no-sync': 'error',
         'no-tabs': 'error',
         'no-template-curly-in-string': 'error',
-        'no-ternary': 'error',
+        'no-ternary': 'off',
         'no-throw-literal': 'error',
         'no-trailing-spaces': 'error',
         'no-undef-init': 'error',
@@ -280,6 +280,10 @@ module.exports = {
         'yoda': [
             'error',
             'never'
-        ]
+        ],
+
+        'vue/no-parsing-error': [2, {
+            "invalid-first-character-of-tag-name": false
+        }]
     }
 };
