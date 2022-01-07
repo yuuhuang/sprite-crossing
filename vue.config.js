@@ -16,19 +16,33 @@ module.exports = {
     configureWebpack: config => {
         config.module.rules = config.module.rules.filter(item => String(item.test) !== String(/\.sass$/) &&
             String(item.test) !== String(/\.scss$/));
-        config.module.rules.push({
-                test: /\.s(c|a)ss$/,
+        config.module.rules.push(
+            {
+                test: /\.scss$/,
                 use: [
                     'vue-style-loader',
                     'css-loader',
                     {
                         loader: 'sass-loader',
                         options: {
+                            additionalData: '@import \'@/style/index.scss\';',
                             implementation: require('sass'),
                             sassOptions: {
-                                fiber: require('fibers'),
-                            },
-                            additionalData: '@import \'@/style/index.scss\';'
+                                indentedSyntax: false // optional
+                            }
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.sass$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            additionalData: '@import \'@/style/index.scss\''
                         },
                     },
                 ],

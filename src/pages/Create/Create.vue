@@ -1,14 +1,20 @@
 <template>
   <div class="create-page">
     <tools></tools>
+    <colors></colors>
   </div>
 </template>
 
 <script>
-import Tools from './Tools';
+import Tools from './Tools'
+import Colors from './Colors'
+
 export default {
   name: 'Create',
-  components: {Tools}
+  components: {
+    Tools,
+    Colors
+  }
 }
 </script>
 

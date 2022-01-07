@@ -38,8 +38,6 @@
       <v-menu
         v-if="$vuetify.breakpoint.width < 960 || collapse"
         class="v-menu__content"
-        bottom
-        left
         rounded="lg"
         offset-y
       >

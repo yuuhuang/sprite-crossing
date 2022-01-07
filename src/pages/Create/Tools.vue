@@ -6,12 +6,10 @@
     transition="slide-x-transition"
     offset-x
     left
-    v-on:keyup.b="tool='pencil'"
     v-model="showTools"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        ref="drawer"
         v-show="!showTools"
         class="tool-box-drawer rounded-tr-lg rounded-br-lg rounded-tl-0 rounded-bl-0"
         v-bind="attrs"
