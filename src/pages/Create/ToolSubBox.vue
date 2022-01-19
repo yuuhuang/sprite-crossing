@@ -39,6 +39,7 @@
         value=""
         inactive
         dense
+        @click.capture="chooseTool(item)"
       >
         <v-tooltip
           right

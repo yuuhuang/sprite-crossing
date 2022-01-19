@@ -42,3 +42,11 @@ export const toolKeypress = that => {
         }
     })
 }
+
+export const swapColorKeypress = that => {
+    window.addEventListener('keypress', e => {
+        if (e.key === 'x' || e.key === 'X') {
+            that.swap();
+        }
+    })
+}

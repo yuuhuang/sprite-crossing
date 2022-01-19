@@ -17,7 +17,7 @@
       >
         <div class="vertical">
           Tools
-          <chevron-up></chevron-up>
+          <chevron-down></chevron-down>
         </div>
       </v-btn>
     </template>
@@ -95,7 +95,7 @@ require('@/assets/chevron/index.js')
 import ToolBtn from './ToolBtn'
 import ToolSubBox from './ToolSubBox'
 
-import {toolKeypress} from './keypress.js'
+import {toolKeypress} from '@/scripts/keypress.js'
 
 export default {
   name: 'Tools',

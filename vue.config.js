@@ -1,6 +1,9 @@
 const path = require('path');
 
 module.exports = {
+    transpileDependencies: [
+        'vuetify'
+    ],
     chainWebpack: config => {
         const svgRule = config.module.rule('svg');
 
@@ -13,49 +16,11 @@ module.exports = {
         .use('vue-svg-loader')
         .loader('vue-svg-loader');
     },
-    configureWebpack: config => {
-        config.module.rules = config.module.rules.filter(item => String(item.test) !== String(/\.sass$/) &&
-            String(item.test) !== String(/\.scss$/));
-        config.module.rules.push(
-            {
-                test: /\.scss$/,
-                use: [
-                    'vue-style-loader',
-                    'css-loader',
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            additionalData: '@import \'@/style/index.scss\';',
-                            implementation: require('sass'),
-                            sassOptions: {
-                                indentedSyntax: false // optional
-                            }
-                        },
-                    },
-                ],
+    configureWebpack: {
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'src/'),
             },
-            {
-                test: /\.sass$/,
-                use: [
-                    'vue-style-loader',
-                    'css-loader',
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            additionalData: '@import \'@/style/index.scss\''
-                        },
-                    },
-                ],
-            }
-        );
-        // console.log(config.module.rules)
-
-        return {
-            resolve: {
-                alias: {
-                    '@': path.resolve(__dirname, 'src/'),
-                },
-            },
-        }
+        },
     }
 }

@@ -1,0 +1,1 @@
+export const computePx = (val, func) => `${func(val.match(/[0-9]+/g)[0])}px`;
