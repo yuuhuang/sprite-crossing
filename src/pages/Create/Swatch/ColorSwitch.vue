@@ -30,7 +30,7 @@
       <span>Swap Color ( x )</span>
     </v-tooltip>
     <div
-      class="border"
+      class="border elevation-1"
       :style="{
         height: computePx(size, val => val / 2),
         width: computePx(size, val => val / 2),
@@ -45,7 +45,7 @@
       ></color-block>
     </div>
     <div
-      class="border"
+      class="border elevation-1"
       :style="{
         height: computePx(size, val => val / 2),
         width: computePx(size, val => val / 2),

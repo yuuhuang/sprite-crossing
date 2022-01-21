@@ -50,7 +50,7 @@
 
 
 <script>
-require('@/assets/chevron/index.js')
+require('@/assets/chevron')
 
 export default {
   name: 'Navigator',

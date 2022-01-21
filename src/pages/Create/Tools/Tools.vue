@@ -90,8 +90,8 @@
 </template>
 
 <script>
-require('@/assets/tools/index.js')
-require('@/assets/chevron/index.js')
+require('@/assets/tools')
+require('@/assets/chevron')
 import ToolBtn from './ToolBtn'
 import ToolSubBox from './ToolSubBox'
 

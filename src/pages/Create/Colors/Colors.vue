@@ -31,29 +31,42 @@
           justify="space-between"
           align="center"
         >
-          <v-card-subtitle>
+          <v-card-subtitle class="pl-3">
             Colors
           </v-card-subtitle>
-          <v-btn
-            depressed
-            color="white"
-            width="16px"
-            min-width="16px"
-            @click="showColors=!showColors">
-            <chevron-right></chevron-right>
-          </v-btn>
+          <div>
+            <v-btn
+              depressed
+              color="white"
+              width="16px"
+              min-width="16px"
+              @click="addCurrentColor"
+            >
+              <upload></upload>
+            </v-btn>
+            <v-btn
+              depressed
+              color="white"
+              width="16px"
+              min-width="16px"
+              @click="showColors=!showColors"
+            >
+              <chevron-right></chevron-right>
+            </v-btn>
+          </div>
         </v-row>
       </v-subheader>
       <!-- picker -->
       <div @mousedown="pickStart">
         <v-color-picker
+          ref="color-picker"
           class="color-picker"
           dot-size="13"
           canvas-height="165px"
           width="165px"
           hide-inputs
           v-model="colorValue"
-          @update:color="setCurrentColor"
+          @update:color="pickCurrentColor"
         ></v-color-picker>
       </div>
       <!-- input -->
@@ -104,6 +117,7 @@
           >
             <v-col cols="10">
               <v-text-field
+                ref="hexa-input"
                 dense
                 prefix="#"
                 color="#000"
@@ -121,8 +135,9 @@
 </template>
 
 <script>
-require('@/assets/chevron/index.js')
+require('@/assets/chevron')
 import RefreshSvg from '@/assets/refresh.svg'
+import Upload from '@/assets/upload.svg'
 
 import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
 
@@ -130,6 +145,7 @@ export default {
   name: 'Colors',
   components: {
     RefreshSvg,
+    Upload,
   },
   data() {
     return {
@@ -178,9 +194,12 @@ export default {
     inputHex() {
       this.colorValue = `#${this.hexa}`
     },
-    setCurrentColor(color) {
+    pickCurrentColor(color) {
       this.currentColor = color;
       this.$emit('change-current-color', this.currentColor);
+    },
+    setCurrentColor(color) {
+      this.colorValue = color;
     },
     pickStart() {
       window.addEventListener('mousemove', this.pickColor);
@@ -191,15 +210,22 @@ export default {
       });
     },
     pickColor() {
-      this.RGBA[0] = this.currentColor.rgba.r;
-      this.RGBA[1] = this.currentColor.rgba.g;
-      this.RGBA[2] = this.currentColor.rgba.b;
-      this.RGBA[3] = this.currentColor.rgba.a;
-      this.HSLA[0] = this.currentColor.hsla.h;
-      this.HSLA[1] = this.currentColor.hsla.s;
-      this.HSLA[2] = this.currentColor.hsla.l;
-      this.HSLA[3] = this.currentColor.hsla.a;
+      this.RGBA = [
+        this.currentColor.rgba.r,
+        this.currentColor.rgba.g,
+        this.currentColor.rgba.b,
+        this.currentColor.rgba.a
+      ];
+      this.HSLA = [
+        this.currentColor.hsla.h,
+        this.currentColor.hsla.s,
+        this.currentColor.hsla.l,
+        this.currentColor.hsla.a,
+      ];
       this.hexa = this.currentColor.hexa.slice(1, 8);
+    },
+    addCurrentColor() {
+      this.$emit('add-color', this.currentColor.hexa);
     }
   }
 }
