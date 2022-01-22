@@ -71,11 +71,11 @@ export default {
         this.focusColor = this.currentColor;
       }
     },
-    focusColor(val) {
-      if (val) {
-        this.$emit('choose-color', val);
-      }
-    }
+    // focusColor(val) {
+    //   if (val) {
+    //     this.$emit('choose-color', val);
+    //   }
+    // }
   },
   methods: {
     addColor(val) {

@@ -57,7 +57,7 @@
         </v-row>
       </v-subheader>
       <!-- picker -->
-      <div @mousedown="pickStart">
+      <div @mousedown="pickStart" @click="pickColor">
         <v-color-picker
           ref="color-picker"
           class="color-picker"
@@ -87,11 +87,13 @@
           <refresh-svg class="opacity-half"></refresh-svg>
         </v-btn>
       </v-row>
-      <v-form>
+      <v-form
+        onsubmit="return false;"
+      >
         <v-container class="container">
           <!-- RGBA | HSLA -->
           <v-row
-            v-if="mode === 'RGBA' || mode === 'HSLA'"
+            v-show="mode === 'RGBA' || mode === 'HSLA'"
             dense
           >
             <v-col
@@ -112,7 +114,7 @@
           </v-row>
           <!-- hex -->
           <v-row
-            v-if="mode==='hex'"
+            v-show="mode==='hex'"
             dense
           >
             <v-col cols="10">
@@ -140,6 +142,8 @@ import RefreshSvg from '@/assets/refresh.svg'
 import Upload from '@/assets/upload.svg'
 
 import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
+
+import {rgba2hexa, hsla2hexa} from '@/utils';
 
 export default {
   name: 'Colors',
@@ -181,25 +185,23 @@ export default {
     },
     inputColor() {
       if (this.mode === 'RGBA') {
-        this.colorValue = {
-          r: Number(this.RGBA[0]), g: Number(this.RGBA[1]), b: Number(this.RGBA[2]), a: Number(this.RGBA[3])
-        }
+        this.colorValue = rgba2hexa(this.RGBA);
       }
       if (this.mode === 'HSLA') {
-        this.colorValue = {
-          h: Number(this.HSLA[0]), s: Number(this.HSLA[1]), l: Number(this.HSLA[2]), a: Number(this.HSLA[3])
-        }
+        this.colorValue = hsla2hexa(this.HSLA);
       }
     },
-    inputHex() {
-      this.colorValue = `#${this.hexa}`
+    inputHex(color) {
+      this.colorValue = color || `#${this.hexa}`
     },
     pickCurrentColor(color) {
       this.currentColor = color;
       this.$emit('change-current-color', this.currentColor);
     },
     setCurrentColor(color) {
-      this.colorValue = color;
+      this.inputHex(color);
+      this.$refs['hexa-input'].$emit('input', color.slice(1));
+      this.pickColor();
     },
     pickStart() {
       window.addEventListener('mousemove', this.pickColor);

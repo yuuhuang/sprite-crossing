@@ -109,13 +109,9 @@ export default {
         val.splice(12);
       }
     },
-    currentColor(val, oldVal) {
+    currentColor(val) {
       this.$refs['color-switch'].setCurrentColor(val);
-      if (this.recentSwatch.indexOf(oldVal) > -1) {
-        // eslint-disable-next-line no-warning-comments
-        // TODO: record recent color by pen and eyepoint
-      }
-    },
+    }
   },
   methods: {
     handleDrag(val) {
