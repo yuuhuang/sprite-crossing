@@ -93,7 +93,7 @@
         <v-container class="container">
           <!-- RGBA | HSLA -->
           <v-row
-            v-show="mode === 'RGBA' || mode === 'HSLA'"
+            v-if="mode === 'RGBA' || mode === 'HSLA'"
             dense
           >
             <v-col
@@ -196,12 +196,12 @@ export default {
     },
     pickCurrentColor(color) {
       this.currentColor = color;
+      this.pickColor();
       this.$emit('change-current-color', this.currentColor);
     },
     setCurrentColor(color) {
       this.inputHex(color);
       this.$refs['hexa-input'].$emit('input', color.slice(1));
-      this.pickColor();
     },
     pickStart() {
       window.addEventListener('mousemove', this.pickColor);
