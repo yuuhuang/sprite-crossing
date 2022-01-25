@@ -21,7 +21,7 @@
           color="white"
           v-for="item in pages"
           :key="item.name"
-          @click="$router.push(item.path)"
+          @click="pushRoute(item.path)"
         >
           {{item.title}}
         </v-btn>
@@ -31,7 +31,7 @@
         class="hover-pointer"
         width="32px"
         height="32px"
-        @click="$router.push('/profile')"
+        @click="pushRoute('/profile')"
       >
         <img src="@/assets/caitou.png">
       </v-avatar>
@@ -60,7 +60,7 @@
             :class="{isChosen: $route.name === item.name}"
             v-for="item in pages"
             :key="item.name"
-            @click="$router.push(item.path)"
+            @click="pushRoute(item.path)"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -87,6 +87,13 @@ export default {
   watch: {
     $route(cur) {
       this.collapse = cur.name === 'create';
+    }
+  },
+  methods: {
+    pushRoute(path) {
+      if (this.$route.path !== path) {
+        this.$router.push(path)
+      }
     }
   }
 }

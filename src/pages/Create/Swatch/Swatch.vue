@@ -51,12 +51,6 @@
               <color-switch ref="color-switch"></color-switch>
             </v-col>
             <v-col cols="5" class="pl-0 pb-0 pt-0">
-              <color-group
-                :current-color="currentColor"
-                :rows="4"
-                :cols="3"
-                size="16px"
-              ></color-group>
             </v-col>
           </v-row>
         </v-container>

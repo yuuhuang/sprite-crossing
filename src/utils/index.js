@@ -1,5 +1,7 @@
 export const computePx = (val, func) => `${func(val.match(/[0-9]+/g)[0])}px`;
 
+export const fixTwoDecimal = num => (Number.isInteger(num) ? num : num.toFixed(2));
+
 export const rgba2hexa = rgba => {
     const result = rgba.slice(0, 3).map(item => {
         const hex = Number(item).toString(16);

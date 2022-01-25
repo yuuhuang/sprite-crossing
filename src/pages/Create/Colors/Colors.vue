@@ -143,7 +143,7 @@ import Upload from '@/assets/upload.svg'
 
 import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
 
-import {rgba2hexa, hsla2hexa} from '@/utils';
+import {rgba2hexa, hsla2hexa, fixTwoDecimal} from '@/utils';
 
 export default {
   name: 'Colors',
@@ -220,8 +220,8 @@ export default {
       ];
       this.HSLA = [
         this.currentColor.hsla.h,
-        this.currentColor.hsla.s,
-        this.currentColor.hsla.l,
+        fixTwoDecimal(this.currentColor.hsla.s),
+        fixTwoDecimal(this.currentColor.hsla.l),
         this.currentColor.hsla.a,
       ];
       this.hexa = this.currentColor.hexa.slice(1, 8);
