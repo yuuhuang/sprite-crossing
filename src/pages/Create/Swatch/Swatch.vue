@@ -130,6 +130,7 @@ export default {
   width: 30px;
   height: 100px !important;
   padding: 0 !important;
+  z-index: 999;
 }
 .vertical {
   transform: rotateZ(90deg);
@@ -153,6 +154,7 @@ export default {
   position: absolute;
   top: 310px;
   left: calc(100vw - 230px);
+  z-index: 999;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="create-page">
-    <tools ref="tools"></tools>
+    <tools ref="tools" @tool="tool => this.currentTool=tool"></tools>
     <navigator ref="navigator" v-if="false"></navigator>
     <swatch
       ref="swatch"
@@ -12,6 +12,8 @@
       @add-color="addColor"
       @change-current-color="pickCurrentColor"
     ></colors>
+    <board ref="board" :tool="currentTool" @scale="scale => this.currentScale=scale"></board>
+    <options ref="options" :current-scale="currentScale"></options>
   </div>
 </template>
 
@@ -20,10 +22,14 @@ import Tools from './Tools/Tools'
 import Colors from './Colors/Colors'
 import Swatch from './Swatch/Swatch';
 import Navigator from './Navigator/Navigator';
+import Board from './Board/Board';
+import Options from './Options/Options';
 
 export default {
   name: 'Create',
   components: {
+    Options,
+    Board,
     Tools,
     Colors,
     Swatch,
@@ -31,6 +37,7 @@ export default {
   },
   data() {
     return {
+      currentTool: 'pencil',
       currentColor: {
         alpha: 1,
         hex: '#000000',
@@ -40,6 +47,7 @@ export default {
         hue: 0,
         rgba: {r: 0, g: 0, b: 0, a: 1}
       },
+      currentScale: 1,
     }
   },
   methods: {
@@ -51,7 +59,7 @@ export default {
     },
     clickColor(color) {
       this.$refs.colors.setCurrentColor(color);
-    }
+    },
   }
 }
 </script>

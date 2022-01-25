@@ -78,7 +78,6 @@
           <template>
             <zoom-in slot="zoom-in"></zoom-in>
             <zoom-out slot="zoom-out"></zoom-out>
-            <zoom-resize slot="zoom-resize"></zoom-resize>
           </template>
         </tool-sub-box>
       </v-list-item-group>
@@ -109,6 +108,14 @@ export default {
       showTools: true,
     }
   },
+  watch: {
+    tool: {
+      handler(val) {
+        this.$emit('tool', val);
+      },
+      immediate: true,
+    }
+  },
   methods: {
     chooseSubTool(subTool) {
       this.tool = subTool;
@@ -129,6 +136,7 @@ export default {
   width: 30px;
   height: 90px !important;
   padding: 0 !important;
+  z-index: 999;
 }
 .vertical {
   transform: rotateZ(-90deg);

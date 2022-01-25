@@ -242,6 +242,7 @@ export default {
   width: 30px;
   height: 100px !important;
   padding: 0 !important;
+  z-index: 999;
 }
 .vertical {
   transform: rotateZ(90deg);
