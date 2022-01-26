@@ -1,4 +1,4 @@
-export const toolKeypress = that => {
+export const toolsKeypress = that => {
     window.addEventListener('keypress', e => {
         switch (e.key) {
             case 'b':
@@ -39,6 +39,22 @@ export const toolKeypress = that => {
                 break;
             default:
                 break;
+        }
+    })
+}
+
+export const swatchKeypress = that => {
+    window.addEventListener('keypress', e => {
+        if (e.key === 's' || e.key === 'S') {
+            that.showSwatch = !that.showSwatch;
+        }
+    })
+}
+
+export const colorsKeypress = that => {
+    window.addEventListener('keypress', e => {
+        if (e.key === 'c' || e.key === 'C') {
+            that.showColors = !that.showColors;
         }
     })
 }

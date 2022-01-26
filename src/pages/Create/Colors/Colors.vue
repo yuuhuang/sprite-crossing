@@ -145,6 +145,8 @@ import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
 
 import {rgba2hexa, hsla2hexa, fixTwoDecimal} from '@/utils';
 
+import {colorsKeypress} from '@/scripts/keypress.js'
+
 export default {
   name: 'Colors',
   components: {
@@ -229,6 +231,9 @@ export default {
     addCurrentColor() {
       this.$emit('add-color', this.currentColor.hexa);
     }
+  },
+  mounted() {
+    colorsKeypress(this);
   }
 }
 </script>

@@ -94,7 +94,7 @@ require('@/assets/chevron')
 import ToolBtn from './ToolBtn'
 import ToolSubBox from './ToolSubBox'
 
-import {toolKeypress} from '@/scripts/keypress.js'
+import {toolsKeypress} from '@/scripts/keypress.js'
 
 export default {
   name: 'Tools',
@@ -122,7 +122,7 @@ export default {
     }
   },
   mounted() {
-    toolKeypress(this);
+    toolsKeypress(this);
   },
 }
 </script>

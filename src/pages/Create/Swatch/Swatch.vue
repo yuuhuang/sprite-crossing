@@ -71,6 +71,9 @@
 import ColorSwitch from './ColorSwitch';
 import ColorGroup from './ColorGroup';
 import Trash from '@/components/Trash';
+
+import {swatchKeypress} from '@/scripts/keypress';
+
 require('@/assets/chevron')
 
 export default {
@@ -117,6 +120,9 @@ export default {
     changeColor(color) {
       this.$emit('click-color', color);
     }
+  },
+  mounted() {
+    swatchKeypress(this);
   }
 }
 </script>
