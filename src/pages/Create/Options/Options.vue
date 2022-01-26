@@ -1,7 +1,7 @@
 <template>
   <div class="options-container">
     <div class="btn-bar elevation-3">
-      <option-item tip="New Project ( Ctrl + n )" value="new" left-style @click-option="clickOption">
+      <option-item tip="New Project" value="new" left-style @click-option="clickOption">
         <new></new>
       </option-item>
       <option-item tip="Default Scale ( Ctrl + f )" value="rescale" @click-option="clickOption">
@@ -28,6 +28,8 @@ require('@/assets/optionsBar/index')
 
 import OptionItem from './OptionItem';
 
+import {optionsKeypress} from '@/scripts/keypress';
+
 export default {
   name: 'Options',
   components: {OptionItem},
@@ -43,6 +45,9 @@ export default {
     clickOption(val) {
       this.$emit('click-option', val);
     }
+  },
+  mounted() {
+    optionsKeypress(this);
   }
 }
 </script>

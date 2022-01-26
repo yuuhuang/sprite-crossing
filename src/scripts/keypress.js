@@ -1,68 +1,115 @@
 export const toolsKeypress = that => {
-    window.addEventListener('keypress', e => {
-        switch (e.key) {
-            case 'b':
-            case 'B':
-                that.tool = 'pencil';
-                break;
-            case 'e':
-            case 'E':
-                that.tool = 'eraser';
-                break;
-            case 'i':
-            case 'I':
-                that.tool = 'eyedropper';
-                break;
-            case 'g':
-            case 'G':
-                that.tool = 'bucket';
-                break;
-            case 'u':
-            case 'U':
-                that.tool = e.shiftKey ? 'rectangle-outline' : 'rectangle-fill';
-                break;
-            case 'o':
-            case 'O':
-                that.tool = e.shiftKey ? 'ellipse-outline' : 'ellipse-fill';
-                break;
-            case 'v':
-            case 'V':
-                that.tool = 'move';
-                break;
-            case 'z':
-            case 'Z':
-                that.tool = e.shiftKey ? 'zoom-out' : 'zoom-in';
-                break;
-            case 't':
-            case 'T':
-                that.showTools = !that.showTools;
-                break;
-            default:
-                break;
+    window.addEventListener('keydown', e => {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        if (!e.ctrlKey && !e.shiftKey) {
+            switch (e.key) {
+                case 'b':
+                case 'B':
+                    that.tool = 'pencil';
+                    break;
+                case 'e':
+                case 'E':
+                    that.tool = 'eraser';
+                    break;
+                case 'i':
+                case 'I':
+                    that.tool = 'eyedropper';
+                    break;
+                case 'g':
+                case 'G':
+                    that.tool = 'bucket';
+                    break;
+                case 'u':
+                case 'U':
+                    that.tool = e.shiftKey ? 'rectangle-outline' : 'rectangle-fill';
+                    break;
+                case 'o':
+                case 'O':
+                    that.tool = e.shiftKey ? 'ellipse-outline' : 'ellipse-fill';
+                    break;
+                case 'v':
+                case 'V':
+                    that.tool = 'move';
+                    break;
+                case 'z':
+                case 'Z':
+                    that.tool = e.shiftKey ? 'zoom-out' : 'zoom-in';
+                    break;
+                case 't':
+                case 'T':
+                    that.showTools = !that.showTools;
+                    break;
+                default:
+                    break;
+            }
         }
+
+        return false;
     })
 }
 
 export const swatchKeypress = that => {
-    window.addEventListener('keypress', e => {
-        if (e.key === 's' || e.key === 'S') {
+    window.addEventListener('keydown', e => {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.shiftKey) {
             that.showSwatch = !that.showSwatch;
         }
+
+        return false;
     })
 }
 
 export const colorsKeypress = that => {
-    window.addEventListener('keypress', e => {
-        if (e.key === 'c' || e.key === 'C') {
+    window.addEventListener('keydown', e => {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.shiftKey) {
             that.showColors = !that.showColors;
         }
+
+        return false;
     })
 }
 
 export const swapColorKeypress = that => {
-    window.addEventListener('keypress', e => {
-        if (e.key === 'x' || e.key === 'X') {
+    window.addEventListener('keydown', e => {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        if ((e.key === 'x' || e.key === 'X') && !e.ctrlKey && !e.shiftKey) {
             that.swap();
         }
+
+        return false;
+    })
+}
+
+export const optionsKeypress = that => {
+    window.addEventListener('keydown', e => {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        if (e.ctrlKey && !e.shiftKey) {
+            switch (e.key) {
+                case 'f':
+                    that.$emit('click-option', 'rescale');
+                    break;
+                case 'g':
+                    that.$emit('click-option', 'grid');
+                    break;
+                case 'z':
+                    that.$emit('click-option', 'undo');
+                    break;
+                case 'y':
+                    that.$emit('click-option', 'redo');
+                    break;
+                case 's':
+                    that.$emit('click-option', 'save');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return false;
     })
 }
