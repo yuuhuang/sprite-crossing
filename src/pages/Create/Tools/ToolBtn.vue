@@ -2,7 +2,7 @@
   <v-list-item :value="value">
     <v-tooltip
       right
-      open-delay="100"
+      open-delay="250"
       transition="slide-x-transition"
     >
       <template v-slot:activator="{ on, attrs }">

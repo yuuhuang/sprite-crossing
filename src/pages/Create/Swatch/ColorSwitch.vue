@@ -98,6 +98,7 @@ export default {
   methods: {
     swap() {
       [this.currentColor, this.reserveColor] = [this.reserveColor, this.currentColor];
+      this.$emit('switch-color', this.currentColor);
     },
     setCurrentColor(color) {
       this.currentColor = color;

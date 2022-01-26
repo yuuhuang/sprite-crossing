@@ -21,12 +21,15 @@ export default {
   },
   data() {
     return {
+      // Basic
+      basicSize: 500,
+      // Scale
       currentScale: 1,
       maxScale: 8,
       minScale: 0.125,
       scaleSpeed: 0.001,
-
-      basicSize: 500,
+      // Grid
+      gridShown: false,
     };
   },
   methods: {
@@ -53,7 +56,7 @@ export default {
           break;
       }
     },
-
+    // Scale
     zoomWheel(e) {
       e.preventDefault();
       this.currentScale = restrict(this.currentScale - e.deltaY * this.scaleSpeed, this.minScale, this.maxScale);
@@ -66,6 +69,15 @@ export default {
     },
     zoomResize() {
       this.currentScale = 1;
+    },
+    // Grid
+    showGrid() {
+      this.gridShown = true;
+      console.log('show grid');
+    },
+    hideGrid() {
+      this.gridShown = false;
+      console.log('hide grid');
     },
   },
   watch: {

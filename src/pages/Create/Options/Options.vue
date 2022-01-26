@@ -1,38 +1,48 @@
 <template>
   <div class="options-container">
-    <v-btn-toggle
-      class="btn-bar elevation-3"
-      multiple
-    >
-      <v-btn class="white">
+    <div class="btn-bar elevation-3">
+      <option-item tip="New Project ( Ctrl + n )" value="new" left-style @click-option="clickOption">
         <new></new>
-      </v-btn>
-      <v-btn class="white">
-        <overscan></overscan>
-      </v-btn>
-      <v-btn class="white">
+      </option-item>
+      <option-item tip="Default Scale ( Ctrl + f )" value="rescale" @click-option="clickOption">
+        <rescale></rescale>
+      </option-item>
+      <option-item tip="Show Grid ( Ctrl + g )" value="grid" with-chosen-status @click-option="clickOption">
         <grid></grid>
-      </v-btn>
-      <v-btn class="white">
-        <revocation></revocation>
-      </v-btn>
-      <v-btn class="white">
+      </option-item>
+      <option-item tip="Undo ( Ctrl + z )" value="undo" @click-option="clickOption">
+        <undo></undo>
+      </option-item>
+      <option-item tip="Redo ( Ctrl + y )" value="redo" @click-option="clickOption">
         <redo></redo>
-      </v-btn>
-      <v-btn class="white">
+      </option-item>
+      <option-item tip="Save ( Ctrl + s )" value="save" right-style @click-option="clickOption">
         <save></save>
-      </v-btn>
-    </v-btn-toggle>
+      </option-item>
+    </div>
   </div>
 </template>
 
 <script>
 require('@/assets/optionsBar/index')
 
+import OptionItem from './OptionItem';
+
 export default {
   name: 'Options',
+  components: {OptionItem},
   props: {
     currentScale: Number
+  },
+  data() {
+    return {
+      options: [],
+    }
+  },
+  methods: {
+    clickOption(val) {
+      this.$emit('click-option', val);
+    }
   }
 }
 </script>
@@ -49,6 +59,10 @@ export default {
   align-items: center;
 }
 .btn-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
+  border-radius: 4px;
 }
 </style>

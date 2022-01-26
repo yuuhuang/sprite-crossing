@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     app
-    flat
+    :flat="!collapse"
     :collapse="collapse"
     color="white"
   >

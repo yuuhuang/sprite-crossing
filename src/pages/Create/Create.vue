@@ -13,7 +13,7 @@
       @change-current-color="pickCurrentColor"
     ></colors>
     <board ref="board" :tool="currentTool" @scale="scale => this.currentScale=scale"></board>
-    <options ref="options" :current-scale="currentScale"></options>
+    <options ref="options" :current-scale="currentScale" @click-option="clickOption"></options>
   </div>
 </template>
 
@@ -51,15 +51,58 @@ export default {
     }
   },
   methods: {
+    // Colors
     pickCurrentColor(color) {
       this.$set(this.$data, 'currentColor', color);
     },
     addColor(color) {
       this.$refs.swatch.addColor(color);
     },
+    // Swatch
     clickColor(color) {
       this.$refs.colors.setCurrentColor(color);
     },
+    // Options
+    clickOption(option) {
+      switch (option) {
+        case 'new':
+          this.newProject();
+          break;
+        case 'rescale':
+          this.$refs.board.zoomResize();
+          break;
+        case 'grid':
+          if (this.$refs.board.gridShown) {
+            this.$refs.board.hideGrid();
+          } else {
+            this.$refs.board.showGrid();
+          }
+          break;
+        case 'undo':
+          this.undo();
+          break;
+        case 'redo':
+          this.redo();
+          break;
+        case 'save':
+          this.save();
+          break;
+        default:
+          break;
+      }
+    },
+    newProject() {
+      console.log('new project');
+    },
+    undo() {
+      console.log('undo');
+    },
+    redo() {
+      console.log('redo');
+    },
+    save() {
+      console.log('save');
+    }
   }
 }
 </script>

@@ -48,7 +48,7 @@
         <v-container>
           <v-row>
             <v-col cols="7" class="pt-0">
-              <color-switch ref="color-switch"></color-switch>
+              <color-switch ref="color-switch" @switch-color="changeColor"></color-switch>
             </v-col>
             <v-col cols="5" class="pl-0 pb-0 pt-0">
             </v-col>
@@ -59,7 +59,7 @@
           ref="color-group"
           :current-color="currentColor"
           @drag="handleDrag"
-          @click-color="clickColor"
+          @click-color="changeColor"
         ></color-group>
       </v-card>
     </v-menu>
@@ -114,7 +114,7 @@ export default {
     addColor(color) {
       this.$refs['color-group'].addColor(color);
     },
-    clickColor(color) {
+    changeColor(color) {
       this.$emit('click-color', color);
     }
   }
