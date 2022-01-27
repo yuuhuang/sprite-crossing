@@ -91,19 +91,19 @@ export const optionsKeypress = that => {
         if (e.ctrlKey && !e.shiftKey) {
             switch (e.key) {
                 case 'f':
-                    that.$emit('click-option', 'rescale');
+                    that.$refs.rescale.click();
                     break;
                 case 'g':
-                    that.$emit('click-option', 'grid');
+                    that.$refs.grid.click();
                     break;
                 case 'z':
-                    that.$emit('click-option', 'undo');
+                    that.$refs.undo.click();
                     break;
                 case 'y':
-                    that.$emit('click-option', 'redo');
+                    that.$refs.redo.click();
                     break;
                 case 's':
-                    that.$emit('click-option', 'save');
+                    that.$refs.save.click();
                     break;
                 default:
                     break;

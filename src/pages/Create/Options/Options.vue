@@ -1,22 +1,22 @@
 <template>
   <div class="options-container">
     <div class="btn-bar elevation-3">
-      <option-item tip="New Project" value="new" left-style @click-option="clickOption">
+      <option-item tip="New Project" ref="new" value="new" left-style @click-option="clickOption">
         <new></new>
       </option-item>
-      <option-item tip="Default Scale ( Ctrl + f )" value="rescale" @click-option="clickOption">
+      <option-item tip="Default Scale ( Ctrl + f )" ref="rescale" value="rescale" @click-option="clickOption">
         <rescale></rescale>
       </option-item>
-      <option-item tip="Show Grid ( Ctrl + g )" value="grid" with-chosen-status @click-option="clickOption">
+      <option-item tip="Show Grid ( Ctrl + g )" ref="grid" value="grid" with-chosen-status @click-option="clickOption">
         <grid></grid>
       </option-item>
-      <option-item tip="Undo ( Ctrl + z )" value="undo" @click-option="clickOption">
+      <option-item tip="Undo ( Ctrl + z )" ref="undo" value="undo" @click-option="clickOption">
         <undo></undo>
       </option-item>
-      <option-item tip="Redo ( Ctrl + y )" value="redo" @click-option="clickOption">
+      <option-item tip="Redo ( Ctrl + y )" ref="redo" value="redo" @click-option="clickOption">
         <redo></redo>
       </option-item>
-      <option-item tip="Save ( Ctrl + s )" value="save" right-style @click-option="clickOption">
+      <option-item tip="Save ( Ctrl + s )" ref="save" value="save" right-style @click-option="clickOption">
         <save></save>
       </option-item>
     </div>
