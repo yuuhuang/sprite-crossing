@@ -2,7 +2,7 @@ export const computePx = (val, func) => `${func(val.match(/[0-9]+/g)[0])}px`;
 
 export const fixTwoDecimal = num => (Number.isInteger(num) ? num : num.toFixed(2));
 
-export const restrict = (num, min, max) => Math.max(Math.min(num, max || Infinity), min || Infinity);
+export const restrict = (num, min, max) => Math.max(Math.min(num, max ?? Infinity), min ?? -Infinity);
 
 export const rgba2hexa = rgba => {
     const result = rgba.slice(0, 3).map(item => {

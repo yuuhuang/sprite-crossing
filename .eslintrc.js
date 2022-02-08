@@ -13,7 +13,7 @@ module.exports = {
         'SharedArrayBuffer': 'readonly'
     },
     'parserOptions': {
-        'ecmaVersion': 2018,
+        'ecmaVersion': 2020,
         'sourceType': 'module'
     },
     'plugins': [
@@ -283,7 +283,7 @@ module.exports = {
         ],
 
         'vue/no-parsing-error': [2, {
-            "invalid-first-character-of-tag-name": false
+            'invalid-first-character-of-tag-name': false
         }]
     }
 };

@@ -12,7 +12,12 @@
       @add-color="addColor"
       @change-current-color="pickCurrentColor"
     ></colors>
-    <board ref="board" :tool="currentTool" @scale="scale => this.currentScale=scale"></board>
+    <board
+      ref="board"
+      :tool="currentTool"
+      :color="currentColor.rgba"
+      @scale="scale => this.currentScale=scale"
+    ></board>
     <options ref="options" :current-scale="currentScale" @click-option="clickOption"></options>
   </div>
 </template>
@@ -47,7 +52,7 @@ export default {
         hue: 0,
         rgba: {r: 0, g: 0, b: 0, a: 1}
       },
-      currentScale: 1,
+      currentScale: 0.25,
     }
   },
   methods: {

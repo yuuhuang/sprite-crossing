@@ -37,7 +37,7 @@
       </v-avatar>
       <v-menu
         v-if="$vuetify.breakpoint.width < 960 || collapse"
-        class="v-menu__content"
+        class="v-menu__content top"
         rounded="lg"
         offset-y
       >
@@ -121,5 +121,8 @@ export default {
 }
 .collapse-nav {
   padding: 0 !important;
+}
+.top {
+  z-index: 999 !important;
 }
 </style>
