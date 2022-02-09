@@ -20,7 +20,7 @@
 
 <script>
 import {restrict} from '@/utils';
-import {drawing} from './drawing';
+import {Drawing} from './drawing';
 
 export default {
   name: 'Board',
@@ -32,7 +32,7 @@ export default {
     return {
       // Basic
       basicSize: 2560,
-      imageSize: 128,
+      imageSize: 16,
       // Scale
       currentScale: 0.25,
       maxScale: 1,
@@ -40,6 +40,8 @@ export default {
       scaleSpeed: 0.001,
       // Grid
       gridShown: false,
+      // Drawing
+      drawing: null,
     };
   },
   methods: {
@@ -47,10 +49,12 @@ export default {
     mousedown(e) {
       switch (this.tool) {
         case 'pencil':
-          drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
+          this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
           this.$refs['drawing-board'].onmousemove = this.mousemove;
           break;
         case 'eraser':
+          this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY));
+          this.$refs['drawing-board'].onmousemove = this.mousemove;
           break;
         case 'eyedropper':
           break;
@@ -80,15 +84,39 @@ export default {
     },
     mousemove(e) {
       if (e.buttons) {
-        drawing.pencil(this.getPosition(e.offsetX, e.offsetY), this.color);
+        switch (this.tool) {
+          case 'pencil':
+            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+            break;
+          case 'eraser':
+            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY));
+            break;
+          default:
+            break;
+        }
       }
     },
     removeMoveEvent() {
       this.$refs['drawing-board'].onmousemove = null;
     },
+    mouseenter(e) {
+      switch (this.tool) {
+        case 'pencil':
+          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+          break;
+        default:
+          break;
+      }
+    },
     mouseout(e) {
       if (e.buttons) {
-        drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+        switch (this.tool) {
+          case 'pencil':
+            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+            break;
+          default:
+            break;
+        }
       }
     },
     getPosition(offsetX, offsetY) {
@@ -130,12 +158,15 @@ export default {
     }
   },
   mounted() {
+    this.drawing = new Drawing();
+
     this.$refs['drawing-board'].onwheel = this.zoomWheel;
     this.$refs['drawing-board'].onmousedown = this.mousedown;
     this.$refs['drawing-board'].onmouseout = this.mouseout;
+    this.$refs['drawing-board'].onmouseenter = this.mouseenter;
     document.body.onmouseup = this.removeMoveEvent;
 
-    drawing.init(this.$refs['drawing-board'], this.imageSize);
+    this.drawing.init(this.$refs['drawing-board'], this.imageSize);
   },
   beforeDestroy() {
     this.$refs['drawing-board'].onwheel = null;

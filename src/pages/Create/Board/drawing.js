@@ -1,49 +1,82 @@
-let showCanvas, sourceCanvas;
-let showCanvasCtx, sourceCanvasCtx;
+export class Drawing {
+    constructor() {
+        this.showCanvas = null;
+        this.sourceCanvas = null;
 
-let size = 16;
-let imageData;
+        this.size = 16;
+        this.imageData = [];
 
-let lastX = 0;
-let lastY = 0;
+        this.lastX = 0;
+        this.lastY = 0;
 
-const getIndex = (x, y) => (y * size + x) * 4;
+        this.emptyColor = {
+            r: 255, g: 255, b: 255, a: 0
+        };
+    }
 
-export const drawing = {
-    init(canvasArg, imageSize) {
-        size = imageSize;
+    init (canvasArg, imageSize) {
+        this.size = imageSize;
 
-        showCanvas = canvasArg;
-        showCanvasCtx = showCanvas.getContext('2d');
-        showCanvasCtx.imageSmoothingEnabled = false;
-        showCanvasCtx.webkitImageSmoothingEnabled = false
-        showCanvasCtx.mozImageSmoothingEnabled = false
+        this.showCanvas = canvasArg;
+        this.showCanvasCtx = this.showCanvas.getContext('2d');
+        this.showCanvasCtx.imageSmoothingEnabled = false;
+        this.showCanvasCtx.webkitImageSmoothingEnabled = false;
+        this.showCanvasCtx.mozImageSmoothingEnabled = false;
+        this.showCanvasCtx.globalCompositeOperation = 'copy';
 
-        sourceCanvas = document.createElement('canvas');
-        sourceCanvas.width = sourceCanvas.height = imageSize;
-        sourceCanvasCtx = sourceCanvas.getContext('2d');
-        sourceCanvasCtx.imageSmoothingEnabled = false;
-        sourceCanvasCtx.webkitImageSmoothingEnabled = false
-        sourceCanvasCtx.mozImageSmoothingEnabled = false
+        this.sourceCanvas = document.createElement('canvas');
+        this.sourceCanvas.width = this.sourceCanvas.height = imageSize;
+        this.sourceCanvasCtx = this.sourceCanvas.getContext('2d');
+        this.sourceCanvasCtx.imageSmoothingEnabled = false;
+        this.sourceCanvasCtx.webkitImageSmoothingEnabled = false;
+        this.sourceCanvasCtx.mozImageSmoothingEnabled = false;
 
-        imageData = sourceCanvasCtx.getImageData(0, 0, imageSize, imageSize);
-    },
-    colorPixel(position, rgba) {
-        imageData.data[getIndex(position.x, position.y)] = rgba.r;
-        imageData.data[getIndex(position.x, position.y) + 1] = rgba.g;
-        imageData.data[getIndex(position.x, position.y) + 2] = rgba.b;
-        imageData.data[getIndex(position.x, position.y) + 3] = 255 * rgba.a;
-    },
-    drawPoint(position, rgba) {
-        this.colorPixel(position, rgba);
-        sourceCanvasCtx.putImageData(imageData, 0, 0);
-        showCanvasCtx.drawImage(sourceCanvas, 0, 0, showCanvas.width, showCanvas.height);
+        this.imageData = this.sourceCanvasCtx.getImageData(0, 0, imageSize, imageSize);
+    }
 
-        lastX = position.x;
-        lastY = position.y;
-    },
-    drawLine(current, rgba, last) {
-        last = last ?? {x: lastX, y: lastY};
+    getIndex (x, y) {
+        return (y * this.size + x) * 4;
+    }
+
+    getLast () {
+        return {x: this.lastX, y: this.lastY}
+    }
+
+    setLast (position) {
+        this.lastX = position.x;
+        this.lastY = position.y;
+    }
+
+    colorPixel (position, rgba) {
+        this.imageData.data[this.getIndex(position.x, position.y)] = rgba.r;
+        this.imageData.data[this.getIndex(position.x, position.y) + 1] = rgba.g;
+        this.imageData.data[this.getIndex(position.x, position.y) + 2] = rgba.b;
+        this.imageData.data[this.getIndex(position.x, position.y) + 3] = 255 * rgba.a;
+    }
+
+    drawPoint (position, rgba) {
+        if (rgba) { // pencil
+            this.colorPixel(position, rgba);
+            this.sourceCanvasCtx.globalCompositeOperation = 'copy';
+        } else { // eraser
+            this.colorPixel(position, this.emptyColor);
+            this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
+        }
+        this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
+        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
+
+        this.setLast(position);
+    }
+
+    drawLine (current, rgba, last) {
+        if (rgba) { // pencil
+            this.sourceCanvasCtx.globalCompositeOperation = 'copy';
+        } else { // eraser
+            this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
+            rgba = this.emptyColor;
+        }
+        last = last ?? this.getLast();
+
         let dx = Math.abs(current.x - last.x);
         let dy = Math.abs(current.y - last.y);
 
@@ -64,13 +97,11 @@ export const drawing = {
             lineY += (dy * yDir)
             i += 1
         }
-        sourceCanvasCtx.putImageData(imageData, 0, 0);
-        showCanvasCtx.drawImage(sourceCanvas, 0, 0, showCanvas.width, showCanvas.height);
+        this.colorPixel({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
+        this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
+        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
-        lastX = current.x;
-        lastY = current.y;
-    },
-    pencil(position, rgba) {
-        this.drawLine(position, rgba, {x: lastX, y: lastY});
+        this.lastX = current.x;
+        this.lastY = current.y;
     }
-};
+}
