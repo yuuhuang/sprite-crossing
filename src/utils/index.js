@@ -21,13 +21,14 @@ export const checkRGBAObj = val => {
 }
 
 export const rgba2hexa = rgba => {
-    const result = rgba.slice(0, 3).map(item => {
+    const rgb = rgba.slice(0, 3).map(item => {
         const hex = Number(item).toString(16);
 
         return hex.length > 1 ? hex : `0${hex}`;
     });
+    const [a] = (/\w(.)?/).exec((rgba[3] * 255).toString(16));
 
-    return `#${result.join('')}${(rgba[3] * 0xff).toString(16)}`
+    return `#${rgb.join('')}${a.length > 1 ? '' : '0'}${a}`;
 }
 
 export const hsla2hexa = hsla => {
