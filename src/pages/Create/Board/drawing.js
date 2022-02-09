@@ -4,6 +4,7 @@ export class Drawing {
         this.sourceCanvas = null;
 
         this.size = 16;
+        this.scale = 160;
         this.imageData = [];
 
         this.lastX = 0;
@@ -23,6 +24,7 @@ export class Drawing {
         this.showCanvasCtx.webkitImageSmoothingEnabled = false;
         this.showCanvasCtx.mozImageSmoothingEnabled = false;
         this.showCanvasCtx.globalCompositeOperation = 'copy';
+        this.scale = this.showCanvas.width / this.size;
 
         this.sourceCanvas = document.createElement('canvas');
         this.sourceCanvas.width = this.sourceCanvas.height = imageSize;
@@ -110,7 +112,12 @@ export class Drawing {
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
-        this.lastX = current.x;
-        this.lastY = current.y;
+        this.setLast(current);
+    }
+
+    translate(position) {
+        this.showCanvasCtx.translate((position.x - this.lastX) * this.scale, (position.y - this.lastY) * this.scale);
+        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
+        this.setLast(position);
     }
 }

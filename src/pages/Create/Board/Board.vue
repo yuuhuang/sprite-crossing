@@ -4,7 +4,9 @@
       class="canvas-container"
       :style="{
         width: `${basicSize * currentScale + 8}px`,
-        height: `${basicSize * currentScale + 8}px`
+        height: `${basicSize * currentScale + 8}px`,
+        transform: `translateX(${translateX * translateSpeed * currentScale}px)
+         translateY(${translateY * translateSpeed * currentScale}px)`
       }"
     >
       <canvas
@@ -38,6 +40,12 @@ export default {
       maxScale: 1,
       minScale: 0.025,
       scaleSpeed: 0.001,
+      // translate
+      translateX: 0,
+      translateY: 0,
+      translateFromX: 0,
+      translateFromY: 0,
+      translateSpeed: 1,
       // Grid
       gridShown: false,
       // Drawing
@@ -69,7 +77,14 @@ export default {
           break;
         case 'ellipse-outline':
           break;
-        case 'move':
+        case 'move-object':
+          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+          this.$refs['drawing-board'].onmousemove = this.mousemove;
+          break;
+        case 'move-board':
+          this.translateFromX = e.offsetX;
+          this.translateFromY = e.offsetY;
+          this.$refs['drawing-board'].onmousemove = this.mousemove;
           break;
         case 'zoom-in': {
           this.zoomIn();
@@ -91,6 +106,13 @@ export default {
             break;
           case 'eraser':
             this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY));
+            break;
+          case 'move-object':
+            this.drawing.translate(this.getPosition(e.offsetX, e.offsetY));
+            break;
+          case 'move-board':
+            this.translateX += e.offsetX - this.translateFromX;
+            this.translateY += e.offsetY - this.translateFromY;
             break;
           default:
             break;
@@ -120,6 +142,13 @@ export default {
         }
       }
     },
+    mouseup(e) { // body event
+      this.removeMoveEvent();
+      if (this.tool === 'move-board') {
+        this.translateFromX = e.offsetX;
+        this.translateFromY = e.offsetY;
+      }
+    },
     getPosition(offsetX, offsetY) {
       return {
         x: restrict(Math.floor(this.imageSize * offsetX / this.basicSize), 0, this.imageSize - 1),
@@ -139,6 +168,11 @@ export default {
     },
     zoomResize() {
       this.currentScale = 0.25;
+    },
+    // Translate
+    translateReset() {
+      this.translateX = 0;
+      this.translateY = 0;
     },
     // Grid
     showGrid() {
@@ -165,7 +199,7 @@ export default {
     this.$refs['drawing-board'].onmousedown = this.mousedown;
     this.$refs['drawing-board'].onmouseout = this.mouseout;
     this.$refs['drawing-board'].onmouseenter = this.mouseenter;
-    document.body.onmouseup = this.removeMoveEvent;
+    document.body.onmouseup = this.mouseup;
 
     this.drawing.init(this.$refs['drawing-board'], this.imageSize);
   },

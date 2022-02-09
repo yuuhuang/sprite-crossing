@@ -74,8 +74,9 @@ export default {
         case 'new':
           this.newProject();
           break;
-        case 'rescale':
+        case 'reset':
           this.$refs.board.zoomResize();
+          this.$refs.board.translateReset();
           break;
         case 'grid':
           if (this.$refs.board.gridShown) {

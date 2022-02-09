@@ -62,9 +62,21 @@
             <ellipse-outline slot="ellipse-outline"></ellipse-outline>
           </template>
         </tool-sub-box>
-        <tool-btn value="move" tip="Move Tool ( v )">
-          <move></move>
-        </tool-btn>
+        <tool-sub-box
+          :tool="tool"
+          default-tool="move-object"
+          :sub-tools="['move-object', 'move-board']"
+          :tips="[
+            'Move Object ( v )',
+            'Move Board ( space )',
+          ]"
+            @choose-tool="chooseSubTool"
+        >
+          <template>
+            <move-object slot="move-object"></move-object>
+            <move-board slot="move-board"></move-board>
+          </template>
+        </tool-sub-box>
         <tool-sub-box
           :tool="tool"
           default-tool="zoom-in"

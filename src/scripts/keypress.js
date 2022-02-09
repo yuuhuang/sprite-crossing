@@ -1,8 +1,10 @@
+// eslint-disable-next-line max-lines-per-function
 export const toolsKeypress = that => {
+    // eslint-disable-next-line max-lines-per-function
     window.addEventListener('keydown', e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
-        if (!e.ctrlKey && !e.shiftKey) {
+        if (!e.ctrlKey) {
             switch (e.key) {
                 case 'b':
                 case 'B':
@@ -31,6 +33,9 @@ export const toolsKeypress = that => {
                 case 'v':
                 case 'V':
                     that.tool = 'move';
+                    break;
+                case ' ':
+                    that.tool = 'move-board';
                     break;
                 case 'z':
                 case 'Z':

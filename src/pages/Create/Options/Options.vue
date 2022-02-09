@@ -4,8 +4,8 @@
       <option-item tip="New Project" ref="new" value="new" left-style @click-option="clickOption">
         <new></new>
       </option-item>
-      <option-item tip="Default Scale ( Ctrl + f )" ref="rescale" value="rescale" @click-option="clickOption">
-        <rescale></rescale>
+      <option-item tip="Default Scale ( Ctrl + f )" ref="reset" value="reset" @click-option="clickOption">
+        <reset></reset>
       </option-item>
       <option-item tip="Show Grid ( Ctrl + g )" ref="grid" value="grid" with-chosen-status @click-option="clickOption">
         <grid></grid>
