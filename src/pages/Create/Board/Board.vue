@@ -57,6 +57,7 @@ export default {
           this.$refs['drawing-board'].onmousemove = this.mousemove;
           break;
         case 'eyedropper':
+          this.$emit('eyedropper-pick', this.drawing.getPixelColor(this.getPosition(e.offsetX, e.offsetY)));
           break;
         case 'bucket':
           break;

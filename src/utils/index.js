@@ -4,6 +4,22 @@ export const fixTwoDecimal = num => (Number.isInteger(num) ? num : num.toFixed(2
 
 export const restrict = (num, min, max) => Math.max(Math.min(num, max ?? Infinity), min ?? -Infinity);
 
+export const isBetween = (x, min, max) => x >= min && x <= max
+
+export const checkRGBAObj = val => {
+    if (typeof val !== 'object') {
+        return false;
+    }
+    if (isBetween(val?.r, 0, 255) &&
+        isBetween(val?.g, 0, 255) &&
+        isBetween(val?.b, 0, 255) &&
+        isBetween(val?.a, 0, 1)) {
+        return true;
+    }
+
+    return false;
+}
+
 export const rgba2hexa = rgba => {
     const result = rgba.slice(0, 3).map(item => {
         const hex = Number(item).toString(16);

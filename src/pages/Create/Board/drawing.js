@@ -47,7 +47,16 @@ export class Drawing {
         this.lastY = position.y;
     }
 
-    colorPixel (position, rgba) {
+    getPixelColor (position) {
+        return {
+            r: this.imageData.data[this.getIndex(position.x, position.y)],
+            g: this.imageData.data[this.getIndex(position.x, position.y) + 1],
+            b: this.imageData.data[this.getIndex(position.x, position.y) + 2],
+            a: this.imageData.data[this.getIndex(position.x, position.y) + 3] / 255
+        };
+    }
+
+    setPixelColor (position, rgba) {
         this.imageData.data[this.getIndex(position.x, position.y)] = rgba.r;
         this.imageData.data[this.getIndex(position.x, position.y) + 1] = rgba.g;
         this.imageData.data[this.getIndex(position.x, position.y) + 2] = rgba.b;
@@ -56,10 +65,10 @@ export class Drawing {
 
     drawPoint (position, rgba) {
         if (rgba) { // pencil
-            this.colorPixel(position, rgba);
+            this.setPixelColor(position, rgba);
             this.sourceCanvasCtx.globalCompositeOperation = 'copy';
         } else { // eraser
-            this.colorPixel(position, this.emptyColor);
+            this.setPixelColor(position, this.emptyColor);
             this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
         }
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
@@ -92,12 +101,12 @@ export class Drawing {
 
         let i = 0
         while (i < step) {
-            this.colorPixel({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
+            this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
             lineX += (dx * xDir)
             lineY += (dy * yDir)
             i += 1
         }
-        this.colorPixel({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
+        this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 

@@ -143,7 +143,7 @@ import Upload from '@/assets/upload.svg'
 
 import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
 
-import {rgba2hexa, hsla2hexa, fixTwoDecimal} from '@/utils';
+import {checkRGBAObj, rgba2hexa, hsla2hexa, fixTwoDecimal} from '@/utils';
 
 import {colorsKeypress} from '@/scripts/keypress.js'
 
@@ -202,6 +202,9 @@ export default {
       this.$emit('change-current-color', this.currentColor);
     },
     setCurrentColor(color) {
+      if (checkRGBAObj(color)) {
+        color = rgba2hexa(Object.values(color));
+      }
       this.inputHex(color);
       this.$refs['hexa-input'].$emit('input', color.slice(1));
     },

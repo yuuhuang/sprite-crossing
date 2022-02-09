@@ -17,6 +17,7 @@
       :tool="currentTool"
       :color="currentColor.rgba"
       @scale="scale => this.currentScale=scale"
+      @eyedropper-pick="color => this.$refs.colors.setCurrentColor(color)"
     ></board>
     <options ref="options" :current-scale="currentScale" @click-option="clickOption"></options>
   </div>
