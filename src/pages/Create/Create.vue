@@ -14,12 +14,15 @@
     ></colors>
     <board
       ref="board"
+      :image-size="size"
       :tool="currentTool"
       :color="currentColor.rgba"
       @scale="scale => this.currentScale=scale"
       @eyedropper-pick="color => this.$refs.colors.setCurrentColor(color)"
     ></board>
     <options ref="options" :current-scale="currentScale" @click-option="clickOption"></options>
+    <new ref="new" @create="create"></new>
+    <save ref="save" @save="(fileName, downloadSize) => this.$refs.board.save(fileName, downloadSize)"></save>
   </div>
 </template>
 
@@ -30,10 +33,14 @@ import Swatch from './Swatch/Swatch';
 import Navigator from './Navigator/Navigator';
 import Board from './Board/Board';
 import Options from './Options/Options';
+import Save from './Dialogs/Save';
+import New from './Dialogs/New';
 
 export default {
   name: 'Create',
   components: {
+    New,
+    Save,
     Options,
     Board,
     Tools,
@@ -54,6 +61,7 @@ export default {
         rgba: {r: 0, g: 0, b: 0, a: 1}
       },
       currentScale: 0.25,
+      size: 32,
     }
   },
   methods: {
@@ -99,7 +107,7 @@ export default {
       }
     },
     newProject() {
-      console.log('new project');
+      this.$refs.new.showNew();
     },
     undo() {
       this.$refs.board.undo();
@@ -108,7 +116,12 @@ export default {
       this.$refs.board.redo();
     },
     save() {
-      console.log('save');
+      this.$refs.save.showSave();
+    },
+    // New
+    create(size) {
+      this.size = size;
+      this.$refs.board.create(size);
     }
   }
 }

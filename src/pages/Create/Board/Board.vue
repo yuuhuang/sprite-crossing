@@ -38,12 +38,15 @@ export default {
   props: {
     tool: String,
     color: Object,
+    imageSize: {
+      type: Number,
+      default: 32
+    }
   },
   data() {
     return {
       // Basic
       basicSize: 2560,
-      imageSize: 16,
       // Scale
       currentScale: 0.25,
       maxScale: 1,
@@ -221,6 +224,17 @@ export default {
     undo() {
       this.drawing.putImageData(history.undo());
     },
+    // Save
+    save(fileName, size) {
+      this.drawing.download(fileName, size);
+    },
+    // New
+    create(size) {
+      history.init();
+      this.drawing = new Drawing();
+      this.drawing.init(this.$refs['drawing-board'], size ?? this.imageSize);
+      this.drawing.putImageData();
+    }
   },
   watch: {
     currentScale: {
@@ -231,7 +245,7 @@ export default {
     }
   },
   mounted() {
-    this.drawing = new Drawing();
+    this.create();
 
     this.$refs['drawing-board'].onwheel = this.zoomWheel;
     this.$refs['drawing-board'].onmousedown = this.mousedown;
@@ -239,12 +253,14 @@ export default {
     this.$refs['drawing-board'].onmouseenter = this.mouseenter;
     this.$refs['drawing-board'].onclick = this.click;
     document.body.onmouseup = this.bodyMouseup;
-
-    this.drawing.init(this.$refs['drawing-board'], this.imageSize);
   },
   beforeDestroy() {
     this.$refs['drawing-board'].onwheel = null;
+    this.$refs['drawing-board'].onmousedown = null;
+    this.$refs['drawing-board'].onmouseout = null;
+    this.$refs['drawing-board'].onmouseenter = null;
     this.$refs['drawing-board'].onclick = null;
+    document.body.onmouseup = null;
   }
 }
 </script>

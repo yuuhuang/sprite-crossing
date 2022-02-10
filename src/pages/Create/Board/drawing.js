@@ -35,7 +35,6 @@ export class Drawing {
         this.scale = this.showCanvas.width / this.size;
 
         this.sourceCanvas = document.createElement('canvas');
-        window.sourceCanvas = this.sourceCanvas;
         this.sourceCanvas.width = this.sourceCanvas.height = imageSize;
         this.sourceCanvasCtx = this.sourceCanvas.getContext('2d');
         this.sourceCanvasCtx.imageSmoothingEnabled = false;
@@ -149,5 +148,23 @@ export class Drawing {
         this.showCanvasCtx.translate((position.x - this.lastX) * this.scale, (position.y - this.lastY) * this.scale);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
         this.setLast(position);
+    }
+
+    download(fileName, size) {
+        const downloadCanvas = document.createElement('canvas');
+        downloadCanvas.width = downloadCanvas.height = size;
+        const downloadCanvasCtx = downloadCanvas.getContext('2d');
+        downloadCanvasCtx.imageSmoothingEnabled = false;
+        downloadCanvasCtx.webkitImageSmoothingEnabled = false;
+        downloadCanvasCtx.mozImageSmoothingEnabled = false;
+        downloadCanvasCtx.drawImage(this.showCanvas, 0, 0);
+
+        const link = document.createElement('a');
+        link.href = downloadCanvas.toDataURL();
+        link.download = `${fileName}.png`;
+        link.click();
+
+        link.remove();
+        downloadCanvas.remove();
     }
 }

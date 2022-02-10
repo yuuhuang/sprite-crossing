@@ -3,8 +3,12 @@ export const history = {
     index: 0,
     max: 50,
 
+    init() {
+        this.records.length = 0;
+        this.index = 0;
+    },
+
     record(curImageData) {
-        window.records = this.records;
         if (this.index > 0) {
             this.records.splice(0, this.index);
             this.index = 0;
@@ -13,6 +17,14 @@ export const history = {
         if (this.records.length > this.max) {
             this.records.length = this.max;
         }
+    },
+
+    canUndo() {
+        return !(!this.records.length || this.index + 1 >= Math.min(this.max - 1, this.records.length));
+    },
+
+    canRedo() {
+        return !(!this.records.length || this.index <= 0);
     },
 
     undo() {

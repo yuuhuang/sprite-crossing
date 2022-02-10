@@ -1,6 +1,6 @@
 <template>
   <div class="options-container">
-    <div class="btn-bar elevation-3">
+    <div class="btn-bar elevation-1">
       <option-item tip="New Project" ref="new" value="new" left-style @click-option="clickOption">
         <new></new>
       </option-item>
@@ -10,10 +10,12 @@
       <option-item tip="Show Grid ( Ctrl + g )" ref="grid" value="grid" with-chosen-status @click-option="clickOption">
         <grid></grid>
       </option-item>
-      <option-item tip="Undo ( Ctrl + z )" ref="undo" value="undo" @click-option="clickOption">
+      <option-item
+        tip="Undo ( Ctrl + z )" ref="undo" value="undo" :disabled="!history.canUndo()" @click-option="clickOption">
         <undo></undo>
       </option-item>
-      <option-item tip="Redo ( Ctrl + y )" ref="redo" value="redo" @click-option="clickOption">
+      <option-item
+        tip="Redo ( Ctrl + y )" ref="redo" value="redo" :disabled="!history.canRedo()" @click-option="clickOption">
         <redo></redo>
       </option-item>
       <option-item tip="Save ( Ctrl + s )" ref="save" value="save" right-style @click-option="clickOption">
@@ -30,6 +32,8 @@ import OptionItem from './OptionItem';
 
 import {optionsKeypress} from '@/scripts/keypress';
 
+import {history} from '@/pages/Create/Board/history';
+
 export default {
   name: 'Options',
   components: {OptionItem},
@@ -39,6 +43,7 @@ export default {
   data() {
     return {
       options: [],
+      history,
     }
   },
   methods: {

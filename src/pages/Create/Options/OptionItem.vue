@@ -13,6 +13,7 @@
         v-on="on"
         tile
         :value="value"
+        :disabled="disabled"
         @click="click"
       >
         <slot></slot>
@@ -29,6 +30,7 @@ export default {
     tip: String,
     value: String,
     withChosenStatus: Boolean,
+    disabled: Boolean,
 
     leftStyle: Boolean,
     rightStyle: Boolean,

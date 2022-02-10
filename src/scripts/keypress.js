@@ -1,7 +1,15 @@
+import {history} from '@/pages/Create/Board/history';
+
+let toolsEventListener,
+    swatchEventListener,
+    colorsEventListener,
+    swapColorEventListener,
+    optionsEventListener;
+
 // eslint-disable-next-line max-lines-per-function
 export const toolsKeypress = that => {
     // eslint-disable-next-line max-lines-per-function
-    window.addEventListener('keydown', e => {
+    toolsEventListener = e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
         if (!e.ctrlKey) {
@@ -51,11 +59,12 @@ export const toolsKeypress = that => {
         }
 
         return false;
-    })
+    };
+    window.addEventListener('keydown', toolsEventListener);
 }
 
 export const swatchKeypress = that => {
-    window.addEventListener('keydown', e => {
+    swatchEventListener = e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
         if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.shiftKey) {
@@ -63,11 +72,12 @@ export const swatchKeypress = that => {
         }
 
         return false;
-    })
+    };
+    window.addEventListener('keydown', swatchEventListener);
 }
 
 export const colorsKeypress = that => {
-    window.addEventListener('keydown', e => {
+    colorsEventListener = e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
         if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.shiftKey) {
@@ -75,11 +85,12 @@ export const colorsKeypress = that => {
         }
 
         return false;
-    })
+    };
+    window.addEventListener('keydown', colorsEventListener);
 }
 
 export const swapColorKeypress = that => {
-    window.addEventListener('keydown', e => {
+    swapColorEventListener = e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
         if ((e.key === 'x' || e.key === 'X') && !e.ctrlKey && !e.shiftKey) {
@@ -87,11 +98,12 @@ export const swapColorKeypress = that => {
         }
 
         return false;
-    })
+    };
+    window.addEventListener('keydown', swapColorEventListener);
 }
 
 export const optionsKeypress = that => {
-    window.addEventListener('keydown', e => {
+    optionsEventListener = e => {
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
         if (e.ctrlKey && !e.shiftKey) {
             switch (e.key) {
@@ -102,10 +114,14 @@ export const optionsKeypress = that => {
                     that.$refs.grid.click();
                     break;
                 case 'z':
-                    that.$refs.undo.click();
+                    if (history.canUndo()) {
+                        that.$refs.undo.click();
+                    }
                     break;
                 case 'y':
-                    that.$refs.redo.click();
+                    if (history.canRedo()) {
+                        that.$refs.redo.click();
+                    }
                     break;
                 case 's':
                     that.$refs.save.click();
@@ -116,5 +132,30 @@ export const optionsKeypress = that => {
         }
 
         return false;
+    };
+    window.addEventListener('keydown', optionsEventListener);
+}
+
+export const removeAllKeypress = () => {
+    window.removeEventListener('keydown', toolsEventListener);
+    window.removeEventListener('keydown', swatchEventListener);
+    window.removeEventListener('keydown', colorsEventListener);
+    window.removeEventListener('keydown', swapColorEventListener);
+    window.removeEventListener('keydown', optionsEventListener);
+}
+
+export const addAllKeypress = () => {
+    window.addEventListener('keydown', toolsEventListener);
+    window.addEventListener('keydown', swatchEventListener);
+    window.addEventListener('keydown', colorsEventListener);
+    window.addEventListener('keydown', swapColorEventListener);
+    window.addEventListener('keydown', optionsEventListener);
+}
+
+export const preventCtrlS = () => {
+    window.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key.toLowerCase() === 's') {
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        }
     })
 }
