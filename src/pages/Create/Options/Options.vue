@@ -62,6 +62,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 .btn-bar {
   display: flex;

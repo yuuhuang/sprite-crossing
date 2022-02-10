@@ -1,14 +1,21 @@
+import {restrict} from '@/utils'
+
 export class Drawing {
     constructor() {
         this.showCanvas = null;
         this.sourceCanvas = null;
+        this.showCanvasCtx = null;
+        this.sourceCanvasCtx = null;
+        this.imageData = [];
 
         this.size = 16;
         this.scale = 160;
-        this.imageData = [];
 
         this.lastX = 0;
         this.lastY = 0;
+
+        this.translateX = 0;
+        this.translateY = 0;
 
         this.emptyColor = {
             r: 255, g: 255, b: 255, a: 0
@@ -27,6 +34,7 @@ export class Drawing {
         this.scale = this.showCanvas.width / this.size;
 
         this.sourceCanvas = document.createElement('canvas');
+        window.sourceCanvas = this.sourceCanvas;
         this.sourceCanvas.width = this.sourceCanvas.height = imageSize;
         this.sourceCanvasCtx = this.sourceCanvas.getContext('2d');
         this.sourceCanvasCtx.imageSmoothingEnabled = false;
@@ -40,6 +48,13 @@ export class Drawing {
         return (y * this.size + x) * 4;
     }
 
+    restrictPosition (position) {
+        return {
+            x: restrict(position.x, 0, this.size - 1),
+            y: restrict(position.y, 0, this.size - 1)
+        }
+    }
+
     getLast () {
         return {x: this.lastX, y: this.lastY}
     }
@@ -51,35 +66,40 @@ export class Drawing {
 
     getPixelColor (position) {
         return {
-            r: this.imageData.data[this.getIndex(position.x, position.y)],
-            g: this.imageData.data[this.getIndex(position.x, position.y) + 1],
-            b: this.imageData.data[this.getIndex(position.x, position.y) + 2],
-            a: this.imageData.data[this.getIndex(position.x, position.y) + 3] / 255
+            r: this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY)],
+            g: this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 1],
+            b: this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 2],
+            a: this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 3] / 255
         };
     }
 
     setPixelColor (position, rgba) {
-        this.imageData.data[this.getIndex(position.x, position.y)] = rgba.r;
-        this.imageData.data[this.getIndex(position.x, position.y) + 1] = rgba.g;
-        this.imageData.data[this.getIndex(position.x, position.y) + 2] = rgba.b;
-        this.imageData.data[this.getIndex(position.x, position.y) + 3] = 255 * rgba.a;
+        this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY)] = rgba.r;
+        this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 1] = rgba.g;
+        this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 2] = rgba.b;
+        this.imageData.data[this.getIndex(position.x - this.translateX, position.y - this.translateY) + 3] =
+            255 * rgba.a;
     }
 
     drawPoint (position, rgba) {
+        const pos = this.restrictPosition(position);
+
         if (rgba) { // pencil
-            this.setPixelColor(position, rgba);
+            this.setPixelColor(pos, rgba);
             this.sourceCanvasCtx.globalCompositeOperation = 'copy';
         } else { // eraser
-            this.setPixelColor(position, this.emptyColor);
+            this.setPixelColor(pos, this.emptyColor);
             this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
         }
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
-        this.setLast(position);
+        this.setLast(pos);
     }
 
     drawLine (current, rgba, last) {
+        const cur = this.restrictPosition(current);
+
         if (rgba) { // pencil
             this.sourceCanvasCtx.globalCompositeOperation = 'copy';
         } else { // eraser
@@ -88,11 +108,11 @@ export class Drawing {
         }
         last = last ?? this.getLast();
 
-        let dx = Math.abs(current.x - last.x);
-        let dy = Math.abs(current.y - last.y);
+        let dx = Math.abs(cur.x - last.x);
+        let dy = Math.abs(cur.y - last.y);
 
-        const xDir = current.x - last.x >= 0 ? 1 : -1;
-        const yDir = current.y - last.y >= 0 ? 1 : -1;
+        const xDir = cur.x - last.x >= 0 ? 1 : -1;
+        const yDir = cur.y - last.y >= 0 ? 1 : -1;
 
         let lineX = last.x;
         let lineY = last.y;
@@ -112,10 +132,12 @@ export class Drawing {
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
-        this.setLast(current);
+        this.setLast(cur);
     }
 
     translate(position) {
+        this.translateX += position.x - this.lastX;
+        this.translateY += position.y - this.lastY;
         this.showCanvasCtx.translate((position.x - this.lastX) * this.scale, (position.y - this.lastY) * this.scale);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
         this.setLast(position);

@@ -1,5 +1,10 @@
 <template>
   <div class="screen-container">
+    <grid
+      v-show="gridShown"
+      :size="basicSize * currentScale + 8"
+      style="position: absolute; z-index: 1"
+    ></grid>
     <div
       class="canvas-container"
       :style="{
@@ -24,8 +29,11 @@
 import {restrict} from '@/utils';
 import {Drawing} from './drawing';
 
+import Grid from './Grid';
+
 export default {
   name: 'Board',
+  components: {Grid},
   props: {
     tool: String,
     color: Object,
@@ -151,8 +159,8 @@ export default {
     },
     getPosition(offsetX, offsetY) {
       return {
-        x: restrict(Math.floor(this.imageSize * offsetX / this.basicSize), 0, this.imageSize - 1),
-        y: restrict(Math.floor(this.imageSize * offsetY / this.basicSize), 0, this.imageSize - 1),
+        x: Math.floor(this.imageSize * offsetX / this.basicSize),
+        y: Math.floor(this.imageSize * offsetY / this.basicSize),
       }
     },
     // Scale
@@ -177,11 +185,9 @@ export default {
     // Grid
     showGrid() {
       this.gridShown = true;
-      console.log('show grid');
     },
     hideGrid() {
       this.gridShown = false;
-      console.log('hide grid');
     },
   },
   watch: {
