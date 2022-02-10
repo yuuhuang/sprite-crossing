@@ -102,10 +102,10 @@ export default {
       console.log('new project');
     },
     undo() {
-      console.log('undo');
+      this.$refs.board.undo();
     },
     redo() {
-      console.log('redo');
+      this.$refs.board.redo();
     },
     save() {
       console.log('save');

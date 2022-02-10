@@ -1,4 +1,5 @@
 import {restrict} from '@/utils'
+import {history} from './history';
 
 export class Drawing {
     constructor() {
@@ -42,6 +43,7 @@ export class Drawing {
         this.sourceCanvasCtx.mozImageSmoothingEnabled = false;
 
         this.imageData = this.sourceCanvasCtx.getImageData(0, 0, imageSize, imageSize);
+        history.record(this.imageData.data);
     }
 
     getIndex (x, y) {
@@ -81,6 +83,14 @@ export class Drawing {
             255 * rgba.a;
     }
 
+    putImageData(imageData) {
+        if (imageData) {
+            this.imageData = new ImageData(Uint8ClampedArray.of(...imageData), this.size, this.size);
+        }
+        this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
+        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
+    }
+
     drawPoint (position, rgba) {
         const pos = this.restrictPosition(position);
 
@@ -91,9 +101,8 @@ export class Drawing {
             this.setPixelColor(pos, this.emptyColor);
             this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
         }
-        this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
-        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
+        this.putImageData();
         this.setLast(pos);
     }
 
@@ -129,9 +138,8 @@ export class Drawing {
             i += 1
         }
         this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
-        this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
-        this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
 
+        this.putImageData();
         this.setLast(cur);
     }
 

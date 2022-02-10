@@ -28,6 +28,7 @@
 <script>
 import {restrict} from '@/utils';
 import {Drawing} from './drawing';
+import {history} from './history';
 
 import Grid from './Grid';
 
@@ -144,13 +145,37 @@ export default {
         switch (this.tool) {
           case 'pencil':
             this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+            history.record(this.drawing.imageData.data);
+            break;
+          case 'eraser':
+          case 'bucket':
+          case 'rectangle-fill':
+          case 'rectangle-outline':
+          case 'ellipse-fill':
+          case 'ellipse-outline':
+            history.record(this.drawing.imageData.data);
             break;
           default:
             break;
         }
       }
     },
-    mouseup(e) { // body event
+    click() {
+      switch (this.tool) {
+        case 'pencil':
+        case 'eraser':
+        case 'bucket':
+        case 'rectangle-fill':
+        case 'rectangle-outline':
+        case 'ellipse-fill':
+        case 'ellipse-outline':
+          history.record(this.drawing.imageData.data);
+          break;
+        default:
+          break;
+      }
+    },
+    bodyMouseup(e) {
       this.removeMoveEvent();
       if (this.tool === 'move-board') {
         this.translateFromX = e.offsetX;
@@ -189,6 +214,13 @@ export default {
     hideGrid() {
       this.gridShown = false;
     },
+    // Redo && Undo
+    redo() {
+      this.drawing.putImageData(history.redo());
+    },
+    undo() {
+      this.drawing.putImageData(history.undo());
+    },
   },
   watch: {
     currentScale: {
@@ -205,7 +237,8 @@ export default {
     this.$refs['drawing-board'].onmousedown = this.mousedown;
     this.$refs['drawing-board'].onmouseout = this.mouseout;
     this.$refs['drawing-board'].onmouseenter = this.mouseenter;
-    document.body.onmouseup = this.mouseup;
+    this.$refs['drawing-board'].onclick = this.click;
+    document.body.onmouseup = this.bodyMouseup;
 
     this.drawing.init(this.$refs['drawing-board'], this.imageSize);
   },

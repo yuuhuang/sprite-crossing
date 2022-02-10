@@ -96,7 +96,7 @@ export const optionsKeypress = that => {
         if (e.ctrlKey && !e.shiftKey) {
             switch (e.key) {
                 case 'f':
-                    that.$refs.rescale.click();
+                    that.$refs.reset.click();
                     break;
                 case 'g':
                     that.$refs.grid.click();
