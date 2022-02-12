@@ -109,6 +109,8 @@
                 hide-details
                 v-model="$data[mode][index]"
                 @input="inputColor"
+                @focus="removeAllKeypress"
+                @blur="() => {addAllKeypress(); pickColor();}"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -127,6 +129,8 @@
                 hide-details
                 v-model="hexa"
                 @input="inputHex"
+                @focus="removeAllKeypress"
+                @blur="() => {addAllKeypress(); pickColor();}"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -145,7 +149,7 @@ import {RGBARules, HSLARules, hexRules} from '@/scripts/rules'
 
 import {checkRGBAObj, rgba2hexa, hsla2hexa, fixTwoDecimal} from '@/utils';
 
-import {colorsKeypress} from '@/scripts/keypress.js'
+import {addAllKeypress, removeAllKeypress, colorsKeypress} from '@/scripts/keypress.js'
 
 export default {
   name: 'Colors',
@@ -174,6 +178,9 @@ export default {
       RGBA: [0, 0, 0, 1],
       HSLA: [0, 0, 0, 1],
       hexa: '000000ff',
+
+      addAllKeypress,
+      removeAllKeypress,
     }
   },
   computed: {
@@ -198,7 +205,6 @@ export default {
     },
     pickCurrentColor(color) {
       this.currentColor = color;
-      this.pickColor();
       this.$emit('change-current-color', this.currentColor);
     },
     setCurrentColor(color) {

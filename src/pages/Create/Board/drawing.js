@@ -157,7 +157,7 @@ export class Drawing {
         downloadCanvasCtx.imageSmoothingEnabled = false;
         downloadCanvasCtx.webkitImageSmoothingEnabled = false;
         downloadCanvasCtx.mozImageSmoothingEnabled = false;
-        downloadCanvasCtx.drawImage(this.showCanvas, 0, 0);
+        downloadCanvasCtx.drawImage(this.showCanvas, 0, 0, size, size);
 
         const link = document.createElement('a');
         link.href = downloadCanvas.toDataURL();

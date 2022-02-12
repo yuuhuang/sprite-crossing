@@ -40,7 +40,7 @@ export const toolsKeypress = that => {
                     break;
                 case 'v':
                 case 'V':
-                    that.tool = 'move';
+                    that.tool = 'move-object';
                     break;
                 case ' ':
                     that.tool = 'move-board';

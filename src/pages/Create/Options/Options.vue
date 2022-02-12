@@ -75,5 +75,6 @@ export default {
   align-items: center;
   margin: auto;
   border-radius: 4px;
+  background-color: #fff;
 }
 </style>

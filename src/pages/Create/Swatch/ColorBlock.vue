@@ -1,14 +1,18 @@
 <template>
   <div
-    class="block"
-    ref="color-block"
+    class="bg-block"
     :style="{
       width: size,
       height: size,
-      backgroundColor: color,
-      borderRadius: '2px',
     }"
-  ></div>
+  >
+    <div
+      class="block"
+      ref="color-block"
+      :style="{backgroundColor: color}"
+    >
+    </div>
+  </div>
 </template>
 
 <script>
@@ -35,5 +39,12 @@ export default {
 <style scoped>
 .block {
   display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+.bg-block {
+  border-radius: 3px;
+  background: url("./../../../assets/background/transparent-small.png");
 }
 </style>

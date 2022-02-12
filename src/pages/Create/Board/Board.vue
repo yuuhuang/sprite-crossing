@@ -3,7 +3,12 @@
     <grid
       v-show="gridShown"
       :size="basicSize * currentScale + 8"
-      style="position: absolute; z-index: 1"
+      :style="{
+        position: 'absolute',
+         'z-index': 1,
+         transform: `translateX(${translateX * translateSpeed * currentScale}px)
+         translateY(${translateY * translateSpeed * currentScale}px)`
+      }"
     ></grid>
     <div
       class="canvas-container"
@@ -246,7 +251,6 @@ export default {
   },
   mounted() {
     this.create();
-
     this.$refs['drawing-board'].onwheel = this.zoomWheel;
     this.$refs['drawing-board'].onmousedown = this.mousedown;
     this.$refs['drawing-board'].onmouseout = this.mouseout;
@@ -278,11 +282,12 @@ export default {
   padding: 4px;
   border: solid 2px #ccc;
   border-radius: 2px;
-  background-color: #fff;
+  background-color: #fff0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .drawing-board {
+  background: url("./../../../assets/background/transparent-big.png");
 }
 </style>
