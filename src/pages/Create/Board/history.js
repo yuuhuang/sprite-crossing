@@ -13,7 +13,7 @@ export const history = {
             this.records.splice(0, this.index);
             this.index = 0;
         }
-        this.records.unshift(Uint8ClampedArray.of(...curImageData));
+        this.records.unshift(Uint8ClampedArray.from(curImageData));
         if (this.records.length > this.max) {
             this.records.length = this.max;
         }

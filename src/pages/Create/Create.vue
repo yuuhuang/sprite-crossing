@@ -22,7 +22,11 @@
     ></board>
     <options ref="options" :current-scale="currentScale" @click-option="clickOption"></options>
     <new ref="new" @create="create"></new>
-    <save ref="save" @save="(fileName, downloadSize) => this.$refs.board.save(fileName, downloadSize)"></save>
+    <save
+      ref="save"
+      :image-size="size"
+      @save="(fileName, downloadSize) => this.$refs.board.save(fileName, downloadSize)"
+    ></save>
   </div>
 </template>
 

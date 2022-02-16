@@ -1,7 +1,7 @@
 <template>
   <canvas
     ref="grid"
-    style="background-color: #fff0; pointer-events: none"
+    class="canvas"
   ></canvas>
 </template>
 
@@ -43,5 +43,10 @@ export default {
 </script>
 
 <style scoped>
-
+.canvas {
+  background-color: #fff0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+}
 </style>

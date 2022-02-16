@@ -4,8 +4,6 @@
       v-show="gridShown"
       :size="basicSize * currentScale + 8"
       :style="{
-        position: 'absolute',
-         'z-index': 1,
          transform: `translateX(${translateX * translateSpeed * currentScale}px)
          translateY(${translateY * translateSpeed * currentScale}px)`
       }"
@@ -16,9 +14,16 @@
         width: `${basicSize * currentScale + 8}px`,
         height: `${basicSize * currentScale + 8}px`,
         transform: `translateX(${translateX * translateSpeed * currentScale}px)
-         translateY(${translateY * translateSpeed * currentScale}px)`
+         translateY(${translateY * translateSpeed * currentScale}px)`,
       }"
     >
+      <mouse-track
+        ref="mouse-track"
+        :current-scale="currentScale"
+        :image-size="imageSize"
+        :color="color"
+        :tool="tool"
+      ></mouse-track>
       <canvas
         ref="drawing-board"
         class="drawing-board"
@@ -35,11 +40,12 @@ import {restrict} from '@/utils';
 import {Drawing} from './drawing';
 import {history} from './history';
 
+import MouseTrack from './MouseTrack';
 import Grid from './Grid';
 
 export default {
   name: 'Board',
-  components: {Grid},
+  components: {Grid, MouseTrack},
   props: {
     tool: String,
     color: Object,
@@ -67,6 +73,7 @@ export default {
       gridShown: false,
       // Drawing
       drawing: null,
+      listenDrawMove: false,
     };
   },
   methods: {
@@ -75,11 +82,11 @@ export default {
       switch (this.tool) {
         case 'pencil':
           this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
-          this.$refs['drawing-board'].onmousemove = this.mousemove;
+          this.listenDrawMove = true;
           break;
         case 'eraser':
           this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY));
-          this.$refs['drawing-board'].onmousemove = this.mousemove;
+          this.listenDrawMove = true;
           break;
         case 'eyedropper':
           this.$emit('eyedropper-pick', this.drawing.getPixelColor(this.getPosition(e.offsetX, e.offsetY)));
@@ -96,12 +103,12 @@ export default {
           break;
         case 'move-object':
           this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
-          this.$refs['drawing-board'].onmousemove = this.mousemove;
+          this.listenDrawMove = true;
           break;
         case 'move-board':
           this.translateFromX = e.offsetX;
           this.translateFromY = e.offsetY;
-          this.$refs['drawing-board'].onmousemove = this.mousemove;
+          this.listenDrawMove = true;
           break;
         case 'zoom-in': {
           this.zoomIn();
@@ -116,7 +123,7 @@ export default {
       }
     },
     mousemove(e) {
-      if (e.buttons) {
+      if (e.buttons && this.listenDrawMove) {
         switch (this.tool) {
           case 'pencil':
             this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
@@ -134,10 +141,9 @@ export default {
           default:
             break;
         }
+      } else {
+        this.$refs['mouse-track'].mousemove(e);
       }
-    },
-    removeMoveEvent() {
-      this.$refs['drawing-board'].onmousemove = null;
     },
     mouseenter(e) {
       switch (this.tool) {
@@ -166,6 +172,8 @@ export default {
           default:
             break;
         }
+      } else {
+        this.$refs['mouse-track'].mouseout(e);
       }
     },
     click() {
@@ -184,7 +192,7 @@ export default {
       }
     },
     bodyMouseup(e) {
-      this.removeMoveEvent();
+      this.listenDrawMove = false;
       if (this.tool === 'move-board') {
         this.translateFromX = e.offsetX;
         this.translateFromY = e.offsetY;
@@ -239,6 +247,7 @@ export default {
       this.drawing = new Drawing();
       this.drawing.init(this.$refs['drawing-board'], size ?? this.imageSize);
       this.drawing.putImageData();
+      this.$refs['mouse-track'].init(size ?? this.imageSize);
     }
   },
   watch: {
@@ -253,6 +262,7 @@ export default {
     this.create();
     this.$refs['drawing-board'].onwheel = this.zoomWheel;
     this.$refs['drawing-board'].onmousedown = this.mousedown;
+    this.$refs['drawing-board'].onmousemove = this.mousemove;
     this.$refs['drawing-board'].onmouseout = this.mouseout;
     this.$refs['drawing-board'].onmouseenter = this.mouseenter;
     this.$refs['drawing-board'].onclick = this.click;
@@ -261,6 +271,7 @@ export default {
   beforeDestroy() {
     this.$refs['drawing-board'].onwheel = null;
     this.$refs['drawing-board'].onmousedown = null;
+    this.$refs['drawing-board'].onmousemove = null;
     this.$refs['drawing-board'].onmouseout = null;
     this.$refs['drawing-board'].onmouseenter = null;
     this.$refs['drawing-board'].onclick = null;

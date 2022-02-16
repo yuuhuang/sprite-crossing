@@ -104,7 +104,12 @@ module.exports = {
                 'code': 120,
             }
         ],
-        'max-lines': 'error',
+        'max-lines': [
+            'error',
+            {
+                'max': 360,
+            }
+        ],
         'max-lines-per-function': 'error',
         'max-nested-callbacks': 'error',
         'max-params': 'error',

@@ -84,7 +84,7 @@ export class Drawing {
 
     putImageData(imageData) {
         if (imageData) {
-            this.imageData = new ImageData(Uint8ClampedArray.of(...imageData), this.size, this.size);
+            this.imageData = new ImageData(Uint8ClampedArray.from(imageData), this.size, this.size);
         }
         this.sourceCanvasCtx.putImageData(this.imageData, 0, 0);
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
@@ -140,6 +140,14 @@ export class Drawing {
 
         this.putImageData();
         this.setLast(cur);
+    }
+
+    clearBoard() {
+        this.sourceCanvasCtx.beginPath();
+        this.sourceCanvasCtx.fillStyle = 'rgba(0, 0, 0, 0)';
+        this.sourceCanvasCtx.fillRect(0, 0, this.size, this.size);
+        this.sourceCanvasCtx.stroke();
+        this.putImageData(this.sourceCanvasCtx.getImageData(0, 0, this.size, this.size).data);
     }
 
     translate(position) {
