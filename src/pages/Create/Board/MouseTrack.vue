@@ -49,22 +49,24 @@ export default {
         case 'rectangle-outline':
         case 'ellipse-fill':
         case 'ellipse-outline':
-          this.track.setLast(this.getPosition(e.offsetX, e.offsetY));
+          this.track.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
           break;
         default:
           break;
       }
     },
     mousemove(e) {
+      this.track.clearBoard();
       if (e.buttons) {
         switch (this.tool) {
           case 'straight':
-            this.track.clearBoard();
-            this.track.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+            this.track.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.track.getGeometryLast());
             break;
           case 'rectangle-fill':
+            this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
             break;
           case 'rectangle-outline':
+            this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
             break;
           case 'ellipse-fill':
             break;
@@ -81,8 +83,7 @@ export default {
           case 'rectangle-outline':
           case 'ellipse-fill':
           case 'ellipse-outline':
-            this.track.clearBoard();
-            this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+            this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
             break;
           default:
             break;
@@ -103,7 +104,7 @@ export default {
   },
   watch: {
     tool(val) {
-      if (!['pencil', 'rectangle-fill', 'rectangle-outline', 'ellipse-fill', 'ellipse-outline'].includes(val)) {
+      if (!['pencil', 'line', 'rectangle-fill', 'rectangle-outline', 'ellipse-fill', 'ellipse-outline'].includes(val)) {
         this.track.clearBoard();
       }
     }

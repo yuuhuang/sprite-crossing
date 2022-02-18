@@ -98,7 +98,7 @@ export default {
         case 'rectangle-outline':
         case 'ellipse-fill':
         case 'ellipse-outline':
-          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+          this.drawing.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
           this.$refs['mouse-track'].mousedown(e);
           break;
         case 'move-object':
@@ -174,10 +174,14 @@ export default {
     mouseup(e) {
       switch (this.tool) {
         case 'straight':
-          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.drawing.getGeometryLast());
           break;
         case 'rectangle-fill':
+          this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+          break;
         case 'rectangle-outline':
+          this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
         case 'ellipse-fill':
         case 'ellipse-outline':
           break;
