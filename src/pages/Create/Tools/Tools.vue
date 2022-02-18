@@ -148,7 +148,7 @@ export default {
   width: 30px;
   height: 90px !important;
   padding: 0 !important;
-  z-index: 999;
+  z-index: 199;
 }
 .vertical {
   transform: rotateZ(-90deg);
