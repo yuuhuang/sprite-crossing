@@ -20,7 +20,7 @@ export const history = {
     },
 
     canUndo() {
-        return !(!this.records.length || this.index + 1 >= Math.min(this.max - 1, this.records.length));
+        return !(!this.records.length || this.index + 1 >= Math.min(this.max - 1, this.records.length - 1));
     },
 
     canRedo() {
@@ -31,7 +31,7 @@ export const history = {
         if (!this.records.length) {
             return 0;
         }
-        if (this.index >= Math.min(this.max - 1, this.records.length)) {
+        if (this.index + 1 >= Math.min(this.max - 1, this.records.length - 1)) {
             return this.records[this.max - 1];
         }
 

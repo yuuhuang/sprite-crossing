@@ -45,17 +45,19 @@
         </tool-btn>
         <tool-sub-box
           :tool="tool"
-          default-tool="rectangle-fill"
-          :sub-tools="['rectangle-fill', 'rectangle-outline', 'ellipse-fill', 'ellipse-outline']"
+          default-tool="straight"
+          :sub-tools="['straight', 'rectangle-fill', 'rectangle-outline', 'ellipse-fill', 'ellipse-outline']"
           :tips="[
-              'Rectangle Filled Tool ( u )',
-              'Rectangle Outline Tool ( Shift + u )',
-              'Ellipse Filled Tool ( o )',
-              'Ellipse Outline Tool ( Shift + o )'
+            'Straight Line Tool ( l )',
+            'Rectangle Filled Tool ( u )',
+            'Rectangle Outline Tool ( Shift + u )',
+            'Ellipse Filled Tool ( o )',
+            'Ellipse Outline Tool ( Shift + o )'
           ]"
           @choose-tool="chooseSubTool"
         >
           <template>
+            <straight slot="straight"></straight>
             <rectangle-fill slot="rectangle-fill"></rectangle-fill>
             <rectangle-outline slot="rectangle-outline"></rectangle-outline>
             <ellipse-fill slot="ellipse-fill"></ellipse-fill>
@@ -77,21 +79,21 @@
             <move-board slot="move-board"></move-board>
           </template>
         </tool-sub-box>
-        <tool-sub-box
-          :tool="tool"
-          default-tool="zoom-in"
-          :sub-tools="['zoom-in', 'zoom-out']"
-          :tips="[
-            'Zoom In ( z )',
-            'Zoom Out ( Shift + z )',
-          ]"
-            @choose-tool="chooseSubTool"
-        >
-          <template>
-            <zoom-in slot="zoom-in"></zoom-in>
-            <zoom-out slot="zoom-out"></zoom-out>
-          </template>
-        </tool-sub-box>
+<!--        <tool-sub-box-->
+<!--          :tool="tool"-->
+<!--          default-tool="zoom-in"-->
+<!--          :sub-tools="['zoom-in', 'zoom-out']"-->
+<!--          :tips="[-->
+<!--            'Zoom In ( z )',-->
+<!--            'Zoom Out ( Shift + z )',-->
+<!--          ]"-->
+<!--            @choose-tool="chooseSubTool"-->
+<!--        >-->
+<!--          <template>-->
+<!--            <zoom-in slot="zoom-in"></zoom-in>-->
+<!--            <zoom-out slot="zoom-out"></zoom-out>-->
+<!--          </template>-->
+<!--        </tool-sub-box>-->
       </v-list-item-group>
       <tool-btn tip="Hide ToolBox">
         <chevron-left @click="showTools=false"></chevron-left>

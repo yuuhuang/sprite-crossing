@@ -90,7 +90,7 @@ export class Drawing {
         this.showCanvasCtx.drawImage(this.sourceCanvas, 0, 0, this.showCanvas.width, this.showCanvas.height);
     }
 
-    drawPoint (position, rgba) {
+    drawPoint (position, rgba, withoutSetLast) {
         const pos = this.restrictPosition(position);
 
         if (rgba) { // pencil
@@ -102,10 +102,13 @@ export class Drawing {
         }
 
         this.putImageData();
-        this.setLast(pos);
+
+        if (!withoutSetLast) {
+            this.setLast(pos);
+        }
     }
 
-    drawLine (current, rgba, last) {
+    drawLine (current, rgba, withoutSetLast) {
         const cur = this.restrictPosition(current);
 
         if (rgba) { // pencil
@@ -114,7 +117,7 @@ export class Drawing {
             this.sourceCanvasCtx.globalCompositeOperation = 'destination-out';
             rgba = this.emptyColor;
         }
-        last = last ?? this.getLast();
+        const last = this.getLast();
 
         let dx = Math.abs(cur.x - last.x);
         let dy = Math.abs(cur.y - last.y);
@@ -139,7 +142,10 @@ export class Drawing {
         this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
 
         this.putImageData();
-        this.setLast(cur);
+
+        if (!withoutSetLast) {
+            this.setLast(cur);
+        }
     }
 
     clearBoard() {

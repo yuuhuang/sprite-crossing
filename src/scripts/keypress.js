@@ -30,6 +30,10 @@ export const toolsKeypress = that => {
                 case 'G':
                     that.tool = 'bucket';
                     break;
+                case 'l':
+                case 'L':
+                    that.tool = 'straight';
+                    break;
                 case 'u':
                 case 'U':
                     that.tool = e.shiftKey ? 'rectangle-outline' : 'rectangle-fill';

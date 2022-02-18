@@ -93,13 +93,13 @@ export default {
           break;
         case 'bucket':
           break;
+        case 'straight':
         case 'rectangle-fill':
-          break;
         case 'rectangle-outline':
-          break;
         case 'ellipse-fill':
-          break;
         case 'ellipse-outline':
+          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+          this.$refs['mouse-track'].mousedown(e);
           break;
         case 'move-object':
           this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
@@ -110,14 +110,6 @@ export default {
           this.translateFromY = e.offsetY;
           this.listenDrawMove = true;
           break;
-        case 'zoom-in': {
-          this.zoomIn();
-          break;
-        }
-        case 'zoom-out': {
-          this.zoomOut();
-          break;
-        }
         default:
           break;
       }
@@ -156,24 +148,11 @@ export default {
     },
     mouseout(e) {
       if (e.buttons) {
-        switch (this.tool) {
-          case 'pencil':
-            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
-            history.record(this.drawing.imageData.data);
-            break;
-          case 'eraser':
-          case 'bucket':
-          case 'rectangle-fill':
-          case 'rectangle-outline':
-          case 'ellipse-fill':
-          case 'ellipse-outline':
-            history.record(this.drawing.imageData.data);
-            break;
-          default:
-            break;
+        if (this.tool === 'pencil') {
+          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
         }
       } else {
-        this.$refs['mouse-track'].mouseout(e);
+        this.$refs['mouse-track'].clear();
       }
     },
     click() {
@@ -181,11 +160,26 @@ export default {
         case 'pencil':
         case 'eraser':
         case 'bucket':
+        case 'straight':
         case 'rectangle-fill':
         case 'rectangle-outline':
         case 'ellipse-fill':
         case 'ellipse-outline':
           history.record(this.drawing.imageData.data);
+          break;
+        default:
+          break;
+      }
+    },
+    mouseup(e) {
+      switch (this.tool) {
+        case 'straight':
+          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
+        case 'rectangle-fill':
+        case 'rectangle-outline':
+        case 'ellipse-fill':
+        case 'ellipse-outline':
           break;
         default:
           break;
@@ -197,6 +191,7 @@ export default {
         this.translateFromX = e.offsetX;
         this.translateFromY = e.offsetY;
       }
+      this.$refs['mouse-track'].clear();
     },
     getPosition(offsetX, offsetY) {
       return {
@@ -208,12 +203,6 @@ export default {
     zoomWheel(e) {
       e.preventDefault();
       this.currentScale = restrict(this.currentScale * (1 + e.deltaY * this.scaleSpeed), this.minScale, this.maxScale);
-    },
-    zoomIn() {
-      this.currentScale = restrict(this.currentScale * 1.25, this.minScale, this.maxScale);
-    },
-    zoomOut() {
-      this.currentScale = restrict(this.currentScale * 0.8, this.minScale, this.maxScale);
     },
     zoomResize() {
       this.currentScale = 0.25;
@@ -266,6 +255,7 @@ export default {
     this.$refs['drawing-board'].onmouseout = this.mouseout;
     this.$refs['drawing-board'].onmouseenter = this.mouseenter;
     this.$refs['drawing-board'].onclick = this.click;
+    this.$refs['drawing-board'].onmouseup = this.mouseup;
     document.body.onmouseup = this.bodyMouseup;
   },
   beforeDestroy() {
@@ -275,6 +265,7 @@ export default {
     this.$refs['drawing-board'].onmouseout = null;
     this.$refs['drawing-board'].onmouseenter = null;
     this.$refs['drawing-board'].onclick = null;
+    this.$refs['drawing-board'].onmouseup = null;
     document.body.onmouseup = null;
   }
 }

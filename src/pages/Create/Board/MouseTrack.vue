@@ -42,23 +42,56 @@ export default {
       this.track.init(this.$refs.canvas, size ?? this.imageSize);
       this.track.putImageData();
     },
-    mousemove(e) {
+    mousedown(e) {
       switch (this.tool) {
-        case 'pencil':
+        case 'straight':
         case 'rectangle-fill':
         case 'rectangle-outline':
         case 'ellipse-fill':
         case 'ellipse-outline':
-          this.track.clearBoard();
-          this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
+          this.track.setLast(this.getPosition(e.offsetX, e.offsetY));
           break;
         default:
           break;
       }
+    },
+    mousemove(e) {
+      if (e.buttons) {
+        switch (this.tool) {
+          case 'straight':
+            this.track.clearBoard();
+            this.track.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+            break;
+          case 'rectangle-fill':
+            break;
+          case 'rectangle-outline':
+            break;
+          case 'ellipse-fill':
+            break;
+          case 'ellipse-outline':
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (this.tool) {
+          case 'pencil':
+          case 'straight':
+          case 'rectangle-fill':
+          case 'rectangle-outline':
+          case 'ellipse-fill':
+          case 'ellipse-outline':
+            this.track.clearBoard();
+            this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+            break;
+          default:
+            break;
+        }
+      }
 
       return false;
     },
-    mouseout() {
+    clear() {
       this.track.clearBoard();
     },
     getPosition(offsetX, offsetY) {
