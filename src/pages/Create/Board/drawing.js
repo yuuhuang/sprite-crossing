@@ -189,44 +189,30 @@ export class Drawing {
         let xh = 0, yh = hRadius, xw = wRadius, yw = 0;
         while (yh >= 0) {
             xh = Math.sqrt((1 - yh ** 2 / hRadius ** 2) * wRadius ** 2);
-            if (Math.round(xCenter + xh) === Math.round(xCenter - xh)) {
-                this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
-                this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
-                this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
-                this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
-                if (fill) {
-                    for (let i = Math.floor(xCenter - xh); i <= Math.ceil(xCenter + xh); i++) {
-                        this.setPixelColor({x: i, y: Math.round(yCenter + yh)}, rgba);
-                        this.setPixelColor({x: i, y: Math.round(yCenter - yh)}, rgba);
-                    }
-                }
-            } else {
-                this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
-                if (fill) {
-                    for (let i = Math.round(xCenter - xh); i <= Math.round(xCenter + xh); i++) {
-                        this.setPixelColor({x: i, y: Math.round(yCenter + yh)}, rgba);
-                        this.setPixelColor({x: i, y: Math.round(yCenter - yh)}, rgba);
-                    }
+            this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
+            this.setPixelColor({x: 2 * xCenter - Math.round(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
+            this.setPixelColor({x: Math.round(xCenter - xh), y: 2 * yCenter - Math.round(yCenter - yh)}, rgba);
+            this.setPixelColor({
+                x: 2 * xCenter - Math.round(xCenter - xh),
+                y: 2 * yCenter - Math.round(yCenter - yh)
+            }, rgba);
+            if (fill) {
+                for (let i = Math.round(xCenter - xh); i <= 2 * xCenter - Math.round(xCenter - xh); i++) {
+                    this.setPixelColor({x: i, y: Math.round(yCenter - yh)}, rgba);
+                    this.setPixelColor({x: i, y: 2 * yCenter - Math.round(yCenter - yh)}, rgba);
                 }
             }
             yh--;
         }
         while (xw >= 0) {
             yw = Math.sqrt((1 - xw ** 2 / wRadius ** 2) * hRadius ** 2);
-            if (Math.round(yCenter + yw) === Math.round(yCenter - yw)) {
-                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.ceil(yCenter + yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.floor(yCenter - yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.ceil(yCenter + yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.floor(yCenter - yw)}, rgba);
-            } else {
-                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter + yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter - yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter + yw)}, rgba);
-                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter - yw)}, rgba);
-            }
+            this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter - yw)}, rgba);
+            this.setPixelColor({x: 2 * xCenter - Math.round(xCenter - xw), y: Math.round(yCenter - yw)}, rgba);
+            this.setPixelColor({x: Math.round(xCenter - xw), y: 2 * yCenter - Math.round(yCenter - yw)}, rgba);
+            this.setPixelColor({
+                x: 2 * xCenter - Math.round(xCenter - xw),
+                y: 2 * yCenter - Math.round(yCenter - yw)
+            }, rgba);
             xw--;
         }
         this.putImageData();
