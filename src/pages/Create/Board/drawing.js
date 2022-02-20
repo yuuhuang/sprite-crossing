@@ -218,6 +218,54 @@ export class Drawing {
         this.putImageData();
     }
 
+    fill (current, rgba) {
+        const pixelStack = [{x: current.x, y: current.y}];
+        const targetColor = this.getPixelColor(current);
+
+        const compareRGBA =
+            (rgba1, rgba2) => rgba1.r === rgba2.r && rgba1.g === rgba2.g && rgba1.b === rgba2.b && rgba1.a === rgba2.a;
+        if (compareRGBA(rgba, targetColor)) {
+            return;
+        }
+
+        while (pixelStack.length > 0) {
+            let reachLeft = false, reachRight = false;
+            // eslint-disable-next-line prefer-const
+            let {x, y} = pixelStack.shift();
+
+            while (y >= 0 && compareRGBA(this.getPixelColor({x, y}), targetColor)) {
+                y--;
+            }
+
+            while (y++ < this.size && compareRGBA(this.getPixelColor({x, y}), targetColor)) {
+                this.setPixelColor({x, y}, rgba);
+
+                if (x > 0) {
+                    if (compareRGBA(this.getPixelColor({x: x - 1, y}), targetColor)) {
+                        // eslint-disable-next-line max-depth
+                        if (!reachLeft) {
+                            pixelStack.push({x: x - 1, y});
+                            reachLeft = true;
+                        }
+                    } else if (reachLeft) {
+                        reachLeft = false;
+                    }
+                }
+                if (x < this.size - 1) {
+                    if (compareRGBA(this.getPixelColor({x: x + 1, y}), targetColor)) {
+                        if (!reachRight) {
+                            pixelStack.push({x: x + 1, y});
+                            reachRight = true;
+                        }
+                    } else if (reachRight) {
+                        reachRight = false;
+                    }
+                }
+            }
+        }
+        this.putImageData();
+    }
+
     clearBoard() {
         this.sourceCanvasCtx.clearRect(0, 0, this.size, this.size);
         this.putImageData(this.sourceCanvasCtx.getImageData(0, 0, this.size, this.size).data);

@@ -92,6 +92,7 @@ export default {
           this.$emit('eyedropper-pick', this.drawing.getPixelColor(this.getPosition(e.offsetX, e.offsetY)));
           break;
         case 'bucket':
+          this.drawing.fill(this.getPosition(e.offsetX, e.offsetY), this.color);
           break;
         case 'straight':
         case 'rectangle-fill':
