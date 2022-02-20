@@ -69,8 +69,10 @@ export default {
             this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
             break;
           case 'ellipse-fill':
+            this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
             break;
           case 'ellipse-outline':
+            this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
             break;
           default:
             break;

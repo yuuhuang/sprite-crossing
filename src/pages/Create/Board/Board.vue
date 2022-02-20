@@ -183,7 +183,10 @@ export default {
           this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
           break;
         case 'ellipse-fill':
+          this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+          break;
         case 'ellipse-outline':
+          this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
           break;
         default:
           break;
