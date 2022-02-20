@@ -128,27 +128,20 @@ export class Drawing {
         }
         last = last ?? this.getLast();
 
-        let dx = Math.abs(cur.x - last.x);
-        let dy = Math.abs(cur.y - last.y);
-
-        const xDir = cur.x - last.x >= 0 ? 1 : -1;
-        const yDir = cur.y - last.y >= 0 ? 1 : -1;
-
-        let lineX = last.x;
-        let lineY = last.y;
-
-        const step = dx >= dy ? dx : dy;
-        dx /= step;
-        dy /= step;
+        const width = Math.abs(cur.x - last.x), height = Math.abs(cur.y - last.y);
+        const longSide = Math.max(width, height);
+        const xDir = cur.x - last.x >= 0 ? 1 : -1, yDir = cur.y - last.y >= 0 ? 1 : -1;
+        let {x, y} = last;
+        const xStep = width / longSide, yStep = height / longSide;
 
         let i = 0
-        while (i < step) {
-            this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
-            lineX += (dx * xDir)
-            lineY += (dy * yDir)
-            i += 1
+        while (i < longSide) {
+            this.setPixelColor({x: Math.round(x), y: Math.round(y)}, rgba);
+            x += (xStep * xDir);
+            y += (yStep * yDir);
+            i++;
         }
-        this.setPixelColor({x: Math.floor(lineX), y: Math.floor(lineY)}, rgba);
+        this.setPixelColor({x: Math.round(x), y: Math.round(y)}, rgba);
 
         this.putImageData();
         this.setLast(cur);
@@ -191,51 +184,51 @@ export class Drawing {
     drawArc (current, rgba, fill) {
         const cur = this.restrictPosition(current);
         const xLast = this.getGeometryLast().x, yLast = this.getGeometryLast().y;
-        const xCenter = (cur.x + xLast) / 2,
-            yCenter = (cur.y + yLast) / 2;
-        const hRadius = Math.abs(cur.y - yLast) / 2;
-        const wRadius = Math.abs(cur.x - xLast) / 2;
-        let xh = 0, yh = hRadius;
-        let xw = wRadius, yw = 0;
-
-        while (yh >= 0 || xw >= 0) {
-            if (yh >= 0) {
-                xh = Math.sqrt((1 - yh ** 2 / hRadius ** 2) * wRadius ** 2);
+        const xCenter = (cur.x + xLast) / 2, yCenter = (cur.y + yLast) / 2;
+        const hRadius = Math.abs(cur.y - yLast) / 2, wRadius = Math.abs(cur.x - xLast) / 2;
+        let xh = 0, yh = hRadius, xw = wRadius, yw = 0;
+        while (yh >= 0) {
+            xh = Math.sqrt((1 - yh ** 2 / hRadius ** 2) * wRadius ** 2);
+            if (Math.round(xCenter + xh) === Math.round(xCenter - xh)) {
+                this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
+                this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
+                this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
+                this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
+                if (fill) {
+                    for (let i = Math.floor(xCenter - xh); i <= Math.ceil(xCenter + xh); i++) {
+                        this.setPixelColor({x: i, y: Math.round(yCenter + yh)}, rgba);
+                        this.setPixelColor({x: i, y: Math.round(yCenter - yh)}, rgba);
+                    }
+                }
+            } else {
+                this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
                 if (fill) {
                     for (let i = Math.round(xCenter - xh); i <= Math.round(xCenter + xh); i++) {
                         this.setPixelColor({x: i, y: Math.round(yCenter + yh)}, rgba);
                         this.setPixelColor({x: i, y: Math.round(yCenter - yh)}, rgba);
                     }
-                } else if (Math.round(xCenter + xh) === Math.round(xCenter - xh)) {
-                    this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
-                    this.setPixelColor({x: Math.ceil(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
-                    this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
-                    this.setPixelColor({x: Math.floor(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
-                } else {
-                    this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter + yh)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter + xh), y: Math.round(yCenter - yh)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter + yh)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xh), y: Math.round(yCenter - yh)}, rgba);
                 }
-                yh--;
             }
-            if (xw >= 0) {
-                yw = Math.sqrt((1 - xw ** 2 / wRadius ** 2) * hRadius ** 2);
-                if (Math.round(yCenter + yw) === Math.round(yCenter - yw)) {
-                    this.setPixelColor({x: Math.round(xCenter + xw), y: Math.ceil(yCenter + yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter + xw), y: Math.floor(yCenter - yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xw), y: Math.ceil(yCenter + yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xw), y: Math.floor(yCenter - yw)}, rgba);
-                } else {
-                    this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter + yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter - yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter + yw)}, rgba);
-                    this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter - yw)}, rgba);
-                }
-                xw--;
-            }
+            yh--;
         }
-
+        while (xw >= 0) {
+            yw = Math.sqrt((1 - xw ** 2 / wRadius ** 2) * hRadius ** 2);
+            if (Math.round(yCenter + yw) === Math.round(yCenter - yw)) {
+                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.ceil(yCenter + yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.floor(yCenter - yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.ceil(yCenter + yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.floor(yCenter - yw)}, rgba);
+            } else {
+                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter + yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter + xw), y: Math.round(yCenter - yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter + yw)}, rgba);
+                this.setPixelColor({x: Math.round(xCenter - xw), y: Math.round(yCenter - yw)}, rgba);
+            }
+            xw--;
+        }
         this.putImageData();
     }
 
