@@ -242,10 +242,25 @@ export default {
     create(size) {
       history.init();
       this.drawing = new Drawing();
-      this.drawing.init(this.$refs['drawing-board'], size ?? this.imageSize);
-      this.drawing.putImageData();
+      if (size) {
+        this.drawing.init(this.$refs['drawing-board'], size);
+        this.drawing.putImageData();
+      } else if (Number(window.localStorage.getItem('size'))) {
+        this.drawing.init(this.$refs['drawing-board'], Number(window.localStorage.getItem('size')));
+        const localImageData = JSON.parse(window.localStorage.getItem('imageData'));
+        localImageData.length = Number(window.localStorage.getItem('size')) ** 2 * 4;
+        this.drawing.putImageData(Array.from(localImageData));
+      } else {
+        this.drawing.init(this.$refs['drawing-board'], this.imageSize);
+        this.drawing.putImageData();
+      }
       this.$refs['mouse-track'].init(size ?? this.imageSize);
-    }
+    },
+    // Storage
+    storage() {
+      window.localStorage.setItem('size', JSON.stringify(this.imageSize));
+      window.localStorage.setItem('imageData', JSON.stringify(this.drawing.imageData.data));
+    },
   },
   watch: {
     currentScale: {
@@ -265,6 +280,7 @@ export default {
     this.$refs['drawing-board'].onclick = this.click;
     this.$refs['drawing-board'].onmouseup = this.mouseup;
     document.body.onmouseup = this.bodyMouseup;
+    window.onbeforeunload = this.storage;
   },
   beforeDestroy() {
     this.$refs['drawing-board'].onwheel = null;
@@ -275,6 +291,8 @@ export default {
     this.$refs['drawing-board'].onclick = null;
     this.$refs['drawing-board'].onmouseup = null;
     document.body.onmouseup = null;
+    window.onbeforeunload = null;
+    this.storage();
   }
 }
 </script>
