@@ -36,6 +36,14 @@ export default {
       this.ctx.lineTo(this.size, this.size / 2);
       this.ctx.moveTo(this.size / 2, 0);
       this.ctx.lineTo(this.size / 2, this.size);
+      this.ctx.moveTo(0, this.size / 4 + 1);
+      this.ctx.lineTo(this.size, this.size / 4 + 1);
+      this.ctx.moveTo(0, this.size * 3 / 4 - 1);
+      this.ctx.lineTo(this.size, this.size * 3 / 4 - 1);
+      this.ctx.moveTo(this.size / 4 + 1, 0);
+      this.ctx.lineTo(this.size / 4 + 1, this.size);
+      this.ctx.moveTo(this.size * 3 / 4 - 1, 0);
+      this.ctx.lineTo(this.size * 3 / 4 - 1, this.size);
       this.ctx.stroke();
     }
   }
