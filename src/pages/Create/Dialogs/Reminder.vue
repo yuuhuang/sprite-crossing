@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import {addAllKeypress, removeAllKeypress} from '@/scripts/keypress';
+
 export default {
   name: 'Reminder',
   data() {
@@ -26,17 +28,19 @@ export default {
   methods: {
     showReminder() {
       this.show = true;
+      removeAllKeypress();
     },
     hideReminder() {
       this.show = false;
+      addAllKeypress();
     },
     showNew() {
-      this.$emit('open-new');
       this.hideReminder();
+      this.$emit('open-new');
     },
     showSave() {
-      this.$emit('open-save');
       this.hideReminder();
+      this.$emit('open-save');
     }
   }
 }

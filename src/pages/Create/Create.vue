@@ -47,6 +47,7 @@ import New from './Dialogs/New';
 import Reminder from './Dialogs/Reminder';
 
 import {history} from './Board/history';
+import {addAllKeypress, removeAllKeypress} from '@/scripts/keypress';
 
 export default {
   name: 'Create',
@@ -140,7 +141,13 @@ export default {
       this.size = size;
       this.$refs.board.create(size);
     }
-  }
+  },
+  mounted() {
+    addAllKeypress();
+  },
+  beforeDestroy() {
+    removeAllKeypress();
+  },
 }
 </script>
 
