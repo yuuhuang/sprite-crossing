@@ -3,7 +3,9 @@
     <v-card>
       <v-card-title>
         <v-container subtitle-1>
-          Do you want to save the current work?
+          Do you want to
+          <span class="striking"> save </span>
+          the current work?
         </v-container>
       </v-card-title>
       <v-card-actions>
@@ -47,5 +49,8 @@ export default {
 </script>
 
 <style scoped>
-
+.striking {
+  color: #FF4785;
+  font-weight: bolder;
+}
 </style>
