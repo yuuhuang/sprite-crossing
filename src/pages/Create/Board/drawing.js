@@ -1,5 +1,4 @@
 import {restrict} from '@/utils'
-import {history} from './history';
 
 export class Drawing {
     constructor() {
@@ -45,7 +44,6 @@ export class Drawing {
         this.sourceCanvasCtx.mozImageSmoothingEnabled = false;
 
         this.imageData = this.sourceCanvasCtx.getImageData(0, 0, imageSize, imageSize);
-        history.record(this.imageData.data);
     }
 
     getIndex (x, y) {

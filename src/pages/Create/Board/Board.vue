@@ -254,6 +254,7 @@ export default {
         this.drawing.init(this.$refs['drawing-board'], this.imageSize);
         this.drawing.putImageData();
       }
+      history.record(this.drawing.imageData.data);
       this.$refs['mouse-track'].init(size ?? this.imageSize);
     },
     // Storage

@@ -49,7 +49,10 @@ export default {
   methods: {
     clickOption(val) {
       this.$emit('click-option', val);
-    }
+    },
+    pressOption(val) {
+      this.$refs[`${val}`].click();
+    },
   },
   mounted() {
     optionsKeypress(this);

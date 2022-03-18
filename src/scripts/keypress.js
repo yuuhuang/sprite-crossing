@@ -112,23 +112,28 @@ export const optionsKeypress = that => {
         if (e.ctrlKey && !e.shiftKey) {
             switch (e.key) {
                 case 'f':
-                    that.$refs.reset.click();
+                case 'F':
+                    that.pressOption('reset');
                     break;
                 case 'g':
-                    that.$refs.grid.click();
+                case 'G':
+                    that.pressOption('grid');
                     break;
                 case 'z':
+                case 'Z':
                     if (history.canUndo()) {
-                        that.$refs.undo.click();
+                        that.pressOption('undo');
                     }
                     break;
                 case 'y':
+                case 'Y':
                     if (history.canRedo()) {
-                        that.$refs.redo.click();
+                        that.pressOption('redo');
                     }
                     break;
                 case 's':
-                    that.$refs.save.click();
+                case 'S':
+                    that.pressOption('save');
                     break;
                 default:
                     break;
