@@ -14,7 +14,7 @@
     ></colors>
     <board
       ref="board"
-      :image-size="size"
+      :size="size"
       :tool="currentTool"
       :color="currentColor.rgba"
       @scale="scale => this.currentScale=scale"
@@ -27,6 +27,11 @@
       :image-size="size"
       @save="(fileName, downloadSize) => this.$refs.board.save(fileName, downloadSize)"
     ></save>
+    <reminder
+      ref="reminder"
+      @open-new="() => this.$refs.new.showNew()"
+      @open-save="() => this.$refs.save.showSave()"
+    ></reminder>
   </div>
 </template>
 
@@ -39,10 +44,14 @@ import Board from './Board/Board';
 import Options from './Options/Options';
 import Save from './Dialogs/Save';
 import New from './Dialogs/New';
+import Reminder from './Dialogs/Reminder';
+
+import {history} from './Board/history';
 
 export default {
   name: 'Create',
   components: {
+    Reminder,
     New,
     Save,
     Options,
@@ -111,7 +120,11 @@ export default {
       }
     },
     newProject() {
-      this.$refs.new.showNew();
+      if (history.records.length > 1) {
+        this.$refs.reminder.showReminder();
+      } else {
+        this.$refs.new.showNew();
+      }
     },
     undo() {
       this.$refs.board.undo();

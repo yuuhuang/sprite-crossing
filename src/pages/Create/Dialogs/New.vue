@@ -3,19 +3,24 @@
     <v-card>
       <v-card-title style="color: #FF4785">New Project</v-card-title>
       <v-card-text>
-        <v-form ref="form">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                color="#ff4785"
-                label="Size"
-                v-model="size"
-                suffix="px"
-                :rules="[x => /^[0-9]+$/.test(x) || 'Number Needed']"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-form>
+        <v-container>
+          <v-form ref="form">
+            <v-row>
+              <v-col cols="6">
+                <v-text-field
+                  color="#ff4785"
+                  label="Size"
+                  v-model="size"
+                  suffix="px"
+                  :rules="[
+                    x => /^[0-9]+$/.test(x) && Number(x) > 0 || 'Positive Integer Needed',
+                    x => Number(x) <= 256 || 'Not Greater Than 256px Please'
+                  ]"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

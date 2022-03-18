@@ -49,7 +49,7 @@ export default {
   props: {
     tool: String,
     color: Object,
-    imageSize: {
+    size: {
       type: Number,
       default: 32
     }
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       // Basic
+      imageSize: this.size,
       basicSize: 2560,
       // Scale
       currentScale: 0.25,
@@ -245,11 +246,12 @@ export default {
       if (size) {
         this.drawing.init(this.$refs['drawing-board'], size);
         this.drawing.putImageData();
-      } else if (Number(window.localStorage.getItem('size'))) {
+      } else if (Number(window.localStorage.getItem('size')) && Number(window.localStorage.getItem('size'))) {
         this.drawing.init(this.$refs['drawing-board'], Number(window.localStorage.getItem('size')));
         const localImageData = JSON.parse(window.localStorage.getItem('imageData'));
         localImageData.length = Number(window.localStorage.getItem('size')) ** 2 * 4;
         this.drawing.putImageData(Array.from(localImageData));
+        this.imageSize = Number(window.localStorage.getItem('size'));
       } else {
         this.drawing.init(this.$refs['drawing-board'], this.imageSize);
         this.drawing.putImageData();
@@ -264,6 +266,9 @@ export default {
     },
   },
   watch: {
+    size(val) {
+      this.imageSize = val;
+    },
     currentScale: {
       handler(val) {
         this.$emit('scale', val);

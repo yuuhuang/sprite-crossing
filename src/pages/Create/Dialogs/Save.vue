@@ -3,23 +3,25 @@
     <v-card>
       <v-card-title style="color: #FF4785">Save</v-card-title>
       <v-card-text>
-        <v-form ref="form">
-          <v-text-field color="#ff4785" label="File Name" v-model="fileName"></v-text-field>
-          <v-row>
-            <v-col cols="6">
-              <v-text-field color="#ff4785" label="Size" :value="`${downloadSize}px`" disabled></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                color="#ff4785"
-                label="Resize"
-                v-model="resize"
-                suffix="%"
-                :rules="[x => /^[0-9]+$/.test(x) || 'Percentage Needed']"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-form>
+        <v-container>
+          <v-form ref="form">
+            <v-text-field color="#ff4785" label="File Name" v-model="fileName"></v-text-field>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field color="#ff4785" label="Size" :value="`${downloadSize}px`" disabled></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  color="#ff4785"
+                  label="Resize"
+                  v-model="resize"
+                  suffix="%"
+                  :rules="[x => /^[0-9]+$/.test(x) || 'Percentage Needed']"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
