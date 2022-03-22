@@ -13,7 +13,7 @@ module.exports = {
         'SharedArrayBuffer': 'readonly'
     },
     'parserOptions': {
-        'ecmaVersion': 2018,
+        'ecmaVersion': 2020,
         'sourceType': 'module'
     },
     'plugins': [
@@ -50,7 +50,7 @@ module.exports = {
         'comma-dangle': 'off',
         'comma-spacing': 'error',
         'comma-style': 'error',
-        'complexity': 'error',
+        'complexity': 'off',
         'computed-property-spacing': 'error',
         'consistent-return': 'error',
         'consistent-this': 'error',
@@ -81,7 +81,7 @@ module.exports = {
         ],
         'indent': 'off',
         'indent-legacy': 'off',
-        'init-declarations': 'error',
+        'init-declarations': 'off',
         'jsx-quotes': 'error',
         'key-spacing': 'error',
         'keyword-spacing': [
@@ -104,14 +104,19 @@ module.exports = {
                 'code': 120,
             }
         ],
-        'max-lines': 'error',
+        'max-lines': [
+            'error',
+            {
+                'max': 360,
+            }
+        ],
         'max-lines-per-function': 'error',
         'max-nested-callbacks': 'error',
         'max-params': 'error',
         'max-statements': 'off',
         'max-statements-per-line': 'error',
         'multiline-comment-style': 'off',
-        'multiline-ternary': 'error',
+        'multiline-ternary': 'off',
         'new-cap': 'error',
         'new-parens': 'error',
         'newline-after-var': 'off',
@@ -138,7 +143,7 @@ module.exports = {
         'no-extend-native': 'error',
         'no-extra-bind': 'error',
         'no-extra-label': 'error',
-        'no-extra-parens': 'error',
+        'no-extra-parens': 'off',
         'no-floating-decimal': 'error',
         'no-implicit-coercion': 'error',
         'no-implicit-globals': 'error',
@@ -155,7 +160,7 @@ module.exports = {
         'no-magic-numbers': 'off',
         'no-mixed-operators': 'off',
         'no-mixed-requires': 'error',
-        'no-multi-assign': 'error',
+        'no-multi-assign': 'off',
         'no-multi-spaces': 'error',
         'no-multi-str': 'error',
         'no-multiple-empty-lines': 'error',
@@ -169,9 +174,9 @@ module.exports = {
         'no-new-require': 'error',
         'no-new-wrappers': 'error',
         'no-octal-escape': 'error',
-        'no-param-reassign': 'error',
+        'no-param-reassign': 'off',
         'no-path-concat': 'error',
-        'no-plusplus': 'error',
+        'no-plusplus': 'off',
         'no-process-env': 'off',
         'no-process-exit': 'error',
         'no-proto': 'error',
@@ -191,7 +196,7 @@ module.exports = {
         'no-sync': 'error',
         'no-tabs': 'error',
         'no-template-curly-in-string': 'error',
-        'no-ternary': 'error',
+        'no-ternary': 'off',
         'no-throw-literal': 'error',
         'no-trailing-spaces': 'error',
         'no-undef-init': 'error',
@@ -199,7 +204,7 @@ module.exports = {
         'no-underscore-dangle': 'error',
         'no-unmodified-loop-condition': 'error',
         'no-unneeded-ternary': 'error',
-        'no-unused-expressions': 'error',
+        'no-unused-expressions': 'off',
         'no-use-before-define': 'error',
         'no-useless-call': 'error',
         'no-useless-computed-key': 'error',
@@ -280,6 +285,10 @@ module.exports = {
         'yoda': [
             'error',
             'never'
-        ]
+        ],
+
+        'vue/no-parsing-error': [2, {
+            'invalid-first-character-of-tag-name': false
+        }]
     }
 };
