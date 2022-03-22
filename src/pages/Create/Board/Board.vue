@@ -111,6 +111,7 @@ export default {
           this.translateFromX = e.offsetX;
           this.translateFromY = e.offsetY;
           this.listenDrawMove = true;
+          this.$refs['drawing-board'].style.cursor = 'grabbing';
           break;
         default:
           break;
@@ -190,6 +191,9 @@ export default {
         case 'ellipse-outline':
           this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
           break;
+        case 'move-board':
+          this.$refs['drawing-board'].style.cursor = 'grab';
+          break;
         default:
           break;
       }
@@ -268,6 +272,15 @@ export default {
   watch: {
     size(val) {
       this.imageSize = val;
+    },
+    tool(val) {
+      if (val === 'move-object') {
+        this.$refs['drawing-board'].style.cursor = 'move';
+      } else if (val === 'move-board') {
+        this.$refs['drawing-board'].style.cursor = 'grab';
+      } else {
+        this.$refs['drawing-board'].style.cursor = '';
+      }
     },
     currentScale: {
       handler(val) {
