@@ -4,7 +4,6 @@
       <v-btn
         text
         :color="showMenu ? '#FF4785' : '#666'"
-        small
         v-bind="attrs"
         v-on="on"
       >

@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" class="chooseCard" ref="card">
+  <v-card width="100%" class="chooseCard">
     <v-card-subtitle class="pt-2 pb-2">
       <v-row>
         <v-col cols="6">
@@ -9,7 +9,11 @@
               class="elevation-6"
               alt="avatar"
               :src="avatar"
-            ></v-img>
+            >
+              <template v-slot:placeholder>
+                <v-skeleton-loader height="100%" type="image"></v-skeleton-loader>
+              </template>
+            </v-img>
             <account v-else class="gray-filter"></account>
           </v-avatar>
           <span class="ml-1 pointer-cursor" @click="openProfile">{{nickname}}</span>
@@ -20,19 +24,15 @@
         </v-col>
       </v-row>
     </v-card-subtitle>
-    <v-skeleton-loader
-      loading
-      type="image"
-      :height="imgHeight"
+    <v-img
+      class="pointer-cursor"
+      :src="image"
+      @click="openImg"
     >
-      <v-img
-        class="pointer-cursor"
-        :height="imgHeight"
-        :src="image"
-        @click="openImg"
-        @load="loadedImg = true"
-      ></v-img>
-    </v-skeleton-loader>
+      <template v-slot:placeholder>
+        <v-skeleton-loader type="image" height="100%" tile></v-skeleton-loader>
+      </template>
+    </v-img>
     <v-card-title class="mt-n2">{{ title }}</v-card-title>
     <v-card-text class="mt-n4 overflow-hidden" style="max-height: 64px">
       {{ text }}
@@ -71,10 +71,6 @@ export default {
 
     // data internal
     id: Number,
-    aspectRatio: {
-      type: Number,
-      default: 1
-    },
     // data showing
     avatar: String,
     nickname: {
@@ -118,10 +114,6 @@ export default {
     return {
       like: false,
       likes: this.likeNum,
-      loadedImg: false,
-      loadedAvatar: false,
-      width: 0,
-      imgHeight: 0,
     };
   },
   methods: {
@@ -141,10 +133,6 @@ export default {
       // 接口操作
     },
   },
-  mounted() {
-    this.width = this.$refs.card.$el.clientWidth;
-    this.imgHeight = this.width * this.aspectRatio;
-  },
 }
 </script>
 
@@ -160,9 +148,5 @@ export default {
   box-shadow: 0px 6px 2px -4px rgba(0,0,0,0.2), 0px 4px 4px 0px rgba(0,0,0,0.15), 0px 2px 10px 0px rgba(0,0,0,0.12);
   transition: all 250ms ease-in-out;
   z-index: 99;
-}
-.hide {
-  visibility: hidden;
-  position: absolute;
 }
 </style>

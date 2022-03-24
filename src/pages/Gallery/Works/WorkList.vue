@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col :cols="12 / colsNum">
+    <v-row class="list-scroll">
+      <v-col :cols="12 / colsNum" v-for="(colItem, colIndex) in colArray" :key="colIndex">
         <WorkCard
-          class="mb-12"
-          v-for="(item, index) in workList.filter((item, index) => index % colsNum === 0)"
+          class="mb-6"
+          v-for="(item, index) in workList.filter((item, index) => index % colsNum === colIndex)"
           :key="index"
           :id="item.id"
           :avatar="item.avatar"
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       // style
-      colsNum: 3,
+      colsNum: 0,
       // data
       workList: [
         {
@@ -78,6 +78,9 @@ export default {
     breakpoint() {
       return this.$vuetify.breakpoint.name;
     },
+    colArray() {
+      return Array.from({length: this.colsNum});
+    },
   },
   watch: {
     breakpoint: {
@@ -91,4 +94,13 @@ export default {
 </script>
 
 <style scoped>
+.list-scroll {
+  height: 80vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.list-scroll::-webkit-scrollbar {
+  display: none;
+}
 </style>
