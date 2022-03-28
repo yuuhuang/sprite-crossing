@@ -8,6 +8,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         text
+        width="100%"
         :color="showMenu ? '#FF4785' : '#666'"
         v-bind="attrs"
         v-on="on"
@@ -77,8 +78,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.gray-filter {
-  filter: brightness(0) opacity(0.5);
-}
+<style lang="scss">
+@import "src/styles/common";
 </style>

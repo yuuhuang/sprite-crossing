@@ -35,8 +35,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.gray-filter {
-  filter: brightness(0) opacity(0.5);
-}
+<style lang="scss">
+@import "src/styles/common";
 </style>

@@ -1,22 +1,12 @@
 <template>
   <v-container>
-    <v-row class="list-scroll">
+    <v-row class="list-scroll hide-scroll">
       <v-col :cols="12 / colsNum" v-for="(colItem, colIndex) in colArray" :key="colIndex">
         <WorkCard
           class="mb-6"
           v-for="(item, index) in workList.filter((item, index) => index % colsNum === colIndex)"
           :key="index"
-          :id="item.id"
-          :avatar="item.avatar"
-          :nickname="item.nickname"
-          :upload-time="item.uploadTime"
-          :image="item.image"
-          :title="item.title"
-          :text="item.text"
-          :tags="item.tags"
-          :view-num="item.viewNum"
-          :comment-num="item.commentNum"
-          :like-num="item.likeNum"
+          :work-data="item"
         ></WorkCard>
       </v-col>
     </v-row>
@@ -25,6 +15,7 @@
 
 <script>
 import WorkCard from './WorkCard'
+import {workList} from '@/mock/workList'
 
 export default {
   name: 'WorkList',
@@ -34,21 +25,7 @@ export default {
       // style
       colsNum: 0,
       // data
-      workList: [
-        {
-          id: 0,
-          avatar: '/src/assets/caitou.png',
-          nickname: 'caitou',
-          uploadTime: '2022-03-23',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          title: 'My First Art Work',
-          text: 'This is my first pixel art!!!',
-          tags: ['Animals', 'pink', 'kawaii'],
-          viewNum: 0,
-          commentNum: 0,
-          likeNum: 0
-        }, {}, {}, {}, {}, {}, {},
-      ]
+      workList,
     };
   },
   methods: {
@@ -93,14 +70,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "src/styles/common";
+
 .list-scroll {
   height: 80vh;
   overflow-y: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.list-scroll::-webkit-scrollbar {
-  display: none;
 }
 </style>
