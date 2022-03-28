@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col xl="4" lg="4" md="4" sm="4" cols="12">
+      <v-col cols="4">
         <v-row>
           <v-col cols="6">
             <sort-menu @change="changeSort"></sort-menu>
@@ -12,7 +12,7 @@
         </v-row>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col xl="4" lg="4" md="4" sm="4" cols="12">
+      <v-col :cols="$vuetify.breakpoint.mdAndUp ? 4: 6">
         <search-menu @change="changeSearch"></search-menu>
       </v-col>
     </v-row>

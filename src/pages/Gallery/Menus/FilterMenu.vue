@@ -7,14 +7,15 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        text
+        :icon="$vuetify.breakpoint.xs"
+        :text="!$vuetify.breakpoint.xs"
         width="100%"
         :color="showMenu ? '#FF4785' : '#666'"
         v-bind="attrs"
         v-on="on"
       >
         <filter-svg :class="{'gray-filter': !showMenu}"></filter-svg>
-        Filter
+        {{ $vuetify.breakpoint.xs ? '' : 'Filter' }}
       </v-btn>
     </template>
       <v-card width="320" max-width="320">
