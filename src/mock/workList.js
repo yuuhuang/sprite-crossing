@@ -1,7 +1,7 @@
 export const workList = [
     {
         id: 0,
-        avatar: '/src/assets/caitou.png',
+        avatar: 'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
         userId: 0,
         nickname: 'caitou',
         uploadTime: '2022-03-23',

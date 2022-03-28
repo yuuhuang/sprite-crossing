@@ -1,0 +1,22 @@
+export const user = {
+    userId: 0,
+    avatar: 'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+    nickname: 'caitou',
+    selfIntroduction: 'A Rookie Pixel Artist',
+    backgroundImage: 'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+    likeNum: 0,
+    workList: [
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+        'https://img1.baidu.com/it/u=3109110546,644051308&fm=253&fmt=auto&app=138&f=PNG?w=1671&h=500',
+    ],
+}
