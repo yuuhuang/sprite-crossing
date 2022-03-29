@@ -74,3 +74,22 @@ export const mobileCheck = () => {
 
     return check;
 }
+
+// Format
+export const formatTime = time => {
+    if (time) {
+        const current = new Date();
+        const update = new Date(time);
+        if (current.getFullYear() > update.getFullYear()) {
+            return time;
+        }
+        if (current.getMonth() > update.getMonth() || current.getDate() > update.getDate()) {
+            return `${update.getMonth() + 1}-${update.getDate()}`;
+        }
+        const minute = update.getMinutes();
+
+        return `${update.getHours()}:${minute >= 10 ? minute : `0${minute}`}`;
+    }
+
+    return '';
+}

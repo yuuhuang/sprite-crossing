@@ -97,11 +97,11 @@
                       v-bind="attrs"
                       v-on="on"
                       @click="addReply(comment.userId, comment.nickname)">
-                  <span
-                    v-if="comment.replyId"
-                    class="reply-span ml-1"
-                    @click="openProfile(comment.replyId)"
-                  >@{{ comment.replyNickName }}: </span>
+                      <span
+                        v-if="comment.replyId"
+                        class="reply-span ml-1"
+                        @click="openProfile(comment.replyId)"
+                      >@{{ comment.replyNickName }}: </span>
                       <span class="ml-1">{{ comment.comment }}</span>
                     </div>
                   </template>
@@ -131,7 +131,7 @@
                     <v-btn icon small @click="cancelReply">
                       <close></close>
                     </v-btn>
-                    <span style="color: white">{{ replyName }}</span>
+                    <span style="color: white">@{{ replyName }}</span>
                   </v-chip>
                   <v-btn class="align-self-end mt-1" small text color="#FF4785" @click="sendComment">Send</v-btn>
                 </div>
