@@ -90,74 +90,7 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-card
-              style="background-color: #FF478512;overflow-y: scroll !important;"
-              flat
-              class="hide-scroll"
-              max-height="270"
-            >
-              <v-card-text class="flex-center pt-0">
-                <v-text-field
-                  color="#FF4785"
-                  placeholder="leave a comment..."
-                  hide-details
-                ></v-text-field>
-                <v-btn
-                  class="mt-6"
-                  small
-                  text
-                  color="#FF4785"
-                  @click="sendReply(index)"
-                >Send</v-btn>
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-text v-for="(subComment, index) in comment.subComments" :key="index" class="pt-2 pb-0 pl-0 pr-0">
-                <div style="display: flex;justify-content: space-between;align-items: center" class="pl-4 pr-4">
-                  <nickname-avatar
-                    :user-id="subComment.replierId"
-                    :nickname="subComment.replierNickname"
-                    :avatar="subComment.replierAvatar"
-                  ></nickname-avatar>
-                  <span>{{ formatTime(subComment.createTime) }}</span>
-                </div>
-                <v-expansion-panels flat tile>
-                  <v-expansion-panel>
-                    <v-expansion-panel-header style="background-color: #FF478512;color: #666" class="pb-2">
-                      <template v-slot>
-                        <div class="mt-2 mb-2 pl-4 pr-4">
-                          <span
-                            v-if="subComment.replyToId > -1"
-                            style="color: #FF4785"
-                          >@{{ subComment.replyToNickname }}</span>
-                          <span v-if="subComment.replyToId > -1">: </span>
-                          <span>{{ subComment.text }}</span>
-                        </div>
-                      </template>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content style="background-color: #FF478512">
-                      <div class="flex-center">
-                        <span style="color: #FF4785" class="pt-4">Reply to {{ subComment.replierNickname }}: </span>
-                        <v-text-field
-                          dense
-                          color="#FF4785"
-                          placeholder="leave a reply..."
-                          style="width: 100%;"
-                          hide-details
-                        ></v-text-field>
-                        <v-btn
-                          class="mt-4"
-                          text
-                          small
-                          color="#FF4785"
-                          @click="sendReply(index, subComment.replierId)"
-                        >Send</v-btn>
-                      </div>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-                <v-divider v-if="index !== comment.subComments.length - 1"></v-divider>
-              </v-card-text>
-            </v-card>
+            <replies :poster-id="comment.posterId" :sub-comments="comment.subComments"></replies>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -172,10 +105,11 @@ import {formatTime} from '@/utils'
 require('@/assets/chevron')
 
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar'
+import Replies from '@/pages/Community/DiscussDialog/Replies';
 
 export default {
   name: 'DiscussDialog',
-  components: {NicknameAvatar},
+  components: {Replies, NicknameAvatar},
   props: {
     discussId: Number,
   },

@@ -28,7 +28,7 @@
 
 <script>
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar';
-import DiscussDialog from '@/components/Dialog/DiscussDialog';
+import DiscussDialog from './DiscussDialog/DiscussDialog';
 
 require('@/assets/cards')
 
