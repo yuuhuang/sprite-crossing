@@ -50,7 +50,11 @@
               <div class="overlay" v-if="!$vuetify.breakpoint.smAndDown && showOverlay"></div>
             </v-card>
           </v-col>
-          <v-col xl="3" lg="3" md="3" sm="12" class="pl-0 pr-0">
+          <v-col
+            :cols="$vuetify.breakpoint.mdAndUp ? 3 : 12"
+            class="pl-0 pr-0 hide-scroll"
+            :style="{height: $vuetify.breakpoint.mdAndUp ? '480px' : '', overflowY: 'scroll'}"
+          >
             <v-card flat>
               <v-card-text v-if="$vuetify.breakpoint.smAndDown" class="pt-0 pb-0">
                 <v-row>
@@ -77,8 +81,61 @@
               <v-card-subtitle class="pt-1 pb-1">{{ workData.uploadTime }}</v-card-subtitle>
               <tags-show :tags="workData.tags" class="ml-4 mr-4"></tags-show>
             </v-card>
-            <v-card>
-              <v-card-title>Comments({{ workData.comments ? workData.comments.length : 0 }})</v-card-title>
+            <v-card flat>
+              <v-card-title class="mb-2">Comments({{ workData.comments ? workData.comments.length : 0 }})</v-card-title>
+              <v-card-subtitle v-for="(comment, index) in workData.comments" :key="index"
+                class="flex justify-space-between">
+                <nickname-avatar
+                  :nickname="comment.nickname"
+                  :avatar="comment.avatar"
+                  :user-id="comment.userId"
+                ></nickname-avatar>
+                <v-tooltip bottom open-delay="500" color="#FF4785">
+                  <template v-slot:activator="{ on, attrs }">
+                    <div
+                      class="mt-1 pointer-cursor comment-text"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="addReply(comment.userId, comment.nickname)">
+                  <span
+                    v-if="comment.replyId"
+                    class="reply-span ml-1"
+                    @click="openProfile(comment.replyId)"
+                  >@{{ comment.replyNickName }}: </span>
+                      <span class="ml-1">{{ comment.comment }}</span>
+                    </div>
+                  </template>
+                  <span style="font-size: smaller">Click To Reply</span>
+                </v-tooltip>
+                <span class="comment-time">{{ comment.updateTime }}</span>
+              </v-card-subtitle>
+              <v-card-actions class="mt-2 flex-column">
+                <v-textarea
+                  color="#FF4785"
+                  label="Comment"
+                  placeholder="leave a comment..."
+                  style="width: 100%"
+                  hide-details
+                  filled
+                  v-model="comment"
+                ></v-textarea>
+                <div
+                  :style="{
+                    width: '100%',
+                    display: 'flex',
+                    'justify-content': replyId > -1 ? 'space-between' : 'flex-end',
+                    'align-items': 'center',
+                  }"
+                >
+                  <v-chip v-if="replyId > -1" color="#FF4785" small class="mt-1 pl-0" style="opacity: 0.9">
+                    <v-btn icon small @click="cancelReply">
+                      <close></close>
+                    </v-btn>
+                    <span style="color: white">{{ replyName }}</span>
+                  </v-chip>
+                  <v-btn class="align-self-end mt-1" small text color="#FF4785" @click="sendComment">Send</v-btn>
+                </div>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -102,6 +159,10 @@ export default {
     return {
       show: true,
       showOverlay: false,
+      // comment
+      comment: '',
+      replyId: 0,
+      replyName: 'caitou'
     };
   },
   methods: {
@@ -110,12 +171,26 @@ export default {
         this.$emit('close');
       }
     },
+
     openProfile() {
       console.log('open profile', this.workData.userId);
     },
     clickHeart() {
       console.log('like', this.workData.id, 'userId');
     },
+
+    addReply(id, nickname) {
+      this.replyId = id;
+      this.replyName = nickname;
+    },
+    cancelReply() {
+      this.replyId = -1;
+      this.replyName = '';
+    },
+    sendComment() {
+      console.log('send comment', this.comment, this.replyName);
+    },
+
     enterOptions() {
       this.showOverlay = true;
     },
@@ -156,5 +231,16 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+.reply-span {
+  color: #FF4785;
+}
+.comment-text:hover {
+  background-color: #FF478522;
+}
+.comment-time {
+  position: absolute;
+  right: 4px;
+  font-size: small;
 }
 </style>

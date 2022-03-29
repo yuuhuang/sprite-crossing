@@ -19,14 +19,40 @@ export const workList = [
                 nickname: 'Rick',
                 updateTime: '2022-03-28 17:04',
                 comment: 'I like it !',
-                subComment: {
-                    userId: 2,
-                    nickname: 'Morty',
-                    updateTime: '2022-03-28 17:04',
-                    comment: 'Year! It is the Best !!',
-                }
-            }
-        ]
+            },
+            {
+                userId: 2,
+                nickname: 'Morty',
+                updateTime: '2022-03-29 13:38',
+                comment: 'Year! It is the Best !!!',
+                replyId: 1,
+                replyNickName: 'Rick',
+            },
+            {
+                userId: 2,
+                nickname: 'Morty',
+                updateTime: '2022-03-29 13:38',
+                comment: 'Year! It is the Best !!!',
+                replyId: 1,
+                replyNickName: 'Rick',
+            },
+            {
+                userId: 2,
+                nickname: 'Morty',
+                updateTime: '2022-03-29 13:38',
+                comment: 'Year! It is the Best !!!',
+                replyId: 1,
+                replyNickName: 'Rick',
+            },
+            {
+                userId: 2,
+                nickname: 'Morty',
+                updateTime: '2022-03-29 13:38',
+                comment: 'Year! It is the Best !!!',
+                replyId: 1,
+                replyNickName: 'Rick',
+            },
+        ],
     },
     {
         // eslint-disable-next-line max-len
