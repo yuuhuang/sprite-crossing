@@ -10,7 +10,7 @@
         ></nickname-avatar>
         <span class="font-italic">{{ formatTime(comment.createTime) }}</span>
       </v-card-text>
-      <v-card-text class="pb-1">{{ comment.text }}</v-card-text>
+      <v-card-text class="pb-1 pt-1 pl-6 pr-6">{{ comment.text }}</v-card-text>
       <v-expansion-panels
         flat
         tile

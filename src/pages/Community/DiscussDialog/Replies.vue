@@ -35,7 +35,7 @@
                   :nickname="subComment.replierNickname"
                   :avatar="subComment.replierAvatar"
                 ></nickname-avatar>
-                <span>{{ formatTime(subComment.createTime) }}</span>
+                <span class="font-italic">{{ formatTime(subComment.createTime) }}</span>
               </div>
               <div class="pt-2 pl-2">
                 <span
@@ -116,13 +116,15 @@ export default {
     },
   },
   created() {
-    this.replyTexts[-1] = '';
-    // eslint-disable-next-line array-callback-return
-    this.subComments.map(item => {
-      if (!(item in this.replyTexts)) {
-        this.replyTexts[item.replierId] = '';
-      }
-    })
+    if (Array.isArray(this.subComments)) {
+      this.replyTexts[-1] = '';
+      // eslint-disable-next-line array-callback-return
+      this.subComments.map(item => {
+        if (!(item in this.replyTexts)) {
+          this.replyTexts[item.replierId] = '';
+        }
+      })
+    }
   },
   watch: {
     expandIndex(newVal) {

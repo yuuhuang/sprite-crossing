@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-4 hide-scroll" style="height:90vh;overflow: scroll">
+  <div class="pa-4 hide-scroll" style="height:89vh;overflow: scroll">
     <discuss-card
       class="mb-4"
       v-for="(discuss, index) in discussList"
