@@ -2,8 +2,8 @@
   <div>
     <v-container>
       <v-row>
-        <v-col cols="3">
-          <sort-menu @change="changeSort"></sort-menu>
+        <v-col cols="4">
+          <sort-menu :options="['Latest', 'Most Comments']" @change="changeSort"></sort-menu>
         </v-col>
         <v-col>
           <v-btn width="100%" depressed color="#FF478534" @click="startDiscuss">
