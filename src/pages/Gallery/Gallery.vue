@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import SearchMenu from './Menus/SearchMenu'
-import SortMenu from './Menus/SortMenu';
-import FilterMenu from './Menus/FilterMenu';
+import SearchMenu from '@/components/Menus/SearchMenu'
+import SortMenu from '@/components/Menus/SortMenu';
+import FilterMenu from '@/components/Menus/FilterMenu';
 import WorkList from './Works/WorkList';
 
 export default {

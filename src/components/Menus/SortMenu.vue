@@ -35,9 +35,16 @@ export default {
   name: 'SortMenu',
   data() {
     return {
-      options: ['Latest', 'Favourite', 'Most View'],
       chosenOption: 0,
       showMenu: false,
+    }
+  },
+  props: {
+    options: {
+      type: Array,
+      default() {
+        return ['Latest', 'Favourite', 'Most View']
+      }
     }
   },
   methods: {

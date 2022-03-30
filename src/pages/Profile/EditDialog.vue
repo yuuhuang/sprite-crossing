@@ -56,8 +56,6 @@
 </template>
 
 <script>
-require('@/assets/cards')
-
 export default {
   name: 'EditDialog',
   data() {
