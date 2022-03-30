@@ -58,43 +58,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
-    <v-card tile flat v-for="(comment, index) in discuss.comments" :key="index">
-      <v-divider class="mb-4"></v-divider>
-      <v-card-text style="display: flex;justify-content: space-between;align-items: center;">
-        <nickname-avatar
-          :user-id="comment.posterId"
-          :nickname="comment.posterNickname"
-          :avatar="comment.posterAvatar"
-        ></nickname-avatar>
-        <span class="font-italic">{{ formatTime(comment.createTime) }}</span>
-      </v-card-text>
-      <v-card-text class="pb-1">{{ comment.text }}</v-card-text>
-      <v-expansion-panels
-        flat
-        tile
-        v-model="openReply[index]"
-      >
-        <v-expansion-panel>
-          <v-expansion-panel-header class="gray-filter pt-0 pb-0">
-            <template v-slot:default="{ open }">
-              <v-card-text class="pl-0 pr-0 pt-0 pb-0" style="display: flex;justify-content: flex-start;">
-                <div v-if="open" class="flex-center">
-                  <chevron-up></chevron-up>
-                  Hide Comments
-                </div>
-                <div v-else class="flex-center">
-                  <chevron-down></chevron-down>
-                  {{ comment.subComments && comment.subComments.length > 0 ? 'Show Comments' : 'Add Comments' }}
-                </div>
-              </v-card-text>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <replies :poster-id="comment.posterId" :sub-comments="comment.subComments"></replies>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card>
+    <posters :discuss-id="discussId" :comments="discuss.comments"></posters>
   </v-dialog>
 </template>
 
@@ -105,11 +69,11 @@ import {formatTime} from '@/utils'
 require('@/assets/chevron')
 
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar'
-import Replies from '@/pages/Community/DiscussDialog/Replies';
+import Posters from '@/pages/Community/DiscussDialog/Posters';
 
 export default {
   name: 'DiscussDialog',
-  components: {Replies, NicknameAvatar},
+  components: {Posters, NicknameAvatar},
   props: {
     discussId: Number,
   },
@@ -117,9 +81,7 @@ export default {
     return {
       show: true,
       openPoster: false,
-      openReply: [],
       poster: '',
-      reply: [],
       discuss,
       formatTime,
     };
@@ -133,37 +95,9 @@ export default {
 
     sendPoster() {
       this.openPoster = false;
-      console.log('send poster', this.poster, this.discuss.discussId, new Date());
-    },
-    sendReply(index, replyTo) {
-      console.log('send reply', this.reply[index], this.discuss.discussId, index, replyTo, new Date());
+      console.log('myId', this.discuss.discussId, this.poster, new Date());
     },
   },
-  computed: {
-    lastOpenReply() {
-      return this.openReply[this.openReply.length - 1];
-    },
-  },
-  watch: {
-    lastOpenReply(newVal, oldVal) {
-      console.log(newVal, oldVal)
-      if (newVal === 0 && oldVal !== 0) {
-        console.log(1111)
-        console.log(this.$refs.dialog.$el)
-        this.$refs.dialog.$el.scrollBy(0, 84);
-      }
-    }
-  },
-  beforeMount() {
-    this.openReply.length = this.discuss.comments.length;
-    this.openReply.fill(0);
-    // eslint-disable-next-line array-callback-return
-    this.openReply.map((item, index) => {
-      if (!this.discuss.comments[index].subComments || this.discuss.comments[index].subComments.length <= 0) {
-        this.openReply[index] = -1;
-      }
-    });
-  }
 }
 </script>
 

@@ -11,6 +11,7 @@ export const discuss = {
     viewNum: 1,
     comments: [
         {
+            commentId: 0,
             posterId: 1,
             posterNickname: 'rabbit',
             posterAvatar: '',
@@ -18,6 +19,7 @@ export const discuss = {
             createTime: '2022-03-29 17:47',
             subComments: [
                 {
+                    subCommentId: 0,
                     replierId: 0,
                     replierNickname: 'caitou',
                     replierAvatar: '',
@@ -26,6 +28,7 @@ export const discuss = {
                     createTime: '2022-03-29 17:49',
                 },
                 {
+                    subCommentId: 1,
                     replierId: 1,
                     replierNickname: 'rabbit',
                     replierAvatar: '',
@@ -35,6 +38,7 @@ export const discuss = {
                     createTime: '2022-03-29 17:51',
                 },
                 {
+                    subCommentId: 2,
                     replierId: 1,
                     replierNickname: 'rabbit',
                     replierAvatar: '',
@@ -44,6 +48,7 @@ export const discuss = {
                     createTime: '2022-03-29 17:51',
                 },
                 {
+                    subCommentId: 3,
                     replierId: 1,
                     replierNickname: 'rabbit',
                     replierAvatar: '',
@@ -53,6 +58,7 @@ export const discuss = {
                     createTime: '2022-03-29 17:51',
                 },
                 {
+                    subCommentId: 4,
                     replierId: 1,
                     replierNickname: 'rabbit',
                     replierAvatar: '',
@@ -64,6 +70,7 @@ export const discuss = {
             ],
         },
         {
+            commentId: 1,
             posterId: 2,
             posterNickname: 'wolf',
             avatar: '',

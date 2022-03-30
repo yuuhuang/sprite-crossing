@@ -8,7 +8,7 @@
   >
     <v-card-text class="flex-center pt-0">
       <v-text-field
-        v-model="replyTexts[posterId]"
+        v-model="replyTexts[-1]"
         color="#FF4785"
         placeholder="leave a comment..."
         hide-details
@@ -84,7 +84,8 @@ export default {
   components: {NicknameAvatar},
   props: {
     subComments: Array,
-    posterId: Number,
+    commentId: Number,
+    discussId: Number,
   },
   data() {
     return {
@@ -96,14 +97,14 @@ export default {
   methods: {
     sendReply(replyTo) {
       if (typeof replyTo === 'number') {
-        console.log('my id', replyTo, this.replyTexts[replyTo], new Date());
+        console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
       } else {
-        console.log('my id', this.posterId, this.replyTexts[this.posterId], new Date());
+        console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
       }
     },
   },
   created() {
-    this.replyTexts[this.posterId] = '';
+    this.replyTexts[-1] = '';
     // eslint-disable-next-line array-callback-return
     this.subComments.map(item => {
       if (!(item in this.replyTexts)) {
