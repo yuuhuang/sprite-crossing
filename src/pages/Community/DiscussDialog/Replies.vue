@@ -4,7 +4,7 @@
     style="background-color: #FF478512;overflow-y: scroll !important;"
     flat
     class="hide-scroll"
-    max-height="270"
+    :max-height="workId ? '100%' : '320px'"
   >
     <v-card-text class="flex-center pt-0">
       <v-text-field
@@ -16,17 +16,17 @@
       <v-btn
         class="mt-6"
         small
-        text
+        icon
         color="#FF4785"
         @click="sendReply"
       >
-        Send
+        <send></send>
       </v-btn>
     </v-card-text>
     <v-divider></v-divider>
     <v-expansion-panels flat tile accordion v-model="expandIndex">
       <v-expansion-panel v-for="(subComment, index) in subComments" :key="index">
-        <v-expansion-panel-header style="background-color: #FF478512;color: #666" class="pl-4 pr-4">
+        <v-expansion-panel-header style="background-color: #FF478512;color: #666" class="pl-3 pr-3">
           <template v-slot>
             <div class="flex-column">
               <div style="display: flex;justify-content: space-between;align-items: center">
@@ -48,9 +48,12 @@
             </div>
           </template>
         </v-expansion-panel-header>
-        <v-expansion-panel-content style="background-color: #FF478512">
+        <v-expansion-panel-content style="background-color: #FF478512" class="pl-4 pr-2 pb-4">
           <div class="flex-center">
-            <span style="color: #FF4785">Reply to {{ subComment.replierNickname }}: </span>
+<!--            <span-->
+<!--              class="mt-4 mr-2"-->
+<!--              style="color: #FF4785;font-size: smaller"-->
+<!--            >@{{ subComment.replierNickname }}: </span>-->
             <v-text-field
               dense
               color="#FF4785"
@@ -61,11 +64,13 @@
             ></v-text-field>
             <v-btn
               class="mt-4"
-              text
+              icon
               small
               color="#FF4785"
               @click="sendReply(subComment.replierId)"
-            >Send</v-btn>
+            >
+              <send></send>
+            </v-btn>
           </div>
         </v-expansion-panel-content>
         <v-divider v-if="index !== subComments.length - 1"></v-divider>
@@ -86,6 +91,7 @@ export default {
     subComments: Array,
     commentId: Number,
     discussId: Number,
+    workId: Number,
   },
   data() {
     return {
@@ -96,11 +102,17 @@ export default {
   },
   methods: {
     sendReply(replyTo) {
-      if (typeof replyTo === 'number') {
-        console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
-      } else {
-        console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
-      }
+      if (typeof this.workId === 'number' && this.workId > -1) {
+        if (typeof replyTo === 'number' && replyTo > -1) {
+          console.log('myId', replyTo, this.workId, this.replyTexts[replyTo], new Date());
+        } else {
+          console.log('myId', -1, this.workId, this.replyTexts[-1], new Date());
+        }
+      } else if (typeof replyTo === 'number' && replyTo > -1) {
+          console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
+        } else {
+          console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
+        }
     },
   },
   created() {
