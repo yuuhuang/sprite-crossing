@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const workRouter = require('./routers/work');
 const userRouter = require('./routers/user');
+const authRouter = require('./routers/auth');
 
 const app = express();
 
@@ -26,8 +27,8 @@ mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: true}));
-app.use(express.json({inflate: true}));
-app.use(express.text());
+app.use(express.json());
 
 app.use(workRouter);
 app.use(userRouter);
+app.use(authRouter);

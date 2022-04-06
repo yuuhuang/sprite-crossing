@@ -14,6 +14,9 @@ const userSchema = new Schema({
   bio: String,
   backgroundImage: String,
   worksList: [Number],
+
+  // foreign
+  authId: Number,
 }, {
   timestamps: {
     createAt: 'createAt',
