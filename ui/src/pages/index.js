@@ -7,6 +7,6 @@ import Profile from './Profile/Profile'
 import NotFound from './NotFound/NotFound'
 
 export default {
-    Home, Create, Gallery, Community, Activity, Profile, NotFound
+  Home, Create, Gallery, Community, Activity, Profile, NotFound
 }
 

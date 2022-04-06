@@ -81,60 +81,60 @@ export default {
     // Mouse Events
     mousedown(e) {
       switch (this.tool) {
-        case 'pencil':
-          this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
-          this.listenDrawMove = true;
-          break;
-        case 'eraser':
-          this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY));
-          this.listenDrawMove = true;
-          break;
-        case 'eyedropper':
-          this.$emit('eyedropper-pick', this.drawing.getPixelColor(this.getPosition(e.offsetX, e.offsetY)));
-          break;
-        case 'bucket':
-          this.drawing.fill(this.getPosition(e.offsetX, e.offsetY), this.color);
-          break;
-        case 'straight':
-        case 'rectangle-fill':
-        case 'rectangle-outline':
-        case 'ellipse-fill':
-        case 'ellipse-outline':
-          this.drawing.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
-          this.$refs['mouse-track'].mousedown(e);
-          break;
-        case 'move-object':
-          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
-          this.listenDrawMove = true;
-          break;
-        case 'move-board':
-          this.translateFromX = e.offsetX;
-          this.translateFromY = e.offsetY;
-          this.listenDrawMove = true;
-          this.$refs['drawing-board'].style.cursor = 'grabbing';
-          break;
-        default:
-          break;
+      case 'pencil':
+        this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
+        this.listenDrawMove = true;
+        break;
+      case 'eraser':
+        this.drawing.drawPoint(this.getPosition(e.offsetX, e.offsetY));
+        this.listenDrawMove = true;
+        break;
+      case 'eyedropper':
+        this.$emit('eyedropper-pick', this.drawing.getPixelColor(this.getPosition(e.offsetX, e.offsetY)));
+        break;
+      case 'bucket':
+        this.drawing.fill(this.getPosition(e.offsetX, e.offsetY), this.color);
+        break;
+      case 'straight':
+      case 'rectangle-fill':
+      case 'rectangle-outline':
+      case 'ellipse-fill':
+      case 'ellipse-outline':
+        this.drawing.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
+        this.$refs['mouse-track'].mousedown(e);
+        break;
+      case 'move-object':
+        this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+        this.listenDrawMove = true;
+        break;
+      case 'move-board':
+        this.translateFromX = e.offsetX;
+        this.translateFromY = e.offsetY;
+        this.listenDrawMove = true;
+        this.$refs['drawing-board'].style.cursor = 'grabbing';
+        break;
+      default:
+        break;
       }
     },
     mousemove(e) {
       if (e.buttons && this.listenDrawMove) {
         switch (this.tool) {
-          case 'pencil':
-            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
-            break;
-          case 'eraser':
-            this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY));
-            break;
-          case 'move-object':
-            this.drawing.translate(this.getPosition(e.offsetX, e.offsetY));
-            break;
-          case 'move-board':
-            this.translateX += e.offsetX - this.translateFromX;
-            this.translateY += e.offsetY - this.translateFromY;
-            break;
-          default:
-            break;
+        case 'pencil':
+          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
+        case 'eraser':
+          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY));
+          break;
+        case 'move-object':
+          this.drawing.translate(this.getPosition(e.offsetX, e.offsetY));
+          break;
+        case 'move-board':
+          this.translateX += e.offsetX - this.translateFromX;
+          this.translateY += e.offsetY - this.translateFromY;
+          break;
+        default:
+          break;
         }
       } else {
         this.$refs['mouse-track'].mousemove(e);
@@ -142,11 +142,11 @@ export default {
     },
     mouseenter(e) {
       switch (this.tool) {
-        case 'pencil':
-          this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
-          break;
-        default:
-          break;
+      case 'pencil':
+        this.drawing.setLast(this.getPosition(e.offsetX, e.offsetY));
+        break;
+      default:
+        break;
       }
     },
     mouseout(e) {
@@ -160,42 +160,42 @@ export default {
     },
     click() {
       switch (this.tool) {
-        case 'pencil':
-        case 'eraser':
-        case 'bucket':
-        case 'straight':
-        case 'rectangle-fill':
-        case 'rectangle-outline':
-        case 'ellipse-fill':
-        case 'ellipse-outline':
-          history.record(this.drawing.imageData.data);
-          break;
-        default:
-          break;
+      case 'pencil':
+      case 'eraser':
+      case 'bucket':
+      case 'straight':
+      case 'rectangle-fill':
+      case 'rectangle-outline':
+      case 'ellipse-fill':
+      case 'ellipse-outline':
+        history.record(this.drawing.imageData.data);
+        break;
+      default:
+        break;
       }
     },
     mouseup(e) {
       switch (this.tool) {
-        case 'straight':
-          this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.drawing.getGeometryLast());
-          break;
-        case 'rectangle-fill':
-          this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
-          break;
-        case 'rectangle-outline':
-          this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
-          break;
-        case 'ellipse-fill':
-          this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
-          break;
-        case 'ellipse-outline':
-          this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
-          break;
-        case 'move-board':
-          this.$refs['drawing-board'].style.cursor = 'grab';
-          break;
-        default:
-          break;
+      case 'straight':
+        this.drawing.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.drawing.getGeometryLast());
+        break;
+      case 'rectangle-fill':
+        this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+        break;
+      case 'rectangle-outline':
+        this.drawing.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
+        break;
+      case 'ellipse-fill':
+        this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+        break;
+      case 'ellipse-outline':
+        this.drawing.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
+        break;
+      case 'move-board':
+        this.$refs['drawing-board'].style.cursor = 'grab';
+        break;
+      default:
+        break;
       }
     },
     bodyMouseup(e) {

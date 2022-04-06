@@ -109,10 +109,10 @@ export default {
           console.log('myId', -1, this.workId, this.replyTexts[-1], new Date());
         }
       } else if (typeof replyTo === 'number' && replyTo > -1) {
-          console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
-        } else {
-          console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
-        }
+        console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
+      } else {
+        console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
+      }
     },
   },
   created() {

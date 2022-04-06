@@ -44,51 +44,51 @@ export default {
     },
     mousedown(e) {
       switch (this.tool) {
-        case 'straight':
-        case 'rectangle-fill':
-        case 'rectangle-outline':
-        case 'ellipse-fill':
-        case 'ellipse-outline':
-          this.track.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
-          break;
-        default:
-          break;
+      case 'straight':
+      case 'rectangle-fill':
+      case 'rectangle-outline':
+      case 'ellipse-fill':
+      case 'ellipse-outline':
+        this.track.setGeometryLast(this.getPosition(e.offsetX, e.offsetY));
+        break;
+      default:
+        break;
       }
     },
     mousemove(e) {
       this.track.clearBoard();
       if (e.buttons) {
         switch (this.tool) {
-          case 'straight':
-            this.track.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.track.getGeometryLast());
-            break;
-          case 'rectangle-fill':
-            this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
-            break;
-          case 'rectangle-outline':
-            this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
-            break;
-          case 'ellipse-fill':
-            this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
-            break;
-          case 'ellipse-outline':
-            this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
-            break;
-          default:
-            break;
+        case 'straight':
+          this.track.drawLine(this.getPosition(e.offsetX, e.offsetY), this.color, this.track.getGeometryLast());
+          break;
+        case 'rectangle-fill':
+          this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+          break;
+        case 'rectangle-outline':
+          this.track.drawRect(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
+        case 'ellipse-fill':
+          this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color, true);
+          break;
+        case 'ellipse-outline':
+          this.track.drawArc(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
+        default:
+          break;
         }
       } else {
         switch (this.tool) {
-          case 'pencil':
-          case 'straight':
-          case 'rectangle-fill':
-          case 'rectangle-outline':
-          case 'ellipse-fill':
-          case 'ellipse-outline':
-            this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
-            break;
-          default:
-            break;
+        case 'pencil':
+        case 'straight':
+        case 'rectangle-fill':
+        case 'rectangle-outline':
+        case 'ellipse-fill':
+        case 'ellipse-outline':
+          this.track.drawPoint(this.getPosition(e.offsetX, e.offsetY), this.color);
+          break;
+        default:
+          break;
         }
       }
 

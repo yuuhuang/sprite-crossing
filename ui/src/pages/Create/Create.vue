@@ -93,31 +93,31 @@ export default {
     // Options
     clickOption(option) {
       switch (option) {
-        case 'new':
-          this.newProject();
-          break;
-        case 'reset':
-          this.$refs.board.zoomResize();
-          this.$refs.board.translateReset();
-          break;
-        case 'grid':
-          if (this.$refs.board.gridShown) {
-            this.$refs.board.hideGrid();
-          } else {
-            this.$refs.board.showGrid();
-          }
-          break;
-        case 'undo':
-          this.undo();
-          break;
-        case 'redo':
-          this.redo();
-          break;
-        case 'save':
-          this.save();
-          break;
-        default:
-          break;
+      case 'new':
+        this.newProject();
+        break;
+      case 'reset':
+        this.$refs.board.zoomResize();
+        this.$refs.board.translateReset();
+        break;
+      case 'grid':
+        if (this.$refs.board.gridShown) {
+          this.$refs.board.hideGrid();
+        } else {
+          this.$refs.board.showGrid();
+        }
+        break;
+      case 'undo':
+        this.undo();
+        break;
+      case 'redo':
+        this.redo();
+        break;
+      case 'save':
+        this.save();
+        break;
+      default:
+        break;
       }
     },
     newProject() {

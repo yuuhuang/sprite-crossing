@@ -31,23 +31,23 @@ export default {
   methods: {
     init() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs':
-          this.colsNum = 1;
-          break;
-        case 'sm':
-          this.colsNum = 2;
-          break;
-        case 'md':
-          this.colsNum = 3;
-          break;
-        case 'lg':
-          this.colsNum = 4;
-          break;
-        case 'xl':
-          this.colsNum = 6;
-          break;
-        default:
-          break;
+      case 'xs':
+        this.colsNum = 1;
+        break;
+      case 'sm':
+        this.colsNum = 2;
+        break;
+      case 'md':
+        this.colsNum = 3;
+        break;
+      case 'lg':
+        this.colsNum = 4;
+        break;
+      case 'xl':
+        this.colsNum = 6;
+        break;
+      default:
+        break;
       }
     }
   },
