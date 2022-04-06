@@ -2,8 +2,7 @@
   <v-menu offset-y @input="e => showMenu = e">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        :icon="$vuetify.breakpoint.xs"
-        :text="!$vuetify.breakpoint.xs"
+        text
         :color="showMenu ? '#FF4785' : '#666'"
         width="100%"
         v-bind="attrs"

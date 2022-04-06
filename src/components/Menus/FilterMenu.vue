@@ -7,8 +7,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        :icon="$vuetify.breakpoint.xs"
-        :text="!$vuetify.breakpoint.xs"
+        text
         width="100%"
         :color="showMenu ? '#FF4785' : '#666'"
         v-bind="attrs"

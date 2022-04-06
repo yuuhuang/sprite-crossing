@@ -12,7 +12,7 @@
         </v-row>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col :cols="$vuetify.breakpoint.mdAndUp ? 4: 6">
+      <v-col :cols="$vuetify.breakpoint.mdAndUp ? 4 : ($vuetify.breakpoint.sm ? 6 : 8)">
         <search-menu @change="changeSearch"></search-menu>
       </v-col>
     </v-row>
