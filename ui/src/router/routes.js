@@ -3,7 +3,8 @@ import pages from '@/pages'
 export default [
   {
     name: 'home',
-    path: '/',
+    path: '/home',
+    alias: '/',
     component: pages.Home,
     title: 'Home',
   },
