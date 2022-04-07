@@ -18,6 +18,7 @@
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ emailErrors }}</span>
           <v-text-field
             v-model="nickname"
             color="#FF4785"
@@ -27,6 +28,7 @@
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ nicknameErrors }}</span>
           <v-text-field
             v-model="password"
             color="#FF4785"
@@ -37,10 +39,11 @@
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ passwordErrors }}</span>
         </v-form>
       </v-card-text>
       <v-card-actions class="flex-center">
-        <v-btn color="#ff4785cc" depressed width="80%">
+        <v-btn color="#ff4785cc" depressed width="80%" @click="login">
           <span style="color: white">Create account</span>
         </v-btn>
       </v-card-actions>
@@ -65,26 +68,26 @@
           <v-text-field
             v-model="email"
             color="#FF4785"
-            :rules="emailRules"
             label="Email"
             required
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ emailErrors }}</span>
           <v-text-field
             v-model="password"
             color="#FF4785"
-            :rules="passwordRules"
             label="Password"
             type="password"
             required
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ passwordErrors }}</span>
         </v-form>
       </v-card-text>
       <v-card-actions class="flex-center">
-        <v-btn color="#ff4785cc" depressed width="80%">
+        <v-btn color="#ff4785cc" depressed width="80%" @click="login">
           <span style="color: white">Sign In</span>
         </v-btn>
       </v-card-actions>
@@ -101,16 +104,75 @@
 </template>
 
 <script>
+import {reqSignup, reqLogin} from '../../require/user';
+
 export default {
   name: 'LoginCard',
   data() {
     return {
       toggleIndex: 0,
+
+      // values
+      email: '',
+      password: '',
+      nickname: '',
+
+      // rules
+      emailRules: [
+        v => Boolean(v) || 'email required',
+      ],
+      nicknameRules: [
+        v => Boolean(v) || 'nickname required',
+        v => (v && v.length <= 12) || 'nickname maxlength is 12',
+      ],
+      passwordRules: [
+        v => Boolean(v) || 'password required',
+        v => (v && v.length >= 8) || 'password minlength is 8',
+      ],
+
+      // errors
+      emailErrors: '',
+      nicknameErrors: '',
+      passwordErrors: '',
     };
+  },
+  methods: {
+    async login() {
+      if (this.$refs.form.validate()) {
+        let result;
+        if (this.toggleIndex) {
+          result = await reqLogin(this.email, this.password);
+        } else {
+          result = await reqSignup(this.email, this.password, this.nickname);
+        }
+        if (result === true) {
+          this.$emit('login');
+        } else {
+          this.emailErrors = result.email || '';
+          this.passwordErrors = result.password || '';
+          this.nicknameErrors = result.nickname || '';
+        }
+      }
+    },
+  },
+  watch: {
+    toggleIndex() {
+      this.$refs.form.reset();
+      this.$refs.form.resetValidation();
+      this.emailErrors = this.nicknameErrors = this.passwordErrors = '';
+    }
   },
 }
 </script>
 
 <style lang="scss">
 @import "src/styles/common";
+.error-span {
+  color: rgb(255, 82, 82);
+  font-size: 12px;
+  font-weight: 400;
+  position: relative;
+  left: 12px;
+  bottom: 16px;
+}
 </style>

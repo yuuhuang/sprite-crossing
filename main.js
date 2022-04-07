@@ -32,15 +32,15 @@ mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
 
 app.use(express.static('uploads'));
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({credentials: true, origin: true}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('*', checkUser);
-app.get('/profile', requireAuth, (req, res) => {
-  res.send('open profile');
-});
+// app.get('*', checkUser);
+// app.get('/profile', requireAuth, (req, res) => {
+//   res.send('open profile');
+// });
 
 app.use(authRoutes);
 app.use(uploadRoutes);

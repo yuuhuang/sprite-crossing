@@ -5,17 +5,17 @@
       :class="{
         'container-scroll': $vuetify.breakpoint.smAndDown,
         'hide-scroll': true,
-        'flex-center': login,
+        'flex-center': !login,
        }"
     >
-      <login-card v-if="login"></login-card>
+      <login-card v-if="!login" @login="init"></login-card>
       <div v-else>
         <v-img
-            :src="user.backgroundImage"
-            height="256"
-            width="100%"
-            gradient="to top, #fff, #0000"
-            style="border-radius: 8px 8px 0 0"
+          :src="user.backgroundImage"
+          height="256"
+          width="100%"
+          gradient="to top, #fff, #0000"
+          style="border-radius: 8px 8px 0 0"
         ></v-img>
         <v-row style="position: relative; bottom: 96px;">
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 5 : 12" class="flex-column align-center" style="display: flex">
@@ -28,16 +28,19 @@
             </v-avatar>
             <span class="mt-4" style="font-size: 24px;font-weight: 300">{{ user.nickname }}</span>
             <div class="mt-4">
-              <v-btn outlined dark color="#FF4785" class="mr-1" @click="setProfile">Edit Profile</v-btn>
-              <v-btn outlined dark color="#FF4785" class="ml-1" @click="openProfile">Preview</v-btn>
+              <v-btn outlined dark color="#FF4785" class="mr-1" @click="setProfile">Edit</v-btn>
+              <v-btn outlined dark color="#FF4785" class="ml-1 mr-1" @click="openProfile">Preview</v-btn>
+              <v-btn outlined color="#aaa" class="ml-1" width="36" min-width="36" @click="logout">
+                <exit class="gray-filter"></exit>
+              </v-btn>
             </div>
           </v-col>
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 7 : 12"
                  :class="{'hide-scroll': true, 'time-line-scroll': $vuetify.breakpoint.mdAndUp}">
             <work-time-line
-                :work-list="user.workList"
-                style="position: relative; right: 24px;"
-                @open-upload="showUpload=true"
+              :work-list="user.workList"
+              style="position: relative; right: 24px;"
+              @open-upload="showUpload=true"
             ></work-time-line>
           </v-col>
         </v-row>
@@ -49,10 +52,12 @@
 </template>
 
 <script>
-import {user} from '@/mock/user'
-import WorkTimeLine from '@/pages/Profile/WorkTimeLine'
-import EditDialog from '@/pages/Profile/EditDialog'
-import UploadDialog from '@/pages/Profile/UploadDialog'
+import {user} from '@/mock/user';
+import {reqCheckLogin, reqLogout} from '../../require/user';
+
+import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
+import EditDialog from '@/pages/Profile/EditDialog';
+import UploadDialog from '@/pages/Profile/UploadDialog';
 import LoginCard from '../../components/Dialog/LoginCard';
 
 export default {
@@ -63,16 +68,26 @@ export default {
       showEdit: false,
       showUpload: false,
       user,
-      login: true,
+      login: false,
     };
   },
   methods: {
+    async init() {
+      this.login = await reqCheckLogin();
+    },
     openProfile() {
       console.log('open my profile');
     },
     setProfile() {
       this.showEdit = true;
     },
+    async logout() {
+      await reqLogout();
+      await this.init();
+    },
+  },
+  created() {
+    this.init();
   }
 }
 </script>

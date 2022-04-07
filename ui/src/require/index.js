@@ -1,0 +1,1 @@
+export const requireUrl = 'http://localhost:3001'
