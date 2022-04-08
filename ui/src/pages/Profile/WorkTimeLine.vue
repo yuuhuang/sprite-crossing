@@ -67,7 +67,12 @@ require('@/assets/optionsBar')
 export default {
   name: 'WorkTimeLine',
   props: {
-    worksList: Array,
+    worksList: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     profileDialog: Boolean,
   },
   methods: {

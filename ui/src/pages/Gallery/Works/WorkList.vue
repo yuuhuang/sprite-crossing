@@ -4,9 +4,9 @@
       <v-col :cols="12 / colsNum" v-for="(colItem, colIndex) in colArray" :key="colIndex">
         <WorkCard
           class="mb-6"
-          v-for="(item, index) in workList.filter((item, index) => index % colsNum === colIndex)"
+          v-for="(item, index) in worksList.filter((item, index) => index % colsNum === colIndex)"
           :key="index"
-          :work-data="item"
+          :work="item"
         ></WorkCard>
       </v-col>
     </v-row>
@@ -15,7 +15,7 @@
 
 <script>
 import WorkCard from './WorkCard'
-import {workList} from '@/mock/workList'
+import {reqGetAllWorks} from '@/require/work';
 
 export default {
   name: 'WorkList',
@@ -25,7 +25,7 @@ export default {
       // style
       colsNum: 0,
       // data
-      workList,
+      worksList: [],
     };
   },
   methods: {
@@ -66,6 +66,10 @@ export default {
       },
       immediate: true,
     },
+  },
+  async created() {
+    const result = await reqGetAllWorks();
+    this.worksList = result.worksList;
   },
 }
 </script>

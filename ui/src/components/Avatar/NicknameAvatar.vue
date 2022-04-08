@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-center">
+  <div style="display: flex;align-items: center">
     <v-avatar size="32" class="pointer-cursor" @click="openProfile">
       <v-img
         v-if="avatar"

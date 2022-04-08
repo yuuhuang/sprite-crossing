@@ -19,6 +19,24 @@ export const reqGetWork = async image => {
   }
 }
 
+export const reqGetAllWorks = async () => {
+  try {
+    const result = await fetch(`${requireUrl}/workslist`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return await result.json();
+  } catch (err) {
+    console.log(err);
+
+    return {};
+  }
+}
+
 export const reqPostWork = async work => {
   const {image, title, description, tags} = work;
   let imageUrl;
@@ -60,4 +78,42 @@ export const reqPostWork = async work => {
   }
 
   return true;
+}
+
+export const reqViewWork = async image => {
+  try {
+    const result = await fetch(`${requireUrl}/work/view`, {
+      method: 'POST',
+      body: JSON.stringify({image}),
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return await result.json();
+  } catch (err) {
+    console.log(err);
+
+    return {};
+  }
+}
+
+export const reqLikeWork = async image => {
+  try {
+    const result = await fetch(`${requireUrl}/work/like`, {
+      method: 'POST',
+      body: JSON.stringify({image}),
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return await result.json();
+  } catch (err) {
+    console.log(err);
+
+    return {};
+  }
 }

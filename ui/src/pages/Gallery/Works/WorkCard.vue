@@ -7,18 +7,17 @@
             <nickname-avatar
               :avatar="workData.avatar"
               :nickname="workData.nickname"
-              :user-id="workData.userId"
             ></nickname-avatar>
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="5" style="display: flex;align-items: center;justify-content: right">
-            {{workData.uploadTime}}
+            {{formatTime(workData.uploadTime)}}
           </v-col>
         </v-row>
       </v-card-subtitle>
       <v-img
         class="pointer-cursor"
-        :src="workData.image"
+        :src="`${$store.state.imagePrefix}image/work/${workData.image}`"
         @click="openImg"
       >
         <template v-slot:placeholder>
@@ -27,7 +26,7 @@
       </v-img>
       <v-card-title class="mt-n2">{{ workData.title }}</v-card-title>
       <v-card-text class="mt-n4 overflow-hidden" style="max-height: 64px">
-        {{ workData.text }}
+        {{ workData.description }}
       </v-card-text>
       <tags-show class="ml-4 mr-4" :tags="workData.tags" omit @choose-tag="chooseTag"></tags-show>
       <v-card-actions class="">
@@ -37,11 +36,11 @@
         <comment class="gray-filter mr-2"></comment>
         <span class="subheading mr-2">{{ workData.comments ? workData.comments.length : 0 }}</span>
         <heart
-          :class="{'gray-filter': !workData.like, 'mr-2': true, 'pointer-cursor': true}" @click="clickHeart"></heart>
-        <span class="subheading mr-2">{{ workData.likeNum }}</span>
+          :class="{'gray-filter': !currentLiked, 'mr-2': true, 'pointer-cursor': true}" @click="clickHeart"></heart>
+        <span class="subheading mr-2">{{ currentLikeNum }}</span>
       </v-card-actions>
     </v-card>
-    <work-dialog v-if="openWorkDialog" :work-data="workData" @close="openWorkDialog=false"></work-dialog>
+    <work-dialog v-if="openWorkDialog" :work="workData" @close="closeImg"></work-dialog>
   </div>
 </template>
 
@@ -50,28 +49,53 @@ import WorkDialog from '@/components/Dialog/WorkDialog';
 import TagsShow from '@/components/Tags/TagsShow';
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar';
 require('@/assets/cards')
+import {formatTime} from '@/utils';
+import {reqLikeWork, reqGetWork} from '@/require/work';
 
 export default {
   name: 'WorkCard',
   components: {NicknameAvatar, TagsShow, WorkDialog},
   props: {
-    workData: Object,
+    work: Object,
   },
   data() {
     return {
       openWorkDialog: false,
+      liked: '',
+      likeNum: '',
+      formatTime,
+      workData: this.work,
     };
   },
   methods: {
-    // Events
+    async init() {
+      this.workData = await reqGetWork(this.workData.image);
+    },
+
     openImg() {
       this.openWorkDialog = true;
+    },
+    async closeImg() {
+      await this.init();
+      this.openWorkDialog = false;
     },
     chooseTag(tag) {
       this.$emit('choose-tag', tag);
     },
-    clickHeart() {
-      console.log('like', this.workData.id, 'userId');
+    async clickHeart() {
+      const result = await reqLikeWork(this.workData.image);
+      if (result.success) {
+        this.liked = result.liked;
+        this.likeNum = result.likeNum;
+      }
+    },
+  },
+  computed: {
+    currentLikeNum() {
+      return this.likeNum === '' ? this.workData.likeNum : this.likeNum;
+    },
+    currentLiked() {
+      return this.liked === '' ? this.workData.liked : this.liked;
     },
   },
 }

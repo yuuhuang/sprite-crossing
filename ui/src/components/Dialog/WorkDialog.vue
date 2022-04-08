@@ -27,7 +27,7 @@
               tile
               flat>
               <v-img
-                :src="`${$store.state.imagePrefix}image/work/${workData.image}`"
+                :src="imageSrc"
                 max-width="100%"
                 :max-height="$vuetify.breakpoint.smAndDown ? '100%' : 480"
                 contain
@@ -38,13 +38,13 @@
               </v-img>
               <div class="icon-options flex-center" v-if="!$vuetify.breakpoint.smAndDown && showOverlay">
                 <eye class="gray-filter mr-2"></eye>
-                <span class="gray-filter mr-2">{{ workData.viewNum }}</span>
+                <span class="gray-filter mr-2">{{ currentViewNum }}</span>
                 <comment class="gray-filter mr-2"></comment>
                 <span class="gray-filter mr-2">{{ workData.comments ? workData.comments.length : 0 }}</span>
                 <heart
-                  :class="{'gray-filter': !workData.liked, 'mr-2': true, 'pointer-cursor': true}"
+                  :class="{'gray-filter': !currentLiked, 'mr-2': true, 'pointer-cursor': true}"
                   @click="clickHeart"></heart>
-                <span class="gray-filter mr-2">{{ workData.likeNum }}</span>
+                <span class="gray-filter mr-2">{{ currentLikeNum }}</span>
               </div>
               <div class="overlay" v-if="!$vuetify.breakpoint.smAndDown && showOverlay"></div>
             </v-card>
@@ -66,13 +66,13 @@
                   </v-col>
                   <v-col class="pt-0" style="font-size: 16px;display: flex;justify-content: right" cols="7">
                     <eye class="gray-filter mr-2"></eye>
-                    <span class="gray-filter mr-2">{{ workData.viewNum }}</span>
+                    <span class="gray-filter mr-2">{{ currentViewNum }}</span>
                     <comment class="gray-filter mr-2"></comment>
                     <span class="gray-filter mr-2">{{ workData.comments ? workData.comments.length : 0 }}</span>
                     <heart
-                      :class="{'gray-filter': !workData.liked, 'mr-2': true, 'pointer-cursor': true}"
+                      :class="{'gray-filter': !currentLiked, 'mr-2': true, 'pointer-cursor': true}"
                       @click="clickHeart"></heart>
-                    <span class="gray-filter mr-2">{{ workData.likeNum }}</span>
+                    <span class="gray-filter mr-2">{{ currentLikeNum }}</span>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -93,7 +93,7 @@ import TagsShow from '@/components/Tags/TagsShow';
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar';
 import Replies from '@/pages/Community/DiscussDialog/Replies';
 
-import {reqGetWork} from '@/require/work';
+import {reqGetWork, reqLikeWork, reqViewWork} from '@/require/work';
 
 import {formatTime} from '@/utils';
 
@@ -116,22 +116,33 @@ export default {
       replyName: 'caitou',
       // work
       workData: {
+        image: '',
         title: '',
         description: '',
         tags: [],
         comments: [],
         viewNum: 0,
         likeNum: 0,
+        liked: false,
         uploadTime: {},
         nickname: '',
         avatar: '',
       },
+      // Num
+      viewNum: '',
+      likeNum: '',
+      liked: '',
+
       formatTime,
     };
   },
   methods: {
     async init() {
       this.workData = await reqGetWork(this.image);
+      const result = await reqViewWork(this.workData.image);
+      if (result.success) {
+        this.viewNum = result.viewNum;
+      }
     },
 
     input(state) {
@@ -140,11 +151,12 @@ export default {
       }
     },
 
-    openProfile() {
-      console.log('open profile', this.workData.userId);
-    },
-    clickHeart() {
-      console.log('like', this.workData.id, 'userId');
+    async clickHeart() {
+      const result = await reqLikeWork(this.workData.image);
+      if (result.success) {
+        this.liked = result.liked;
+        this.likeNum = result.likeNum;
+      }
     },
 
     addReply(id, nickname) {
@@ -165,6 +177,20 @@ export default {
     leaveOptions() {
       this.showOverlay = false;
     },
+  },
+  computed: {
+    currentViewNum() {
+      return this.viewNum === '' ? this.workData.viewNum : this.viewNum;
+    },
+    currentLikeNum() {
+      return this.likeNum === '' ? this.workData.likeNum : this.likeNum;
+    },
+    currentLiked() {
+      return this.liked === '' ? this.workData.liked : this.liked;
+    },
+    imageSrc() {
+      return this.workData.image === '' ? '' : `${this.$store.state.imagePrefix}image/work/${this.workData.image}`
+    }
   },
   created() {
     if (this.work) {

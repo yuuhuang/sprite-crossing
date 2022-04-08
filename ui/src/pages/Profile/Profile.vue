@@ -5,10 +5,10 @@
       :class="{
         'container-scroll': $vuetify.breakpoint.smAndDown,
         'hide-scroll': true,
-        'flex-center': !login,
+        'flex-center': login === false,
        }"
     >
-      <login-card v-if="!login" @login="init"></login-card>
+      <login-card v-if="login === false" @login="init"></login-card>
       <div v-else>
         <v-img
           :src="backgroundSrc"
@@ -52,7 +52,7 @@
     <work-dialog v-if="showWork" :image="openWorkImage" @close="showWork=false"></work-dialog>
     <profile-dialog v-if="showProfile" @close="showProfile=false"></profile-dialog>
     <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
-    <upload-dialog v-if="showUpload" @close="showUpload=false"></upload-dialog>
+    <upload-dialog v-if="showUpload" @close="showUpload=false" @upload-success="init"></upload-dialog>
     <exit-confirm v-if="showExit" @close="showExit=false" @logout="logout"></exit-confirm>
   </div>
 </template>
@@ -91,7 +91,7 @@ export default {
       showUpload: false,
       showExit: false,
       user: {},
-      login: false,
+      login: '',
       worksList: [],
       openWorkImage: '',
     };

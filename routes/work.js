@@ -5,5 +5,8 @@ const router = Router();
 
 router.post('/work/publish', workController.postWork);
 router.post('/work', workController.getWork);
+router.get('/workslist', workController.getAllWorks);
+router.post('/work/view', workController.viewWork);
+router.post('/work/like', workController.likeWork);
 
 module.exports = router;

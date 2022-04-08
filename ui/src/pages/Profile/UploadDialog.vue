@@ -122,6 +122,7 @@ export default {
         const result =
             await reqPostWork({image: this.image, title: this.title, description: this.description, tags: this.tags});
         if (result) {
+          this.$emit('upload-success');
           this.$emit('close');
         }
       }
