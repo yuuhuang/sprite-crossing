@@ -48,6 +48,7 @@
         </v-row>
       </div>
     </v-container>
+    <profile-dialog v-if="showProfile" @close="showProfile=false"></profile-dialog>
     <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
     <upload-dialog v-if="showUpload" @close="showUpload=false"></upload-dialog>
     <exit-confirm v-if="showExit" @close="showExit=false" @logout="logout"></exit-confirm>
@@ -63,14 +64,16 @@ import EditDialog from '@/pages/Profile/EditDialog';
 import UploadDialog from '@/pages/Profile/UploadDialog';
 import LoginCard from '@/components/Dialog/LoginCard';
 import ExitConfirm from './ExitConfirm';
+import ProfileDialog from '@/components/Dialog/ProfileDialog';
 
 import AvatarDefault from '@/assets/avatar-large.svg';
 
 export default {
   name: 'Profile',
-  components: {ExitConfirm, LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
+  components: {ProfileDialog, ExitConfirm, LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
   data() {
     return {
+      showProfile: false,
       showEdit: false,
       showUpload: false,
       showExit: false,
@@ -81,13 +84,11 @@ export default {
   methods: {
     async init() {
       this.login = await reqCheckLogin();
-      if (this.login) {
-        this.user = await reqGetUser();
-      }
+      this.user = await reqGetUser();
     },
 
     openProfile() {
-      console.log('open my profile');
+      this.showProfile = true;
     },
     setProfile() {
       this.showEdit = true;

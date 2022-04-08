@@ -5,10 +5,11 @@ const fs = require('fs');
 
 module.exports.getUser = async (req, res) => {
   const { nickname } = req.body;
-  const token = req.cookies.jwt;
-  
   let user;
+
   try {
+    const token = req.cookies.jwt;
+
     if (nickname) {
       user = await UserModel.find({nickname});
       const { avatar, bio, backgroundImage, worksList } = user;
@@ -33,10 +34,10 @@ module.exports.getUser = async (req, res) => {
 
 module.exports.postUser = async (req, res) => {
   const { nickname, avatar, bio, backgroundImage } = req.body;
-  const token = req.cookies.jwt;
-  
   let user;
+
   try {
+    const token = req.cookies.jwt;
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);

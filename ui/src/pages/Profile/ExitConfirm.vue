@@ -6,15 +6,15 @@
         <span style="
           color: #ccc;
           font-weight: bolder;
-          font-size: xx-large;
+          font-size: xxx-large;
           transform: rotateZ(90deg);
         ">:(</span>
       </v-card-text>
       <v-card-actions class="flex-center">
-        <v-btn color="#ff4785cc" depressed @click="cancel">
+        <v-btn color="#ff478588" depressed @click="cancel">
           <span style="color: white">Cancel</span>
         </v-btn>
-        <v-btn color="#aaa" depressed @click="confirm">
+        <v-btn color="#ccc" depressed @click="confirm">
           <span style="color: white">Bye!</span>
         </v-btn>
       </v-card-actions>

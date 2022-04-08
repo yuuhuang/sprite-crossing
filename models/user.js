@@ -9,13 +9,16 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    default: '',
   },
   bio: {
     type: String,
+    default: '',
     maxlength: 128,
   },
   backgroundImage: {
     type: String,
+    default: '',
   },
 
   // foreign
@@ -30,13 +33,6 @@ const userSchema = new mongoose.Schema({
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
   },
-});
-
-userSchema.pre('save', async function(next) {
-  this.avatar = this.avatar || '';
-  this.bio = this.bio || '';
-  this.backgroundImage = this.backgroundImage || '';
-  next();
 });
 
 const UserModel = mongoose.model('user', userSchema);

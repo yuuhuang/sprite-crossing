@@ -7,9 +7,9 @@ const cookieParser = require('cookie-parser');
 const { requireAuth, checkUser } = require('./middlewares/auth');
 
 const authRoutes = require('./routes/auth');
-const uploadRoutes = require('./routes/upload');
-const userRoutes = require('./routes/user');
 const imageRoutes = require('./routes/image');
+const userRoutes = require('./routes/user');
+const workRoutes = require('./routes/work');
 
 const app = express();
 
@@ -46,8 +46,8 @@ app.use(cookieParser());
 // });
 
 app.use(authRoutes);
-app.use(uploadRoutes);
-app.use(userRoutes);
 app.use(imageRoutes);
+app.use(userRoutes);
+app.use(workRoutes);
 
 app.use('/home', express.static(__dirname + '/ui/dist'));

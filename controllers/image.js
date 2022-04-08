@@ -16,3 +16,12 @@ const backgroundStorage = multer.diskStorage({
   }
 });
 module.exports.backgroundUpload = multer({storage: backgroundStorage}).single('background');
+
+
+const workStorage = multer.diskStorage({
+  destination: 'uploads/works/',
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '_' + file.originalname);
+  }
+});
+module.exports.workUpload = multer({storage: workStorage}).single('work');

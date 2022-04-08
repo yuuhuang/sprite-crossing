@@ -4,45 +4,48 @@
       <v-card-text
         class="title-field pb-2"
         :style="{
-          backgroundImage: `linear-gradient(#0000, 40%, #ccc), url(${userData.backgroundImage})`}">
+          backgroundImage: `linear-gradient(#0000, 50%, #fff), url(${backgroundSrc})`}">
         <v-avatar size="64" class="avatar">
-          <v-img :src="userData.avatar"></v-img>
+          <v-img :src="avatarSrc"></v-img>
         </v-avatar>
-        <h1 class="mt-3 nickname">{{ userData.nickname }}</h1>
-        <h4 class="mt-2 self-introduction">{{ userData.bio }}</h4>
+        <h1 class="mt-3 nickname">{{ user.nickname }}</h1>
+        <h4 class="mt-2 self-introduction">{{ user.bio }}</h4>
       </v-card-text>
       <v-card-title class="flex justify-space-between pb-0">
         Art Works
         <div class="flex-center">
           <heart class="mr-2"></heart>
-          {{ userData.likeNum }}
+          {{ user.likeNum }}
         </div>
       </v-card-title>
       <v-card-text class="pt-8 pr-8 pl-4 hide-scroll" style="max-height: 360px">
-        <work-time-line :work-list="userData.workList" profile-dialog></work-time-line>
+        <work-time-line :work-list="user.worksList || []" profile-dialog></work-time-line>
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import {user} from '@/mock/user'
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
-require('@/assets/cards')
+import {reqGetUser} from '../../require/user';
+require('@/assets/cards');
 
 export default {
   name: 'ProfileDialog',
   components: {WorkTimeLine},
   props: {
-    userId: Number,
+    nickname: String,
   },
   data() {
     return {
-      userData: user,
+      user: {},
       show: false,
     };
   },
   methods: {
+    async init() {
+      this.user = await reqGetUser();
+    },
     input(state) {
       if (!state) {
         this.$emit('close');
@@ -52,8 +55,27 @@ export default {
       console.log('open work', work);
     },
   },
+  computed: {
+    backgroundSrc() {
+      if (this.user.backgroundImage) {
+        return `${this.$store.state.imagePrefix}image/background/${this.user.backgroundImage}`;
+      }
+
+      return '';
+    },
+    avatarSrc() {
+      if (this.user.avatar) {
+        return `${this.$store.state.imagePrefix}image/avatar/${this.user.avatar}`;
+      }
+
+      return '';
+    },
+  },
   mounted() {
     this.show = true;
+  },
+  created() {
+    this.init();
   },
 }
 </script>
@@ -75,10 +97,10 @@ export default {
 }
 .nickname {
   color: white;
-  text-shadow: 1px 1px 1px black;
+  text-shadow: 1px 1px 3px #444c;
 }
 .self-introduction {
   color: white;
-  text-shadow: 1px 1px 1px #666;
+  text-shadow: 1px 1px 2px #333;
 }
 </style>

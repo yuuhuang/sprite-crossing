@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="show" @input="input" width="640">
     <v-card>
-      <v-card-title style="color: #FF4785">Upload Artworks</v-card-title>
-      <v-card-text class="mt-4">
+      <v-card-title style="color: #FF4785" class="flex-center">Upload Artworks</v-card-title>
+      <v-card-text class="mt-4 pl-8 pr-8">
         <v-form ref="form">
           <v-file-input
-            v-model="work"
+            v-model="image"
             :counter="1"
             color="#FF4785"
             :rules="workRules"
@@ -35,10 +35,11 @@
             dense
           ></v-textarea>
           <v-combobox
-            v-model="labels"
+            v-model="tags"
             chips
             clearable
             label="Labels"
+            :rules="tagsRules"
             prepend-icon=""
             multiple
             outlined
@@ -63,10 +64,13 @@
           </v-combobox>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="upload" color="#ff4785">Upload</v-btn>
-        <v-btn text @click="cancel">Cancel</v-btn>
+      <v-card-actions class="flex-center">
+        <v-btn color="#ff4785cc" depressed min-width="96" @click="upload">
+          <span style="color: white">Upload</span>
+        </v-btn>
+        <v-btn color="#aaa" depressed min-width="96" @click="cancel">
+          <span style="color: white">Cancel</span>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -74,6 +78,7 @@
 
 <script>
 require('@/assets/cards')
+import {reqPostWork} from '@/require/work';
 
 export default {
   name: 'UploadDialog',
@@ -82,21 +87,24 @@ export default {
       // basic
       show: false,
       // values
-      work: [],
+      image: [],
       title: '',
       description: '',
-      labels: [],
+      tags: [],
       // rules
       workRules: [
-        f => !f || f.size < 2000000 || 'Art work size should be less than 2 MB!',
+        f => !f || f.size < 2000000 || 'art work maxsize is 2 MB!',
       ],
       titleRules: [
-        v => Boolean(v) || 'Title is required',
-        v => (v && v.length <= 32) || 'Title must be less than 32 characters',
+        v => Boolean(v) || 'title required',
+        v => (v && v.length <= 32) || 'title maxlength is 32',
       ],
       descriptionRules: [
-        v => (typeof v === 'string' && v.length <= 128) || 'Descriptions must be less than 128 characters',
+        v => (typeof v === 'string' && v.length <= 128) || 'descriptions maxlength is 128',
       ],
+      tagsRules: [
+        v => (v.length <= 12) || 'tags max number is 12'
+      ]
     };
   },
   methods: {
@@ -106,12 +114,16 @@ export default {
       }
     },
     removeLabel(item) {
-      this.labels.splice(this.labels.indexOf(item), 1)
-      this.labels = [...this.labels]
+      this.tags.splice(this.tags.indexOf(item), 1)
+      this.tags = [...this.tags]
     },
-    upload() {
+    async upload() {
       if (this.$refs.form.validate()) {
-        console.log('upload', this.work, this.title, this.description, this.labels);
+        const result =
+            await reqPostWork({image: this.image, title: this.title, description: this.description, tags: this.tags});
+        if (result) {
+          this.$emit('close');
+        }
       }
     },
     cancel() {
