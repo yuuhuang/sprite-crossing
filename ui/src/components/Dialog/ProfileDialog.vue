@@ -15,11 +15,11 @@
         Art Works
         <div class="flex-center">
           <heart class="mr-2"></heart>
-          {{ user.likeNum }}
+          {{ likeNum }}
         </div>
       </v-card-title>
       <v-card-text class="pt-8 pr-8 pl-4 hide-scroll" style="max-height: 360px">
-        <work-time-line :work-list="user.worksList || []" profile-dialog></work-time-line>
+        <work-time-line :works-list="worksList" profile-dialog></work-time-line>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -27,7 +27,7 @@
 
 <script>
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
-import {reqGetUser} from '../../require/user';
+import {reqGetUser, reqGetUserWork} from '../../require/user';
 require('@/assets/cards');
 
 export default {
@@ -40,11 +40,16 @@ export default {
     return {
       user: {},
       show: false,
-    };
+      worksList: [],
+      likeNum: 0,
+    }
   },
   methods: {
     async init() {
       this.user = await reqGetUser();
+      const result = await reqGetUserWork(this.nickname);
+      this.worksList = result.works;
+      this.likeNum = result.likeNum;
     },
     input(state) {
       if (!state) {

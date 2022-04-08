@@ -3,7 +3,7 @@ import {requireUrl} from './index';
 export const reqGetUser = async nickname => {
   let data;
   try {
-    const res = await fetch(`${requireUrl}/userinfo`, {
+    const res = await fetch(`${requireUrl}/user/info`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -27,6 +27,7 @@ export const reqGetUser = async nickname => {
 
   return data;
 }
+
 
 // eslint-disable-next-line max-lines-per-function
 export const reqPostUser = async user => {
@@ -75,6 +76,35 @@ export const reqPostUser = async user => {
     console.log(err);
 
     return false;
+  }
+
+  return data;
+}
+
+
+export const reqGetUserWork = async nickname => {
+  let data;
+  try {
+    const res = await fetch(`${requireUrl}/user/works`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nickname,
+      }),
+    });
+    data = await res.json();
+    if (data.errors) {
+      console.log(data.errors);
+
+      return {};
+    }
+  } catch (err) {
+    console.log(err);
+
+    return {};
   }
 
   return data;

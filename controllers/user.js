@@ -1,4 +1,5 @@
 const UserModel = require('../models/user');
+const WorkModel = require('../models/work');
 const AuthModel = require('../models/auth');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -70,6 +71,47 @@ module.exports.postUser = async (req, res) => {
       });
       res.status(200).json({ success: true, nickname, avatar, bio, backgroundImage });
     })
+  } catch (err) {
+    res.status(400).json({err});
+  }
+}
+
+module.exports.getUserWorks = async (req, res) => {
+  const { nickname } = req.body;
+  let user;
+  
+  try {
+    const token = req.cookies.jwt;
+    
+    if (nickname) {
+      user = await UserModel.find({nickname});
+      const works = [];
+      let likeNum = 0;
+      await user.worksList.map(async item => {
+        const work = await WorkModel.findById(item);
+        likeNum += work.likeUsers.length;
+        works.push({image: work.image, uploadTime: work.updateAt});
+      })
+      res.status(200).json({ works, likeNum });
+    } else {
+      jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
+        if (err) {
+          console.log(err.message);
+          res.status(400).json({err});
+        } else {
+          const auth = await AuthModel.findById(decodedToken.id);
+          user = await UserModel.findById(auth.userId);
+        }
+        const works = [];
+        let likeNum = 0;
+        await Promise.all(user.worksList.map(async item => {
+          const work = await WorkModel.findById(item);
+          likeNum += work.likeUsers.length;
+          works.push({image: work.image, uploadTime: work.updatedAt});
+        }))
+        res.status(200).json({ works, likeNum });
+      })
+    }
   } catch (err) {
     res.status(400).json({err});
   }

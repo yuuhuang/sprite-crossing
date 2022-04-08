@@ -40,8 +40,8 @@
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 7 : 12"
                  :class="{'hide-scroll': true, 'time-line-scroll': $vuetify.breakpoint.mdAndUp}">
             <work-time-line
-              :work-list="user.worksList || []"
               style="position: relative; right: 24px;"
+              :works-list="worksList"
               @open-upload="showUpload=true"
             ></work-time-line>
           </v-col>
@@ -57,7 +57,8 @@
 
 <script>
 import {reqCheckLogin, reqLogout} from '@/require/auth';
-import {reqGetUser} from '@/require/user';
+import {reqGetUser, reqGetUserWork} from '@/require/user';
+
 
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
@@ -79,12 +80,15 @@ export default {
       showExit: false,
       user: {},
       login: false,
+      worksList: [],
     };
   },
   methods: {
     async init() {
       this.login = await reqCheckLogin();
       this.user = await reqGetUser();
+      const result = await reqGetUserWork(this.nickname);
+      this.worksList = result.works;
     },
 
     openProfile() {

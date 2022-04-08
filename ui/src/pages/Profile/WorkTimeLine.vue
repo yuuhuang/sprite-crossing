@@ -48,7 +48,7 @@
           <v-img
             v-for="(item, index) in value"
             :key="index"
-            :src="item.image"
+            :src="`${$store.state.imagePrefix}image/work/${item.image}`"
             :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
             :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
             class="pointer-cursor"
@@ -67,7 +67,7 @@ require('@/assets/optionsBar')
 export default {
   name: 'WorkTimeLine',
   props: {
-    workList: Array,
+    worksList: Array,
     profileDialog: Boolean,
   },
   methods: {
@@ -83,7 +83,7 @@ export default {
     workTimeLine() {
       const result = {};
       // eslint-disable-next-line array-callback-return
-      this.workList.map(item => {
+      this.worksList.map(item => {
         const itemDate = new Date(item.uploadTime);
         let formatItemDate = `${itemDate.getMonth() + 1}-${itemDate.getDate()}`;
         if (itemDate.getFullYear() !== new Date().getFullYear()) {
