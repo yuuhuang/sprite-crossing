@@ -28,6 +28,7 @@
               </v-img>
             </v-avatar>
             <span class="mt-4" style="font-size: 24px;font-weight: 300">{{ user.nickname }}</span>
+            <span v-if="user.bio" class="mt-2" style="font-size: 16px;font-weight: 200">{{ user.bio }}</span>
             <div class="mt-4">
               <v-btn outlined dark color="#FF4785" class="mr-1" @click="setProfile">Edit</v-btn>
               <v-btn outlined dark color="#FF4785" class="ml-1 mr-1" @click="openProfile">Preview</v-btn>
@@ -47,14 +48,14 @@
         </v-row>
       </div>
     </v-container>
-    <edit-dialog v-if="showEdit" @close="showEdit=false"></edit-dialog>
+    <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
     <upload-dialog v-if="showUpload" @close="showUpload=false"></upload-dialog>
   </div>
 </template>
 
 <script>
-import {reqCheckLogin, reqLogout} from '../../require/auth';
-import {reqGetUser} from '../../require/user';
+import {reqCheckLogin, reqLogout} from '@/require/auth';
+import {reqGetUser} from '@/require/user';
 
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
@@ -76,11 +77,12 @@ export default {
   },
   methods: {
     async init() {
-      this.login = reqCheckLogin();
+      this.login = await reqCheckLogin();
       if (this.login) {
         this.user = await reqGetUser();
       }
     },
+
     openProfile() {
       console.log('open my profile');
     },

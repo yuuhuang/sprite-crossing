@@ -16,7 +16,8 @@ const app = express();
 // Connect to MongoDB
 
 // eslint-disable-next-line max-len
-const dbUrl = 'mongodb+srv://yuuhuang:x4tDcuvCQ2rNSmK@sprite-crossing.8roz9.mongodb.net/sprite-crossing?retryWrites=true&w=majority';
+// const dbUrl = 'mongodb+srv://yuuhuang:x4tDcuvCQ2rNSmK@sprite-crossing.8roz9.mongodb.net/sprite-crossing?retryWrites=true&w=majority';
+const dbUrl = 'mongodb://localhost:27017/sprite-crossing';
 mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => {
     console.log('connect to mongodb');

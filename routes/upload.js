@@ -1,11 +1,22 @@
 const {Router} = require('express');
-const multer  = require('multer');
+const uploadController = require('../controllers/upload');
 
-const uploadWork = multer({ dest: 'uploads/works' });
 const router = Router();
 
+router.post('/upload/avatar', uploadController.avatarUpload, (req, res) => {
+  if (req.file) {
+    res.status(200).json({success: true, filename: req.file.filename})
+  } else {
+    res.status(400).json({error: 'no file'})
+  }
+})
 
-router.post('/upload/work', uploadWork.single('avatar'), (req, res, next) => {
-});
+router.post('/upload/background', uploadController.backgroundUpload, (req, res) => {
+  if (req.file) {
+    res.status(200).json({success: true, filename: req.file.filename})
+  } else {
+    res.status(400).json({error: 'no file'})
+  }
+})
 
 module.exports = router;

@@ -71,8 +71,8 @@ module.exports.postSignup = async (req, res) => {
   try {
     const auth = await AuthModel.create({ email, password });
     const user = await UserModel.create({ nickname });
-    AuthModel.update({ email }, {userId: user._id}, err => {
-      res.status(400).json({err});
+    AuthModel.updateOne({ email }, {userId: user._id}, err => {
+      console.log(err)
     });
     const token = createToken(auth._id);
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });

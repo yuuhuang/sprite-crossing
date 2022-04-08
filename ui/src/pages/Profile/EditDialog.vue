@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" @input="input" width="320">
     <v-card>
-      <v-card-title style="color: #FF4785">Edit Profile</v-card-title>
+      <v-card-title style="color: #FF4785" class="flex-center">Edit Profile</v-card-title>
       <v-card-text class="mt-4">
         <v-form ref="form">
           <v-text-field
@@ -46,16 +46,17 @@
           ></v-file-input>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="save" color="#ff4785">Save</v-btn>
-        <v-btn text @click="cancel">Cancel</v-btn>
+      <v-card-actions class="flex-center">
+        <v-btn color="#ff4785cc" depressed min-width="96" @click="save"><span style="color: white">Save</span></v-btn>
+        <v-btn color="#aaa" depressed min-width="96" @click="cancel"><span style="color: white">Cancel</span></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import {reqGetUser, reqPostUser} from '../../require/user';
+
 export default {
   name: 'EditDialog',
   data() {
@@ -65,21 +66,21 @@ export default {
       // values
       nickname: '',
       bio: '',
-      avatar: [],
-      background: [],
+      avatar: {},
+      background: {},
       // rules
       nameRules: [
-        v => Boolean(v) || 'Nickname is required',
-        v => (v && v.length <= 12) || 'Nickname must be less than 12 characters',
+        v => Boolean(v) || 'nickname required',
+        v => (v && v.length <= 12) || 'nickname maxlength is 12',
       ],
       bioRules: [
-        v => (typeof v === 'string' && v.length <= 128) || 'Bio must be less than 128 characters',
+        v => (typeof v === 'string' && v.length <= 128) || 'bio maxlength is 128',
       ],
       avatarRules: [
-        f => !f || f.size < 2000000 || 'Avatar size should be less than 2 MB!',
+        // f => !f || f && f.size < 2000000 || 'avatar maxsize is 2 MB!',
       ],
       backgroundRules: [
-        f => !f || f.size < 5000000 || 'Avatar size should be less than 5 MB!',
+        // f => !f || f.size < 3000000 || 'backgroundImage maxsize is 3 MB!',
       ],
     };
   },
@@ -90,14 +91,28 @@ export default {
       }
     },
 
-    save() {
+    async save() {
       if (this.$refs.form.validate()) {
-        console.log('save', this.nickname, this.avatar, this.bio, this.background);
+        const result = await reqPostUser({
+          nickname: this.nickname,
+          avatar: this.avatar,
+          bio: this.bio,
+          backgroundImage: this.background,
+        });
+        if (result.success) {
+          this.$emit('edit-success');
+          this.$emit('close');
+        }
       }
     },
     cancel() {
       this.$emit('close');
     },
+  },
+  async created() {
+    const user = await reqGetUser();
+    this.nickname = user.nickname;
+    this.bio = user.bio;
   },
   mounted() {
     this.show = true;
@@ -105,6 +120,6 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import "src/styles/common";
 </style>
