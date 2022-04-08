@@ -8,6 +8,7 @@ const { requireAuth, checkUser } = require('./middlewares/auth');
 
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -44,5 +45,6 @@ app.use(cookieParser());
 
 app.use(authRoutes);
 app.use(uploadRoutes);
+app.use(userRoutes);
 
 app.use('/home', express.static(__dirname + '/ui/dist'));

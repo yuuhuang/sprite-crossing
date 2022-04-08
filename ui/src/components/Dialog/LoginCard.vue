@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import {reqSignup, reqLogin} from '../../require/user';
+import {reqSignup, reqLogin} from '../../require/auth';
 
 export default {
   name: 'LoginCard',

@@ -20,7 +20,8 @@
         <v-row style="position: relative; bottom: 96px;">
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 5 : 12" class="flex-column align-center" style="display: flex">
             <v-avatar size="160" style="border: 2px #fff solid;box-shadow: 0 0 0 2px #ccc">
-              <v-img aspect-ratio="1" :src="user.avatar">
+              <avatar-default v-if="!user.avatar || user.avatar === ''" class="gray-filter"></avatar-default>
+              <v-img aspect-ratio="1" :src="user.avatar" v-else>
                 <template v-slot:placeholder>
                   <v-skeleton-loader type="image" height="100%" tile></v-skeleton-loader>
                 </template>
@@ -38,7 +39,7 @@
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 7 : 12"
                  :class="{'hide-scroll': true, 'time-line-scroll': $vuetify.breakpoint.mdAndUp}">
             <work-time-line
-              :work-list="user.workList"
+              :work-list="user.worksList || []"
               style="position: relative; right: 24px;"
               @open-upload="showUpload=true"
             ></work-time-line>
@@ -52,28 +53,33 @@
 </template>
 
 <script>
-import {user} from '@/mock/user';
-import {reqCheckLogin, reqLogout} from '../../require/user';
+import {reqCheckLogin, reqLogout} from '../../require/auth';
+import {reqGetUser} from '../../require/user';
 
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
 import UploadDialog from '@/pages/Profile/UploadDialog';
-import LoginCard from '../../components/Dialog/LoginCard';
+import LoginCard from '@/components/Dialog/LoginCard';
+
+import AvatarDefault from '@/assets/avatar-large.svg';
 
 export default {
   name: 'Profile',
-  components: {LoginCard, UploadDialog, EditDialog, WorkTimeLine},
+  components: {LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
   data() {
     return {
       showEdit: false,
       showUpload: false,
-      user,
+      user: {},
       login: false,
     };
   },
   methods: {
     async init() {
-      this.login = await reqCheckLogin();
+      this.login = reqCheckLogin();
+      if (this.login) {
+        this.user = await reqGetUser();
+      }
     },
     openProfile() {
       console.log('open my profile');

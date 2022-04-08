@@ -32,6 +32,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.pre('save', async function(next) {
+  this.avatar = this.avatar || '';
+  this.bio = this.bio || '';
+  this.backgroundImage = this.backgroundImage || '';
+  next();
+});
+
 const UserModel = mongoose.model('user', userSchema);
 
 module.exports = UserModel;
