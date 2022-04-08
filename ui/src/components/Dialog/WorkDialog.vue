@@ -11,7 +11,6 @@
             <nickname-avatar
               :nickname="workData.nickname"
               :avatar="workData.avatar"
-              :user-id="workData.userId"
             ></nickname-avatar>
           </v-col>
         </v-row>
@@ -28,7 +27,7 @@
               tile
               flat>
               <v-img
-                :src="workData.image"
+                :src="`${$store.state.imagePrefix}image/work/${workData.image}`"
                 max-width="100%"
                 :max-height="$vuetify.breakpoint.smAndDown ? '100%' : 480"
                 contain
@@ -43,7 +42,7 @@
                 <comment class="gray-filter mr-2"></comment>
                 <span class="gray-filter mr-2">{{ workData.comments ? workData.comments.length : 0 }}</span>
                 <heart
-                  :class="{'gray-filter': !workData.like, 'mr-2': true, 'pointer-cursor': true}"
+                  :class="{'gray-filter': !workData.liked, 'mr-2': true, 'pointer-cursor': true}"
                   @click="clickHeart"></heart>
                 <span class="gray-filter mr-2">{{ workData.likeNum }}</span>
               </div>
@@ -61,9 +60,8 @@
                 <v-row>
                   <v-col class="pt-0" cols="5">
                     <nickname-avatar
-                        :nickname="workData.nickname"
-                        :avatar="workData.avatar"
-                        :user-id="workData.userId"
+                      :nickname="workData.nickname"
+                      :avatar="workData.avatar"
                     ></nickname-avatar>
                   </v-col>
                   <v-col class="pt-0" style="font-size: 16px;display: flex;justify-content: right" cols="7">
@@ -72,14 +70,14 @@
                     <comment class="gray-filter mr-2"></comment>
                     <span class="gray-filter mr-2">{{ workData.comments ? workData.comments.length : 0 }}</span>
                     <heart
-                        :class="{'gray-filter': !workData.like, 'mr-2': true, 'pointer-cursor': true}"
-                        @click="clickHeart"></heart>
+                      :class="{'gray-filter': !workData.liked, 'mr-2': true, 'pointer-cursor': true}"
+                      @click="clickHeart"></heart>
                     <span class="gray-filter mr-2">{{ workData.likeNum }}</span>
                   </v-col>
                 </v-row>
               </v-card-text>
-              <v-card-text class="pt-1 pb-1">{{ workData.text }}</v-card-text>
-              <v-card-subtitle class="pt-1 pb-1">{{ workData.uploadTime }}</v-card-subtitle>
+              <v-card-text class="pt-1 pb-1">{{ workData.description }}</v-card-text>
+              <v-card-subtitle class="pt-1 pb-1">{{ formatTime(workData.uploadTime) }}</v-card-subtitle>
               <tags-show :tags="workData.tags" class="ml-4 mr-4"></tags-show>
             </v-card>
             <replies :work-id="workData.workId" :sub-comments="workData.comments"></replies>
@@ -94,13 +92,19 @@
 import TagsShow from '@/components/Tags/TagsShow';
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar';
 import Replies from '@/pages/Community/DiscussDialog/Replies';
+
+import {reqGetWork} from '@/require/work';
+
+import {formatTime} from '@/utils';
+
 require('@/assets/cards');
 
 export default {
   name: 'WorkDialog',
   components: {Replies, NicknameAvatar, TagsShow},
   props: {
-    workData: Object,
+    image: String,
+    work: Object,
   },
   data() {
     return {
@@ -109,10 +113,27 @@ export default {
       // comment
       comment: '',
       replyId: 0,
-      replyName: 'caitou'
+      replyName: 'caitou',
+      // work
+      workData: {
+        title: '',
+        description: '',
+        tags: [],
+        comments: [],
+        viewNum: 0,
+        likeNum: 0,
+        uploadTime: {},
+        nickname: '',
+        avatar: '',
+      },
+      formatTime,
     };
   },
   methods: {
+    async init() {
+      this.workData = await reqGetWork(this.image);
+    },
+
     input(state) {
       if (!state) {
         this.$emit('close');
@@ -144,6 +165,13 @@ export default {
     leaveOptions() {
       this.showOverlay = false;
     },
+  },
+  created() {
+    if (this.work) {
+      this.workData = this.work;
+    } else {
+      this.init();
+    }
   },
   mounted() {
     if (!this.$vuetify.breakpoint.smAndDown) {

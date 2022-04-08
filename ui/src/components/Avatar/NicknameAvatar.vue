@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="flex-center">
     <v-avatar size="32" class="pointer-cursor" @click="openProfile">
       <v-img
         v-if="avatar"
         class="elevation-6"
         alt="avatar"
-        :src="avatar"
+        :src="`${$store.state.imagePrefix}image/avatar/${avatar}`"
       >
         <template v-slot:placeholder>
           <account class="gray-filter"></account>
@@ -13,8 +13,8 @@
       </v-img>
       <account v-else class="gray-filter"></account>
     </v-avatar>
-    <span class="ml-1 pointer-cursor" @click="openProfile">{{nickname}}</span>
-    <profile-dialog v-if="showProfileDialog" :user-id="userId" @close="showProfileDialog=false"></profile-dialog>
+    <span class="ml-2 pointer-cursor" @click="openProfile">{{nickname}}</span>
+    <profile-dialog v-if="showProfileDialog" :nickname="nickname" @close="showProfileDialog=false"></profile-dialog>
   </div>
 </template>
 
@@ -27,7 +27,6 @@ export default {
   props: {
     nickname: String,
     avatar: String,
-    userId: Number,
   },
   data() {
     return {
@@ -42,5 +41,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "src/styles/common";
 </style>

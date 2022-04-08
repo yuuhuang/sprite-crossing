@@ -1,5 +1,24 @@
 import {requireUrl} from './index';
 
+export const reqGetWork = async image => {
+  try {
+    const result = await fetch(`${requireUrl}/work`, {
+      method: 'POST',
+      body: JSON.stringify({image}),
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return await result.json();
+  } catch (err) {
+    console.log(err);
+
+    return {};
+  }
+}
+
 export const reqPostWork = async work => {
   const {image, title, description, tags} = work;
   let imageUrl;

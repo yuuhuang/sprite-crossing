@@ -43,11 +43,13 @@
               style="position: relative; right: 24px;"
               :works-list="worksList"
               @open-upload="showUpload=true"
+              @open-work="openWork"
             ></work-time-line>
           </v-col>
         </v-row>
       </div>
     </v-container>
+    <work-dialog v-if="showWork" :image="openWorkImage" @close="showWork=false"></work-dialog>
     <profile-dialog v-if="showProfile" @close="showProfile=false"></profile-dialog>
     <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
     <upload-dialog v-if="showUpload" @close="showUpload=false"></upload-dialog>
@@ -59,21 +61,31 @@
 import {reqCheckLogin, reqLogout} from '@/require/auth';
 import {reqGetUser, reqGetUserWork} from '@/require/user';
 
-
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
 import UploadDialog from '@/pages/Profile/UploadDialog';
 import LoginCard from '@/components/Dialog/LoginCard';
 import ExitConfirm from './ExitConfirm';
 import ProfileDialog from '@/components/Dialog/ProfileDialog';
+import WorkDialog from '@/components/Dialog/WorkDialog';
 
 import AvatarDefault from '@/assets/avatar-large.svg';
 
 export default {
   name: 'Profile',
-  components: {ProfileDialog, ExitConfirm, LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
+  components: {
+    WorkDialog,
+    ProfileDialog,
+    ExitConfirm,
+    LoginCard,
+    UploadDialog,
+    EditDialog,
+    WorkTimeLine,
+    AvatarDefault
+  },
   data() {
     return {
+      showWork: false,
       showProfile: false,
       showEdit: false,
       showUpload: false,
@@ -81,6 +93,7 @@ export default {
       user: {},
       login: false,
       worksList: [],
+      openWorkImage: '',
     };
   },
   methods: {
@@ -96,6 +109,10 @@ export default {
     },
     setProfile() {
       this.showEdit = true;
+    },
+    openWork(image) {
+      this.showWork = true;
+      this.openWorkImage = image;
     },
     async logout() {
       await reqLogout();

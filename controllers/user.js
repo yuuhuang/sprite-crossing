@@ -13,7 +13,7 @@ module.exports.getUser = async (req, res) => {
 
     if (nickname) {
       user = await UserModel.find({nickname});
-      const { avatar, bio, backgroundImage, worksList } = user;
+      const { avatar, bio, backgroundImage, worksList } = user[0];
       res.status(200).json({ nickname, avatar, bio, backgroundImage, worksList });
     } else {
       jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
@@ -87,11 +87,11 @@ module.exports.getUserWorks = async (req, res) => {
       user = await UserModel.find({nickname});
       const works = [];
       let likeNum = 0;
-      await user.worksList.map(async item => {
+      await Promise.all(user[0].worksList.map(async item => {
         const work = await WorkModel.findById(item);
         likeNum += work.likeUsers.length;
-        works.push({image: work.image, uploadTime: work.updateAt});
-      })
+        works.push({image: work.image, uploadTime: work.updatedAt});
+      }))
       res.status(200).json({ works, likeNum });
     } else {
       jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {

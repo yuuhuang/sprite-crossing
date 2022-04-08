@@ -53,7 +53,7 @@
             :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
             class="pointer-cursor"
             style="display: inline-block;margin-right: 6px;"
-            @click="openWork(item.workId)"
+            @click="openWork(item.image)"
           ></v-img>
         </v-card-text>
       </v-card>
@@ -71,8 +71,8 @@ export default {
     profileDialog: Boolean,
   },
   methods: {
-    openWork(id) {
-      console.log('open work ', id);
+    openWork(image) {
+      this.$emit('open-work', image);
     },
     uploadWork() {
       this.$emit('open-upload');
