@@ -32,7 +32,7 @@
             <div class="mt-4">
               <v-btn outlined dark color="#FF4785" class="mr-1" @click="setProfile">Edit</v-btn>
               <v-btn outlined dark color="#FF4785" class="ml-1 mr-1" @click="openProfile">Preview</v-btn>
-              <v-btn outlined color="#aaa" class="ml-1" width="36" min-width="36" @click="logout">
+              <v-btn outlined color="#aaa" class="ml-1" width="36" min-width="36" @click="showExit=true">
                 <exit class="gray-filter"></exit>
               </v-btn>
             </div>
@@ -50,6 +50,7 @@
     </v-container>
     <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
     <upload-dialog v-if="showUpload" @close="showUpload=false"></upload-dialog>
+    <exit-confirm v-if="showExit" @close="showExit=false" @logout="logout"></exit-confirm>
   </div>
 </template>
 
@@ -61,16 +62,18 @@ import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
 import UploadDialog from '@/pages/Profile/UploadDialog';
 import LoginCard from '@/components/Dialog/LoginCard';
+import ExitConfirm from './ExitConfirm';
 
 import AvatarDefault from '@/assets/avatar-large.svg';
 
 export default {
   name: 'Profile',
-  components: {LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
+  components: {ExitConfirm, LoginCard, UploadDialog, EditDialog, WorkTimeLine, AvatarDefault},
   data() {
     return {
       showEdit: false,
       showUpload: false,
+      showExit: false,
       user: {},
       login: false,
     };
