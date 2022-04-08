@@ -11,7 +11,7 @@
       <login-card v-if="!login" @login="init"></login-card>
       <div v-else>
         <v-img
-          :src="user.backgroundImage"
+          :src="backgroundSrc"
           height="256"
           width="100%"
           gradient="to top, #fff, #0000"
@@ -21,7 +21,7 @@
           <v-col :cols="$vuetify.breakpoint.mdAndUp ? 5 : 12" class="flex-column align-center" style="display: flex">
             <v-avatar size="160" style="border: 2px #fff solid;box-shadow: 0 0 0 2px #ccc">
               <avatar-default v-if="!user.avatar || user.avatar === ''" class="gray-filter"></avatar-default>
-              <v-img aspect-ratio="1" :src="user.avatar" v-else>
+              <v-img aspect-ratio="1" :src="avatarSrc" v-else>
                 <template v-slot:placeholder>
                   <v-skeleton-loader type="image" height="100%" tile></v-skeleton-loader>
                 </template>
@@ -92,6 +92,22 @@ export default {
     async logout() {
       await reqLogout();
       await this.init();
+    },
+  },
+  computed: {
+    backgroundSrc() {
+      if (this.user.backgroundImage) {
+        return `${this.$store.state.imagePrefix}image/background/${this.user.backgroundImage}`;
+      }
+
+      return '';
+    },
+    avatarSrc() {
+      if (this.user.avatar) {
+        return `${this.$store.state.imagePrefix}image/avatar/${this.user.avatar}`;
+      }
+
+      return '';
     },
   },
   created() {
