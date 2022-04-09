@@ -52,7 +52,7 @@ module.exports.postUser = async (req, res) => {
         const oldAvatar = user.avatar;
         await UserModel.updateOne({_id: user._id}, {avatar}, (err, raw) => {
           console.log(err);
-        });
+        }).clone();
         await fs.unlink(`uploads/avatars/${oldAvatar}`, err => {
           console.log(err);
         });
@@ -61,7 +61,7 @@ module.exports.postUser = async (req, res) => {
         const oldBackgroundImage = user.backgroundImage;
         await UserModel.updateOne({_id: user._id}, {backgroundImage}, (err, raw) => {
           console.log(err);
-        });
+        }).clone();
         await fs.unlink(`uploads/backgrounds/${oldBackgroundImage}`, err => {
           console.log(err);
         });

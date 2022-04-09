@@ -29,11 +29,14 @@
       <v-spacer v-if="!collapse"></v-spacer>
       <v-avatar
         class="hover-pointer"
-        width="32px"
-        height="32px"
+        size="32"
         @click="pushRoute('/profile')"
       >
-        <img src="@/assets/caitou.png">
+        <v-img aspect-ratio="1" :src="`${$store.state.imagePrefix}image/myavatar`">
+          <template v-slot:placeholder>
+            <v-skeleton-loader type="image" height="100%" tile></v-skeleton-loader>
+          </template>
+        </v-img>
       </v-avatar>
       <v-menu
         v-if="$vuetify.breakpoint.width < 960 || collapse"
