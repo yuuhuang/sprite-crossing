@@ -80,7 +80,11 @@
               <v-card-subtitle class="pt-1 pb-1">{{ formatTime(workData.uploadTime) }}</v-card-subtitle>
               <tags-show :tags="workData.tags" class="ml-4 mr-4"></tags-show>
             </v-card>
-            <replies :work-id="workData.title" :sub-comments="workData.comments"></replies>
+            <replies
+              :work-img="workData.image"
+              :sub-comments="workData.comments"
+              @send-comment="init"
+            ></replies>
           </v-col>
         </v-row>
       </v-card-text>

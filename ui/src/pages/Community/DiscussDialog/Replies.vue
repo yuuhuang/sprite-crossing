@@ -4,7 +4,7 @@
     style="background-color: #FF478512;overflow-y: scroll !important;"
     flat
     class="hide-scroll"
-    :max-height="workId ? '100%' : '320px'"
+    :max-height="workImg ? '100%' : '320px'"
   >
     <v-card-text class="flex-center pt-0">
       <v-text-field
@@ -18,7 +18,7 @@
         small
         icon
         color="#FF4785"
-        @click="sendReply"
+        @click="sendReply(-1)"
       >
         <send></send>
       </v-btn>
@@ -31,18 +31,17 @@
             <div class="flex-column">
               <div style="display: flex;justify-content: space-between;align-items: center">
                 <nickname-avatar
-                  :user-id="subComment.replierId"
-                  :nickname="subComment.replierNickname"
-                  :avatar="subComment.replierAvatar"
+                  :nickname="subComment.nickname"
+                  :avatar="subComment.avatar"
                 ></nickname-avatar>
-                <span class="font-italic">{{ formatTime(subComment.createTime) }}</span>
+                <span class="font-italic">{{ formatTime(subComment.uploadTime) }}</span>
               </div>
               <div class="pt-2 pl-2">
                 <span
-                  v-if="subComment.replyToId > -1"
+                  v-if="subComment.replyTo !== ''"
                   style="color: #FF4785"
-                >@{{ subComment.replyToNickname }}</span>
-                <span v-if="subComment.replyToId > -1">: </span>
+                >@{{ subComment.replyTo }}</span>
+                <span v-if="subComment.replyTo !== ''">: </span>
                 <span>{{ subComment.text }}</span>
               </div>
             </div>
@@ -60,14 +59,14 @@
               placeholder="leave a reply..."
               style="width: 100%;"
               hide-details
-              v-model="replyTexts[subComment.replierId]"
+              v-model="replyTexts[index]"
             ></v-text-field>
             <v-btn
               class="mt-4"
               icon
               small
               color="#FF4785"
-              @click="sendReply(subComment.replierId)"
+              @click="sendReply(index, subComment.nickname)"
             >
               <send></send>
             </v-btn>
@@ -81,7 +80,7 @@
 
 <script>
 import {formatTime} from '@/utils'
-
+import {reqCommentWork} from '@/require/work'
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar'
 
 export default {
@@ -91,7 +90,7 @@ export default {
     subComments: Array,
     commentId: Number,
     discussId: Number,
-    workId: Number,
+    workImg: String,
   },
   data() {
     return {
@@ -101,30 +100,12 @@ export default {
     }
   },
   methods: {
-    sendReply(replyTo) {
-      if (typeof this.workId === 'number' && this.workId > -1) {
-        if (typeof replyTo === 'number' && replyTo > -1) {
-          console.log('myId', replyTo, this.workId, this.replyTexts[replyTo], new Date());
-        } else {
-          console.log('myId', -1, this.workId, this.replyTexts[-1], new Date());
-        }
-      } else if (typeof replyTo === 'number' && replyTo > -1) {
-        console.log('myId', replyTo, this.discussId, this.commentId, this.replyTexts[replyTo], new Date());
-      } else {
-        console.log('myId', -1, this.discussId, this.commentId, this.replyTexts[-1], new Date());
-      }
+    async sendReply(index, replyTo) {
+      await reqCommentWork({image: this.workImg, text: this.replyTexts[index],
+        uploadTime: Date.now(), replyTo: replyTo || ''});
+      this.replyTexts[index] = '';
+      this.$emit('send-comment');
     },
-  },
-  created() {
-    if (Array.isArray(this.subComments)) {
-      this.replyTexts[-1] = '';
-      // eslint-disable-next-line array-callback-return
-      this.subComments.map(item => {
-        if (!(item in this.replyTexts)) {
-          this.replyTexts[item.replierId] = '';
-        }
-      })
-    }
   },
   watch: {
     expandIndex(newVal) {

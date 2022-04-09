@@ -117,3 +117,23 @@ export const reqLikeWork = async image => {
     return {};
   }
 }
+
+export const reqCommentWork = async comments => {
+  try {
+    const {image, text, uploadTime, replyTo} = comments;
+    const result = await fetch(`${requireUrl}/work/comment`, {
+      method: 'POST',
+      body: JSON.stringify({image, text, uploadTime, replyTo}),
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return await result.json();
+  } catch (err) {
+    console.log(err);
+
+    return {};
+  }
+}

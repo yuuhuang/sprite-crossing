@@ -150,3 +150,31 @@ module.exports.likeWork = async (req, res) => {
     res.status(400).json({err});
   }
 }
+
+module.exports.postWorkComment = (req, res) => {
+  try {
+    const { image, text, uploadTime, replyTo } = req.body;
+    
+    const token = req.cookies.jwt;
+    jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
+      if (err) {
+        console.log(err.message);
+        res.status(400).json({err});
+      } else {
+        const auth = await AuthModel.findById(decodedToken.id);
+        const user = await UserModel.findById(auth.userId);
+        const work = await WorkModel.findOne({image});
+        const oldComments = work.comments;
+        await WorkModel.updateOne({image}, {comments: [{
+            avatar: user.avatar,
+            nickname: user.nickname,
+            text, uploadTime, replyTo: replyTo || '',
+          }, ...oldComments]});
+        res.status(200).json({success: true});
+      }
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({err});
+  }
+}
