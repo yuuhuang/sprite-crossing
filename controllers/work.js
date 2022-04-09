@@ -15,14 +15,14 @@ module.exports.getWork = async (req, res) => {
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const work = await WorkModel.findOne({image});
-        const { title, description, tags, viewUsers, likeUsers, comments, userId, updatedAt} = work;
+        const { title, description, tags, viewUsers, likeUsers, comments, userId, createdAt} = work;
         const user = await UserModel.findById(userId);
         res.status(200).json({
           image,
           title, description, tags, comments,
           viewNum: viewUsers.length,
           likeNum: likeUsers.length,
-          uploadTime: updatedAt,
+          uploadTime: createdAt,
           nickname: user.nickname,
           avatar: user.avatar,
           liked: likeUsers.includes(auth.userId),
@@ -55,7 +55,7 @@ module.exports.getAllWorks = async (req, res) => {
             comments: item.comments,
             viewNum: item.viewUsers.length,
             likeNum: item.likeUsers.length,
-            uploadTime: item.updatedAt,
+            uploadTime: item.createdAt,
             nickname: artist.nickname,
             avatar: artist.avatar,
             liked: item.likeUsers.includes(auth.userId),

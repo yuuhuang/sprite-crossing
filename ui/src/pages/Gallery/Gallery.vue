@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <work-list></work-list>
+      <work-list :search="search" :sort="sort"></work-list>
     </v-row>
   </v-container>
 </template>
@@ -33,17 +33,16 @@ export default {
   components: {WorkList, FilterMenu, SortMenu, SearchMenu},
   data() {
     return {
-      // sort
-      // filter
-      // search
+      sort: '',
+      search: '',
     }
   },
   methods: {
     changeSort(sort) {
-      console.log(sort);
+      this.sort = sort;
     },
     changeSearch(search) {
-      console.log(search);
+      this.search = search;
     },
     changeFilter(filter) {
       console.log(filter);

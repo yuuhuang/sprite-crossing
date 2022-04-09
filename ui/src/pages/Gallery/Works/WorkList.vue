@@ -4,9 +4,9 @@
       <v-col :cols="12 / colsNum" v-for="(colItem, colIndex) in colArray" :key="colIndex">
         <WorkCard
           class="mb-6"
-          v-for="(item, index) in worksList.filter((item, index) => index % colsNum === colIndex)"
-          :key="index"
+          v-for="item in formatWorksList.filter((item, index) => index % colsNum === colIndex)"
           :work="item"
+          :key="item.title"
         ></WorkCard>
       </v-col>
     </v-row>
@@ -20,6 +20,10 @@ import {reqGetAllWorks} from '@/require/work';
 export default {
   name: 'WorkList',
   components: {WorkCard},
+  props: {
+    sort: String,
+    search: String,
+  },
   data() {
     return {
       // style
@@ -57,6 +61,30 @@ export default {
     },
     colArray() {
       return Array.from({length: this.colsNum});
+    },
+    formatWorksList() {
+      let compare;
+      const copyList = [...this.worksList];
+      switch (this.sort) {
+      case 'Favourite':
+        compare = (a, b) => b.likeNum - a.likeNum;
+        break;
+      case 'Most View':
+        compare = (a, b) => b.viewNum - a.viewNum;
+        break;
+      default: // Latest
+        compare = (a, b) => a.uploadTime - b.uploadTime;
+        break;
+      }
+      if (this.search) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return copyList.sort(compare).filter(item => item.title.includes(this.search) ||
+            item.description.includes(this.search) ||
+            item.tags.some(tag => tag.includes(this.search)));
+      }
+
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return copyList.sort(compare);
     },
   },
   watch: {
