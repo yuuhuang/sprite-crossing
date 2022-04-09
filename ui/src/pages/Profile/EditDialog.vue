@@ -14,6 +14,7 @@
             outlined
             dense
           ></v-text-field>
+          <span class="error-span">{{ nicknameErrors }}</span>
           <v-textarea
             v-model="bio"
             :counter="128"
@@ -82,6 +83,8 @@ export default {
       backgroundRules: [
         // f => !f || f.size < 3000000 || 'backgroundImage maxsize is 3 MB!',
       ],
+      // errors
+      nicknameErrors: '',
     };
   },
   methods: {
@@ -102,6 +105,8 @@ export default {
         if (result.success) {
           this.$emit('edit-success');
           this.$emit('close');
+        } else {
+          this.nicknameErrors = result.nickname || '';
         }
       }
     },
@@ -122,4 +127,12 @@ export default {
 
 <style lang="scss">
 @import "src/styles/common";
+.error-span {
+  color: rgb(255, 82, 82);
+  font-size: 12px;
+  font-weight: 400;
+  position: relative;
+  left: 12px;
+  bottom: 16px;
+}
 </style>

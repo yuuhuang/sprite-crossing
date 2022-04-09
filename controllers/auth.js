@@ -24,7 +24,7 @@ const handleErrors = (err) => {
   }
   
   if (err.code === 11000 && err.message.includes('nickname')) {
-    errors.nickname = 'nickname is already registered';
+    errors.nickname = 'nickname is already used by others';
     return errors;
   }
   
@@ -71,7 +71,7 @@ module.exports.postSignup = async (req, res) => {
   try {
     const auth = await AuthModel.create({ email, password });
     const user = await UserModel.create({ nickname });
-    AuthModel.updateOne({ email }, {userId: user._id}, err => {
+    await AuthModel.updateOne({ email }, {userId: user._id}, err => {
       console.log(err)
     });
     const token = createToken(auth._id);

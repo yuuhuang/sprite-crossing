@@ -68,14 +68,12 @@ export const reqPostUser = async user => {
     });
     data = await res.json();
     if (data.errors) {
-      console.log(data.errors);
-
-      return false;
+      return data.errors;
     }
   } catch (err) {
     console.log(err);
 
-    return false;
+    return {};
   }
 
   return data;

@@ -50,25 +50,31 @@ module.exports.postUser = async (req, res) => {
 
       if (avatar !== '') {
         const oldAvatar = user.avatar;
-        UserModel.updateOne({_id: user._id}, {avatar}, (err, raw) => {
+        await UserModel.updateOne({_id: user._id}, {avatar}, (err, raw) => {
           console.log(err);
         });
-        fs.unlink(`uploads/avatars/${oldAvatar}`, err => {
+        await fs.unlink(`uploads/avatars/${oldAvatar}`, err => {
           console.log(err);
         });
       }
       if (backgroundImage !== '') {
         const oldBackgroundImage = user.backgroundImage;
-        UserModel.updateOne({_id: user._id}, {backgroundImage}, (err, raw) => {
+        await UserModel.updateOne({_id: user._id}, {backgroundImage}, (err, raw) => {
           console.log(err);
         });
-        fs.unlink(`uploads/backgrounds/${oldBackgroundImage}`, err => {
+        await fs.unlink(`uploads/backgrounds/${oldBackgroundImage}`, err => {
           console.log(err);
         });
       }
-      UserModel.updateOne({_id: user._id}, {nickname, bio}, (err, raw) => {
-        console.log(err);
-      });
+      await UserModel.updateOne({_id: user._id}, {nickname, bio}, err => {
+        if (err) {
+          const errors = {message: err.message};
+          if (err.code === 11000 && err.message.includes('nickname')) {
+            errors.nickname = 'nickname is already used by others';
+          }
+          res.status(400).json({errors});
+        }
+      }).clone();
       res.status(200).json({ success: true, nickname, avatar, bio, backgroundImage });
     })
   } catch (err) {
