@@ -6,15 +6,14 @@
     class="hide-scroll"
     :max-height="workImg ? '100%' : '320px'"
   >
-    <v-card-text class="flex-center pt-0">
+    <v-card-text class="flex-center pt-0 pb-0">
       <v-text-field
         v-model="replyTexts[-1]"
         color="#FF4785"
         placeholder="leave a comment..."
-        hide-details
+        :rules="textRules"
       ></v-text-field>
       <v-btn
-        class="mt-6"
         small
         icon
         color="#FF4785"
@@ -36,7 +35,8 @@
                 ></nickname-avatar>
                 <span class="font-italic">{{ formatTime(subComment.uploadTime) }}</span>
               </div>
-              <div class="pt-2 pl-2">
+              <div class="pt-2 pl-2" style="line-height: 24px;"
+                   :class="{'w-200': $vuetify.breakpoint.mdAndUp && workImg}">
                 <span
                   v-if="subComment.replyTo !== ''"
                   style="color: #FF4785"
@@ -47,7 +47,7 @@
             </div>
           </template>
         </v-expansion-panel-header>
-        <v-expansion-panel-content style="background-color: #FF478512" class="pl-4 pr-2 pb-4">
+        <v-expansion-panel-content style="background-color: #FF478512" class="pl-4 pr-2">
           <div class="flex-center">
 <!--            <span-->
 <!--              class="mt-4 mr-2"-->
@@ -58,11 +58,10 @@
               color="#FF4785"
               placeholder="leave a reply..."
               style="width: 100%;"
-              hide-details
+              :rules="textRules"
               v-model="replyTexts[index]"
             ></v-text-field>
             <v-btn
-              class="mt-4"
               icon
               small
               color="#FF4785"
@@ -81,30 +80,48 @@
 <script>
 import {formatTime} from '@/utils'
 import {reqCommentWork} from '@/require/work'
+import {reqPostReply} from '../../../require/discuss'
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar'
 
 export default {
   name: 'Replies',
   components: {NicknameAvatar},
   props: {
+    discussId: String,
+    commentIndex: Number,
     subComments: Array,
-    commentId: Number,
-    discussId: Number,
     workImg: String,
   },
   data() {
     return {
       replyTexts: {},
       expandIndex: -1,
+      textRules: [
+        v => typeof v === 'string' && v.length <= 128 || 'text maxlength is 128',
+      ],
       formatTime,
     }
   },
   methods: {
     async sendReply(index, replyTo) {
-      await reqCommentWork({image: this.workImg, text: this.replyTexts[index],
-        uploadTime: Date.now(), replyTo: replyTo || ''});
-      this.replyTexts[index] = '';
-      this.$emit('send-comment');
+      if (typeof this.replyTexts[index] === 'string' &&
+          this.replyTexts[index].length <= 128 &&
+          this.replyTexts !== '') {
+        if (this.workImg) {
+          await reqCommentWork({image: this.workImg, text: this.replyTexts[index],
+            uploadTime: Date.now(), replyTo: replyTo || ''});
+        } else {
+          await reqPostReply({id: this.discussId,
+            commentIndex: this.commentIndex,
+            text: this.replyTexts[index],
+            uploadTime: Date.now(),
+            replyTo: replyTo || ''});
+          this.$emit('reply');
+        }
+        this.replyTexts[index] = '';
+        this.expandIndex = -1;
+        this.$emit('send-comment');
+      }
     },
   },
   watch: {
@@ -122,4 +139,7 @@ export default {
 
 <style lang="scss">
 @import "src/styles/common";
+.w-200 {
+  width: 200px;
+}
 </style>

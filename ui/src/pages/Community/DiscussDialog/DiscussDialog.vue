@@ -6,13 +6,12 @@
       </v-card-title>
       <v-card-text style="display: flex;justify-content: space-between;align-items: center;">
         <nickname-avatar
-          :user-id="discuss.authorId"
-          :nickname="discuss.authorNickname"
+          :nickname="discuss.nickname"
           :avatar="discuss.avatar"
         ></nickname-avatar>
-        <span class="font-italic">{{ formatTime(discuss.createTime) }}</span>
+        <span class="font-italic">{{ formatTime(discuss.uploadTime) }}</span>
       </v-card-text>
-      <v-card-text class="pb-0">{{ discuss.text }}</v-card-text>
+      <v-card-text class="pb-0">{{ discuss.description }}</v-card-text>
       <v-expansion-panels flat tile v-model="openPoster">
         <v-expansion-panel>
           <v-expansion-panel-header class="pt-0 pb-0">
@@ -42,28 +41,30 @@
                 label=""
                 placeholder="leave a comment..."
                 style="width: 100%;"
-                hide-details
+                :rules="textRules"
                 filled
                 v-model="poster"
               ></v-textarea>
               <v-btn
-                class="align-self-end mt-2"
-                small
-                text
-                color="#FF4785"
+                class="mb-2"
+                style="color: white"
+                color="#FF4785aa"
+                depressed
+                width="80%"
                 @click="sendPoster"
-              >Send</v-btn>
+              >Send Comment</v-btn>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
-    <posters :discuss-id="discussId" :comments="discuss.comments"></posters>
+    <posters :comments="discuss.comments || []" :discuss-id="discussId" @reply="init"></posters>
   </v-dialog>
 </template>
 
 <script>
-import {discuss} from '@/mock/discuss'
+import {reqGetDiscuss, reqPostComment, reqViewDiscuss} from '@/require/discuss';
+
 import {formatTime} from '@/utils'
 
 require('@/assets/chevron')
@@ -75,28 +76,48 @@ export default {
   name: 'DiscussDialog',
   components: {Posters, NicknameAvatar},
   props: {
-    discussId: Number,
+    discussId: String,
   },
   data() {
     return {
       show: true,
       openPoster: false,
       poster: '',
-      discuss,
+      discuss: {},
+      textRules: [
+        v => typeof v === 'string' && v.length <= 128 || 'text maxlength is 128',
+      ],
       formatTime,
     };
   },
   methods: {
+    async init() {
+      const result = await reqGetDiscuss(this.discussId);
+      if (result) {
+        this.discuss = result;
+        if (this.discuss.comments.length === 0) {
+          this.openPoster = 0;
+        }
+      }
+    },
+
     input(status) {
       if (!status) {
         this.$emit('close');
       }
     },
 
-    sendPoster() {
-      this.openPoster = false;
-      console.log('myId', this.discuss.discussId, this.poster, new Date());
+    async sendPoster() {
+      if (this.poster) {
+        await reqPostComment({text: this.poster, uploadTime: Date.now(), id: this.discussId});
+        this.openPoster = false;
+        await this.init();
+      }
     },
+  },
+  async created() {
+    await reqViewDiscuss(this.discussId);
+    await this.init();
   },
 }
 </script>

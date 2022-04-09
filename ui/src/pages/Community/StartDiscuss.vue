@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="show" @input="input" width="640">
     <v-card>
-      <v-card-title style="color: #FF4785">Initiate a discussion</v-card-title>
-      <v-card-text class="mt-4">
+      <v-card-title style="color: #FF4785" class="flex-center">Initiate a discussion</v-card-title>
+      <v-card-text class="mt-4 pl-8 pr-8">
         <v-form ref="form">
           <v-text-field
             v-model="title"
@@ -26,16 +26,21 @@
           ></v-textarea>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="initiate" color="#ff4785">Initiate</v-btn>
-        <v-btn text @click="cancel">Cancel</v-btn>
+      <v-card-actions class="flex-center">
+        <v-btn color="#ff4785cc" depressed width="25%" @click="initiate">
+          <span style="color: white">Initiate</span>
+        </v-btn>
+        <v-btn color="#888" depressed width="25%" @click="cancel">
+          <span style="color:white;">Cancel</span>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import {reqPostDiscuss} from '@/require/discuss';
+
 export default {
   name: 'StartDiscuss',
   data() {
@@ -62,9 +67,11 @@ export default {
       }
     },
 
-    initiate() {
+    async initiate() {
       if (this.$refs.form.validate()) {
-        console.log('initiate', this.title, this.description);
+        await reqPostDiscuss(this.title, this.description);
+        this.$emit('initiate');
+        this.$emit('close');
       }
     },
     cancel() {
@@ -77,6 +84,6 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import "src/styles/common";
 </style>

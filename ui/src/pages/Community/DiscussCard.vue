@@ -6,11 +6,11 @@
         class="pointer-cursor"
         style="overflow-y: hidden;max-height: 48px;"
         @click="showDialog=true"
-      >{{ discussData.textPreview }}</v-card-text>
+      >{{ discussData.description }}</v-card-text>
       <v-card-actions class="flex justify-space-between">
         <nickname-avatar
-          :user-id="discussData.authorId"
-          :nickname="discussData.authorNickname"
+          class="ml-2"
+          :nickname="discussData.nickname"
           :avatar="discussData.avatar"
         ></nickname-avatar>
         <div class="flex-center gray-filter">
@@ -18,11 +18,11 @@
           <span class="mr-2">{{ discussData.viewNum }}</span>
           <comment class="mr-2"></comment>
           <span class="mr-2">{{ discussData.commentNum }}</span>
-          <span class="mr-2">{{ formatTime(discussData.updateTime) }}</span>
+          <span class="mr-2">{{ formatTime(discussData.uploadTime) }}</span>
         </div>
       </v-card-actions>
     </v-card>
-    <discuss-dialog v-if="showDialog" @close="showDialog=false"></discuss-dialog>
+    <discuss-dialog v-if="showDialog" :discuss-id="discussData.id" @close="close"></discuss-dialog>
   </div>
 </template>
 
@@ -46,6 +46,12 @@ export default {
       formatTime,
     };
   },
+  methods: {
+    close() {
+      this.showDialog = false;
+      this.$emit('close-dialog');
+    }
+  }
 }
 </script>
 

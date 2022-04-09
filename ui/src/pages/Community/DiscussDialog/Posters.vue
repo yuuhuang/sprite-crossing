@@ -4,11 +4,10 @@
       <v-divider class="mb-4"></v-divider>
       <v-card-text style="display: flex;justify-content: space-between;align-items: center;">
         <nickname-avatar
-          :user-id="comment.posterId"
-          :nickname="comment.posterNickname"
-          :avatar="comment.posterAvatar"
+          :nickname="comment.nickname"
+          :avatar="comment.avatar"
         ></nickname-avatar>
-        <span class="font-italic">{{ formatTime(comment.createTime) }}</span>
+        <span class="font-italic">{{ formatTime(comment.uploadTime) }}</span>
       </v-card-text>
       <v-card-text class="pb-1 pt-1 pl-6 pr-6">{{ comment.text }}</v-card-text>
       <v-expansion-panels
@@ -26,7 +25,7 @@
                 </div>
                 <div v-else class="flex-center">
                   <chevron-down></chevron-down>
-                  {{ comment.subComments && comment.subComments.length > 0 ? 'Show Comments' : 'Add Comments' }}
+                  {{ comment.subcomments && comment.subcomments.length > 0 ? 'Show Comments' : 'Add Comments' }}
                 </div>
               </v-card-text>
             </template>
@@ -34,8 +33,9 @@
           <v-expansion-panel-content>
             <replies
               :discuss-id="discussId"
-              :comment-id="comment.commentId"
-              :sub-comments="comment.subComments"
+              :comment-index="index"
+              :sub-comments="comment.subcomments"
+              @reply="reply"
             ></replies>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -57,7 +57,7 @@ export default {
   components: {Replies, NicknameAvatar},
   props: {
     comments: Array,
-    discussId: Number,
+    discussId: String,
   },
   data() {
     return {
@@ -70,6 +70,11 @@ export default {
       return this.openReply[this.openReply.length - 1];
     },
   },
+  methods: {
+    reply() {
+      this.$emit('reply');
+    },
+  },
   watch: {
     lastPosterStatus(newVal, oldVal) {
       if (newVal === 0 && oldVal !== 0) {
@@ -77,17 +82,17 @@ export default {
           document.getElementsByClassName('v-dialog hide-scroll v-dialog--active')[0].scrollBy(0, 100);
         }, 180);
       }
+    },
+    comments() {
+      this.openReply.length = this.comments.length;
+      this.openReply.fill(0);
+      // eslint-disable-next-line array-callback-return
+      this.openReply.map((item, index) => {
+        if (!this.comments[index].subcomments || this.comments[index].subcomments.length <= 0) {
+          this.openReply[index] = -1;
+        }
+      });
     }
-  },
-  beforeMount() {
-    this.openReply.length = this.comments.length;
-    this.openReply.fill(0);
-    // eslint-disable-next-line array-callback-return
-    this.openReply.map((item, index) => {
-      if (!this.comments[index].subComments || this.comments[index].subComments.length <= 0) {
-        this.openReply[index] = -1;
-      }
-    });
   },
 }
 </script>

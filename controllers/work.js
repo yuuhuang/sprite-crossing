@@ -17,9 +17,25 @@ module.exports.getWork = async (req, res) => {
         const work = await WorkModel.findOne({image});
         const { title, description, tags, viewUsers, likeUsers, comments, userId, createdAt} = work;
         const user = await UserModel.findById(userId);
+        const formatComments = await Promise.all(comments.map(async comment => {
+          const replier = await UserModel.findById(comment.userId);
+          let replyToName = '';
+          if (comment.replyTo) {
+            const replyToUser = await UserModel.findById(comment.replyTo);
+            replyToName = replyToUser.nickname;
+          }
+          return {
+            avatar: replier.avatar,
+            nickname: replier.nickname,
+            text: comment.text,
+            uploadTime: comment.uploadTime,
+            replyTo: replyToName,
+          }
+        }));
         res.status(200).json({
           image,
-          title, description, tags, comments,
+          title, description, tags,
+          comments: formatComments,
           viewNum: viewUsers.length,
           likeNum: likeUsers.length,
           uploadTime: createdAt,
@@ -47,12 +63,27 @@ module.exports.getAllWorks = async (req, res) => {
         const result = [];
         await Promise.all(works.map(async item => {
           const artist = await UserModel.findById(item.userId);
+          const formatComments = await Promise.all(item.comments.map(async comment => {
+            const replier = await UserModel.findById(comment.userId);
+            let replyToName = '';
+            if (comment.replyTo) {
+              const replyToUser = await UserModel.findById(comment.replyTo);
+              replyToName = replyToUser.nickname;
+            }
+            return {
+              avatar: replier.avatar,
+              nickname: replier.nickname,
+              text: comment.text,
+              uploadTime: comment.uploadTime,
+              replyTo: replyToName,
+            }
+          }));
           result.push({
             image: item.image,
             title: item.title,
             description: item.description,
             tags: item.tags,
-            comments: item.comments,
+            comments: formatComments,
             viewNum: item.viewUsers.length,
             likeNum: item.likeUsers.length,
             uploadTime: item.createdAt,
@@ -164,11 +195,16 @@ module.exports.postWorkComment = (req, res) => {
         const auth = await AuthModel.findById(decodedToken.id);
         const user = await UserModel.findById(auth.userId);
         const work = await WorkModel.findOne({image});
+        let replyToId = '';
+        if (replyTo) {
+          const replyToUser = await UserModel.findOne({nickname: replyTo});
+          replyToId = replyToUser._id;
+        }
         const oldComments = work.comments;
         await WorkModel.updateOne({image}, {comments: [{
-            avatar: user.avatar,
-            nickname: user.nickname,
-            text, uploadTime, replyTo: replyTo || '',
+            userId: user._id,
+            text, uploadTime,
+            replyTo: replyToId,
           }, ...oldComments]});
         res.status(200).json({success: true});
       }

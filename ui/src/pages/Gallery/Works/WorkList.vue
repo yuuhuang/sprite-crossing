@@ -73,7 +73,7 @@ export default {
         compare = (a, b) => b.viewNum - a.viewNum;
         break;
       default: // Latest
-        compare = (a, b) => a.uploadTime - b.uploadTime;
+        compare = (a, b) => new Date(a.uploadTime) - new Date(b.uploadTime);
         break;
       }
       if (this.search) {
@@ -83,7 +83,6 @@ export default {
             item.tags.some(tag => tag.includes(this.search)));
       }
 
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return copyList.sort(compare);
     },
   },
