@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     async init() {
-      this.workData = await reqGetWork(this.image);
+      this.workData = await reqGetWork(this.image || this.workData.image);
       const result = await reqViewWork(this.workData.image);
       if (result.success) {
         this.viewNum = result.viewNum;

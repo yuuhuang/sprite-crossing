@@ -9,7 +9,7 @@
        }"
     >
       <login-card v-if="login === false" @login="init"></login-card>
-      <div v-else>
+      <div v-if="login === true">
         <v-img
           :src="backgroundSrc"
           height="256"

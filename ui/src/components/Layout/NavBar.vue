@@ -34,7 +34,7 @@
       >
         <v-img aspect-ratio="1" :src="`${$store.state.imagePrefix}image/myavatar`">
           <template v-slot:placeholder>
-            <v-skeleton-loader type="image" height="100%" tile></v-skeleton-loader>
+            <account class="gray-filter"></account>
           </template>
         </v-img>
       </v-avatar>
@@ -75,6 +75,7 @@
 
 <script>
 import MenuSvg from '@/assets/menu.svg'
+require('@/assets/cards/')
 
 export default {
   name: 'NavBar',
@@ -103,7 +104,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/colors';
+@import "src/styles/colors";
+@import "src/styles/common";
 
 .isChosen {
   color: $pink !important;
