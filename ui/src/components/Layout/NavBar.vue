@@ -32,7 +32,7 @@
         size="32"
         @click="pushRoute('/profile')"
       >
-        <v-img aspect-ratio="1" :src="`${$store.state.host}/image/myavatar`">
+        <v-img aspect-ratio="1" :src="$store.getters.myAvatarUrl">
           <template v-slot:placeholder>
             <account class="gray-filter"></account>
           </template>

@@ -107,7 +107,7 @@
 import {reqSignup, reqLogin} from '../../require/auth';
 
 export default {
-  name: 'LoginCard',
+  name: 'LoginDialog',
   data() {
     return {
       show: false,
@@ -147,6 +147,7 @@ export default {
           result = await reqSignup(this.email, this.password, this.nickname);
         }
         if (result === true) {
+          this.$store.commit('login');
           this.$emit('close');
         } else {
           this.emailErrors = result.email || '';

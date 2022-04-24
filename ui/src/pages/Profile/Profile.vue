@@ -118,6 +118,7 @@ export default {
     },
     async logout() {
       await reqLogout();
+      this.$store.commit('logout');
       await this.init();
     },
   },
