@@ -24,8 +24,11 @@ const dbUrl = 'mongodb://localhost:27017/sprite-crossing-test';
 mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => {
     console.log('connect to ', dbUrl);
-    app.listen(8082, '172.30.44.208', () => {
-      console.log(`http://172.30.44.208:8082/home/`);
+    // app.listen(8082, '172.30.44.208', () => {
+    //   console.log(`http://172.30.44.208:8082/home/`);
+    // });
+    app.listen(8082, 'localhost', () => {
+      console.log(`http://localhost:8082/home/`);
     });
   })
   .catch(err => {
