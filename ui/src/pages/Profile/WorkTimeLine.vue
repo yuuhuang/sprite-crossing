@@ -1,64 +1,67 @@
 <template>
-  <v-timeline
-    align-top
-    dense
-  >
-    <v-timeline-item
-      v-if="!Object.keys(this.workTimeLine).includes(formatToday) && !profileDialog"
-      small color="#FF4785">
-      <v-card flat style="background-color: #0000">
-        <v-card-title class="text-h4 pt-0" style="color: #FF4785; font-weight: 300">
-          {{ formatToday }}
-        </v-card-title>
-        <v-card-text>
-          <v-btn
-            :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
-            :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
-            tile
-            style="display: inline-block"
-            @click="uploadWork"
-          >
-            <new style="transform: scale(2);filter: brightness(1) opacity(0.5)"></new>
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-timeline-item>
-    <v-timeline-item
-      small
-      color="#FF4785"
-      v-for="(value, key) in workTimeLine"
-      :key="key"
+  <div>
+    <v-timeline
+      align-top
+      dense
     >
-      <v-card flat style="background-color: #0000">
-        <v-card-title class="text-h4 pt-0" style="color: #FF4785; font-weight: 300">
-          {{ key }}
-        </v-card-title>
-        <v-card-text class="flex">
-          <v-img v-if="key === formatToday && !profileDialog"
-            style="display: inline-block;margin-right: 6px;">
+      <v-timeline-item
+        v-if="!Object.keys(this.workTimeLine).includes(formatToday) && !profileDialog"
+        small color="#FF4785">
+        <v-card flat style="background-color: #0000">
+          <v-card-title class="text-h4 pt-0" style="color: #FF4785; font-weight: 300">
+            {{ formatToday }}
+          </v-card-title>
+          <v-card-text>
             <v-btn
               :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
               :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
               tile
+              style="display: inline-block"
               @click="uploadWork"
             >
               <new style="transform: scale(2);filter: brightness(1) opacity(0.5)"></new>
             </v-btn>
-          </v-img>
-          <v-img
-            v-for="(item, index) in value"
-            :key="index"
-            :src="`${$store.state.host}/image/work/${item.image}`"
-            :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
-            :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
-            class="pointer-cursor"
-            style="display: inline-block;margin-right: 6px;"
-            @click="openWork(item.image)"
-          ></v-img>
-        </v-card-text>
-      </v-card>
-    </v-timeline-item>
-  </v-timeline>
+          </v-card-text>
+        </v-card>
+      </v-timeline-item>
+      <v-timeline-item
+        small
+        color="#FF4785"
+        v-for="(value, key) in workTimeLine"
+        :key="key"
+      >
+        <v-card flat style="background-color: #0000">
+          <v-card-title class="text-h4 pt-0" style="color: #FF4785; font-weight: 300">
+            {{ key }}
+          </v-card-title>
+          <v-card-text class="flex">
+            <v-img v-if="key === formatToday && !profileDialog"
+                   style="display: inline-block;margin-right: 6px;">
+              <v-btn
+                :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
+                :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
+                tile
+                @click="uploadWork"
+              >
+                <new style="transform: scale(2);filter: brightness(1) opacity(0.5)"></new>
+              </v-btn>
+            </v-img>
+            <v-img
+              v-for="(item, index) in value"
+              :key="index"
+              :src="`${$store.state.host}/image/work/${item.image}`"
+              :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
+              :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
+              class="pointer-cursor"
+              style="display: inline-block;margin-right: 6px;"
+              @click="openWork(item.image)"
+            ></v-img>
+          </v-card-text>
+        </v-card>
+      </v-timeline-item>
+    </v-timeline>
+    <work-dialog v-if="showWork" :image="openWorkImage" @close="showWork=false"></work-dialog>
+  </div>
 </template>
 
 <script>
@@ -66,6 +69,9 @@ require('@/assets/optionsBar')
 
 export default {
   name: 'WorkTimeLine',
+  components: {
+    WorkDialog: () => import('@/components/Dialog/WorkDialog')
+  },
   props: {
     worksList: {
       type: Array,
@@ -75,9 +81,16 @@ export default {
     },
     profileDialog: Boolean,
   },
+  data() {
+    return {
+      showWork: false,
+      openWorkImage: '',
+    }
+  },
   methods: {
     openWork(image) {
-      this.$emit('open-work', image);
+      this.showWork = true;
+      this.openWorkImage = image;
     },
     uploadWork() {
       this.$emit('open-upload');
@@ -89,7 +102,7 @@ export default {
       const result = {};
       // eslint-disable-next-line array-callback-return
       this.worksList.map(item => {
-        const itemDate = new Date(item.uploadTime);
+        const itemDate = new Date(item.createTime);
         let formatItemDate = `${itemDate.getMonth() + 1}-${itemDate.getDate()}`;
         if (itemDate.getFullYear() !== new Date().getFullYear()) {
           formatItemDate = `${itemDate.getFullYear()}-${formatItemDate}`;

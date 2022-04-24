@@ -6,7 +6,11 @@
         :style="{
           backgroundImage: `linear-gradient(#0000, 50%, #fff), url(${backgroundSrc})`}">
         <v-avatar size="64" class="avatar">
-          <v-img :src="avatarSrc"></v-img>
+          <v-img :src="avatarSrc" alt="avatar">
+            <template v-slot:placeholder>
+              <account class="gray-filter"></account>
+            </template>
+          </v-img>
         </v-avatar>
         <h1 class="mt-3 nickname">{{ user.nickname }}</h1>
         <h4 class="mt-2 self-introduction">{{ user.bio }}</h4>
@@ -46,7 +50,7 @@ export default {
   },
   methods: {
     async init() {
-      this.user = await reqGetUser();
+      this.user = await reqGetUser(this.nickname);
       const result = await reqGetUserWork(this.nickname);
       this.worksList = result.works;
       this.likeNum = result.likeNum;
@@ -66,7 +70,7 @@ export default {
         return `${this.$store.state.host}/image/background/${this.user.backgroundImage}`;
       }
 
-      return '';
+      return `${this.$store.state.host}/image/background/default.png`;
     },
     avatarSrc() {
       if (this.user.avatar) {

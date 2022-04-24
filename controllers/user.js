@@ -96,7 +96,7 @@ module.exports.getUserWorks = async (req, res) => {
       await Promise.all(user[0].worksList.map(async item => {
         const work = await WorkModel.findById(item);
         likeNum += work.likeUsers.length;
-        works.push({image: work.image, uploadTime: work.updatedAt});
+        works.push({image: work.image, createTime: work.createdAt});
       }))
       res.status(200).json({ works, likeNum });
     } else {
@@ -113,7 +113,7 @@ module.exports.getUserWorks = async (req, res) => {
         await Promise.all(user.worksList.map(async item => {
           const work = await WorkModel.findById(item);
           likeNum += work.likeUsers.length;
-          works.push({image: work.image, uploadTime: work.updatedAt});
+          works.push({image: work.image, createTime: work.createdAt});
         }))
         res.status(200).json({ works, likeNum });
       })
