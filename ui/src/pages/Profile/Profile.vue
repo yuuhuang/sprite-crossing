@@ -122,14 +122,14 @@ export default {
   computed: {
     backgroundSrc() {
       if (this.user.backgroundImage) {
-        return `${this.$store.state.imagePrefix}image/background/${this.user.backgroundImage}`;
+        return `${this.$store.state.host}/image/background/${this.user.backgroundImage}`;
       }
 
       return '';
     },
     avatarSrc() {
       if (this.user.avatar) {
-        return `${this.$store.state.imagePrefix}image/avatar/${this.user.avatar}`;
+        return `${this.$store.state.host}/image/avatar/${this.user.avatar}`;
       }
 
       return '';

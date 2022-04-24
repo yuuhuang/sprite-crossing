@@ -48,7 +48,7 @@
           <v-img
             v-for="(item, index) in value"
             :key="index"
-            :src="`${$store.state.imagePrefix}image/work/${item.image}`"
+            :src="`${$store.state.host}/image/work/${item.image}`"
             :width="$vuetify.breakpoint.xs || profileDialog ? 64 : 100"
             :height="$vuetify.breakpoint.xs || profileDialog ? 64 :100"
             class="pointer-cursor"

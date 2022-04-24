@@ -193,7 +193,7 @@ export default {
       return this.liked === '' ? this.workData.liked : this.liked;
     },
     imageSrc() {
-      return this.workData.image === '' ? '' : `${this.$store.state.imagePrefix}image/work/${this.workData.image}`
+      return this.workData.image === '' ? '' : `${this.$store.state.host}/image/work/${this.workData.image}`
     }
   },
   created() {

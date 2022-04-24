@@ -17,7 +17,7 @@
       </v-card-subtitle>
       <v-img
         class="pointer-cursor"
-        :src="`${$store.state.imagePrefix}image/work/${workData.image}`"
+        :src="`${$store.state.host}/image/work/${workData.image}`"
         @click="openImg"
       >
         <template v-slot:placeholder>
