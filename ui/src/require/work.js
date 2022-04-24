@@ -114,7 +114,7 @@ export const reqLikeWork = async image => {
   } catch (err) {
     console.log(err);
 
-    return {};
+    return {err};
   }
 }
 
@@ -134,6 +134,6 @@ export const reqCommentWork = async comments => {
   } catch (err) {
     console.log(err);
 
-    return {};
+    return {err};
   }
 }

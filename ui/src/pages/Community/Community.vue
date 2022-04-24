@@ -47,7 +47,7 @@ export default {
   methods: {
     async init() {
       const result = await reqGetAllDiscusses();
-      if (result) {
+      if (!result.err) {
         this.discussList = result.discussList;
       }
     },

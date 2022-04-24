@@ -4,46 +4,50 @@ const WorkModel = require('../models/work');
 const jwt = require('jsonwebtoken');
 
 module.exports.getWork = async (req, res) => {
+  let auth;
+
+  const token = req.cookies.jwt;
+  jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
+    if (err) {
+      console.log(err.message);
+      // res.status(400).json({err});
+    } else {
+      auth = await AuthModel.findById(decodedToken.id);
+    }
+  });
+  
   try {
     const { image } = req.body;
 
-    const token = req.cookies.jwt;
-    jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
-      if (err) {
-        console.log(err.message);
-        res.status(400).json({err});
-      } else {
-        const auth = await AuthModel.findById(decodedToken.id);
-        const work = await WorkModel.findOne({image});
-        const { title, description, tags, viewUsers, likeUsers, comments, userId, createdAt} = work;
-        const user = await UserModel.findById(userId);
-        const formatComments = await Promise.all(comments.map(async comment => {
-          const replier = await UserModel.findById(comment.userId);
-          let replyToName = '';
-          if (comment.replyTo) {
-            const replyToUser = await UserModel.findById(comment.replyTo);
-            replyToName = replyToUser.nickname;
-          }
-          return {
-            avatar: replier.avatar,
-            nickname: replier.nickname,
-            text: comment.text,
-            uploadTime: comment.uploadTime,
-            replyTo: replyToName,
-          }
-        }));
-        res.status(200).json({
-          image,
-          title, description, tags,
-          comments: formatComments,
-          viewNum: viewUsers.length,
-          likeNum: likeUsers.length,
-          uploadTime: createdAt,
-          nickname: user.nickname,
-          avatar: user.avatar,
-          liked: likeUsers.includes(auth.userId),
-        })
+    const work = await WorkModel.findOne({image});
+    const { title, description, tags, viewUsers, likeUsers, comments, userId, createdAt} = work;
+    const user = await UserModel.findById(userId);
+    const formatComments = await Promise.all(comments.map(async comment => {
+      const replier = await UserModel.findById(comment.userId);
+      let replyToName = '';
+      if (comment.replyTo) {
+        const replyToUser = await UserModel.findById(comment.replyTo);
+        replyToName = replyToUser.nickname;
       }
+      return {
+        avatar: replier.avatar,
+        nickname: replier.nickname,
+        text: comment.text,
+        uploadTime: comment.uploadTime,
+        replyTo: replyToName,
+      }
+    }));
+  
+    res.status(200).json({
+      image,
+      title, description, tags,
+      comments: formatComments,
+      viewNum: viewUsers.length,
+      likeNum: likeUsers.length,
+      uploadTime: createdAt,
+      nickname: user.nickname,
+      avatar: user.avatar,
+      liked: auth && auth.userId ? likeUsers.includes(auth.userId) : false,
     })
   } catch (err) {
     res.status(400).json({err});
@@ -51,50 +55,49 @@ module.exports.getWork = async (req, res) => {
 }
 
 module.exports.getAllWorks = async (req, res) => {
+  let auth;
+  const token = req.cookies.jwt;
+  jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
+    if (!err) {
+      auth = await AuthModel.findById(decodedToken.id);
+    }
+  });
+
   try {
-    const token = req.cookies.jwt;
-    jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
-      if (err) {
-        console.log(err.message);
-        res.status(400).json({err});
-      } else {
-        const auth = await AuthModel.findById(decodedToken.id);
-        const works = await WorkModel.find();
-        const result = [];
-        await Promise.all(works.map(async item => {
-          const artist = await UserModel.findById(item.userId);
-          const formatComments = await Promise.all(item.comments.map(async comment => {
-            const replier = await UserModel.findById(comment.userId);
-            let replyToName = '';
-            if (comment.replyTo) {
-              const replyToUser = await UserModel.findById(comment.replyTo);
-              replyToName = replyToUser.nickname;
-            }
-            return {
-              avatar: replier.avatar,
-              nickname: replier.nickname,
-              text: comment.text,
-              uploadTime: comment.uploadTime,
-              replyTo: replyToName,
-            }
-          }));
-          result.push({
-            image: item.image,
-            title: item.title,
-            description: item.description,
-            tags: item.tags,
-            comments: formatComments,
-            viewNum: item.viewUsers.length,
-            likeNum: item.likeUsers.length,
-            uploadTime: item.createdAt,
-            nickname: artist.nickname,
-            avatar: artist.avatar,
-            liked: item.likeUsers.includes(auth.userId),
-          })
-        }))
-        res.status(200).json({worksList: result});
-      }
-    })
+    const works = await WorkModel.find();
+    const result = [];
+    await Promise.all(works.map(async item => {
+      const artist = await UserModel.findById(item.userId);
+      const formatComments = await Promise.all(item.comments.map(async comment => {
+        const replier = await UserModel.findById(comment.userId);
+        let replyToName = '';
+        if (comment.replyTo) {
+          const replyToUser = await UserModel.findById(comment.replyTo);
+          replyToName = replyToUser.nickname;
+        }
+        return {
+          avatar: replier.avatar,
+          nickname: replier.nickname,
+          text: comment.text,
+          uploadTime: comment.uploadTime,
+          replyTo: replyToName,
+        }
+      }));
+      result.push({
+        image: item.image,
+        title: item.title,
+        description: item.description,
+        tags: item.tags,
+        comments: formatComments,
+        viewNum: item.viewUsers.length,
+        likeNum: item.likeUsers.length,
+        uploadTime: item.createdAt,
+        nickname: artist.nickname,
+        avatar: artist.avatar,
+        liked: auth && auth.userId ? item.likeUsers.includes(auth.userId) : false,
+      })
+    }))
+    res.status(200).json({worksList: result});
   } catch (err) {
     res.status(400).json({err});
   }
@@ -108,7 +111,7 @@ module.exports.postWork = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: false, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const work = await WorkModel.create({userId: auth.userId, image, title, description, tags});
@@ -119,7 +122,7 @@ module.exports.postWork = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }
 
@@ -157,7 +160,7 @@ module.exports.likeWork = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const work = await WorkModel.findOne({image});
@@ -178,7 +181,7 @@ module.exports.likeWork = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }
 
@@ -190,7 +193,7 @@ module.exports.postWorkComment = (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const user = await UserModel.findById(auth.userId);
@@ -211,6 +214,6 @@ module.exports.postWorkComment = (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }

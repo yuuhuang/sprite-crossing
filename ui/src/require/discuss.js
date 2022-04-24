@@ -52,7 +52,7 @@ export const reqPostDiscuss = async (title, description) => {
   } catch (err) {
     console.log(err);
 
-    return false;
+    return {err};
   }
 }
 
@@ -74,7 +74,7 @@ export const reqPostComment = async comment => {
   } catch (err) {
     console.log(err);
 
-    return false;
+    return {err};
   }
 }
 
@@ -96,7 +96,7 @@ export const reqPostReply = async comment => {
   } catch (err) {
     console.log(err);
 
-    return false;
+    return {err};
   }
 }
 
@@ -115,6 +115,6 @@ export const reqViewDiscuss = async id => {
   } catch (err) {
     console.log(err);
 
-    return {};
+    return {err};
   }
 }

@@ -84,7 +84,7 @@ module.exports.postDiscuss = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         await DiscussModel.create({userId: auth.userId, title, description});
@@ -105,7 +105,7 @@ module.exports.postComment = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const discuss = await DiscussModel.findById(id);
@@ -124,7 +124,7 @@ module.exports.postComment = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }
 
@@ -136,7 +136,7 @@ module.exports.postReply = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const discuss = await DiscussModel.findById(id);
@@ -165,10 +165,9 @@ module.exports.postReply = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }
-
 
 module.exports.viewDiscuss = async (req, res) => {
   try {
@@ -178,7 +177,7 @@ module.exports.viewDiscuss = async (req, res) => {
     jwt.verify(token, 'yuu huang is the handsomest', async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.status(400).json({err});
+        res.status(400).json({notLogged: true, err});
       } else {
         const auth = await AuthModel.findById(decodedToken.id);
         const discuss = await DiscussModel.findById(id);
@@ -192,6 +191,6 @@ module.exports.viewDiscuss = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    // res.status(400).json({err});
   }
 }

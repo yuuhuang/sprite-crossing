@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card width="320" min-height="320" v-if="!toggleIndex">
+  <v-dialog width="320" v-model="show" @input="input">
+    <v-card width="100%" v-if="!toggleIndex">
       <v-card-title style="color: #ff4785" class="flex-center">
         Sign Up
       </v-card-title>
@@ -56,7 +56,7 @@
         >Sign in</span>
       </v-card-text>
     </v-card>
-    <v-card width="320" min-height="320" v-if="toggleIndex">
+    <v-card width="100%" v-if="toggleIndex">
       <v-card-title style="color: #ff4785" class="flex-center">
         Sign In
       </v-card-title>
@@ -100,7 +100,7 @@
         >Sign up</span>
       </v-card-text>
     </v-card>
-  </div>
+  </v-dialog>
 </template>
 
 <script>
@@ -110,6 +110,7 @@ export default {
   name: 'LoginCard',
   data() {
     return {
+      show: false,
       toggleIndex: 0,
 
       // values
@@ -146,12 +147,17 @@ export default {
           result = await reqSignup(this.email, this.password, this.nickname);
         }
         if (result === true) {
-          this.$emit('login');
+          this.$emit('close');
         } else {
           this.emailErrors = result.email || '';
           this.passwordErrors = result.password || '';
           this.nicknameErrors = result.nickname || '';
         }
+      }
+    },
+    input(state) {
+      if (!state) {
+        this.$emit('close');
       }
     },
   },
@@ -161,6 +167,9 @@ export default {
       this.$refs.form.resetValidation();
       this.emailErrors = this.nicknameErrors = this.passwordErrors = '';
     }
+  },
+  mounted() {
+    this.show = true;
   },
 }
 </script>

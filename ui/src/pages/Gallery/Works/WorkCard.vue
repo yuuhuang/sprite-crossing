@@ -41,6 +41,7 @@
       </v-card-actions>
     </v-card>
     <work-dialog v-if="openWorkDialog" :work="workData" @close="closeImg"></work-dialog>
+    <login-dialog v-if="showLogin" @close="showLogin = false"></login-dialog>
   </div>
 </template>
 
@@ -48,18 +49,22 @@
 import WorkDialog from '@/components/Dialog/WorkDialog';
 import TagsShow from '@/components/Tags/TagsShow';
 import NicknameAvatar from '@/components/Avatar/NicknameAvatar';
+import LoginDialog from '@/components/Dialog/LoginDialog';
+
 require('@/assets/cards')
 import {formatTime} from '@/utils';
 import {reqLikeWork, reqGetWork} from '@/require/work';
 
 export default {
   name: 'WorkCard',
-  components: {NicknameAvatar, TagsShow, WorkDialog},
+  components: {NicknameAvatar, TagsShow, WorkDialog, LoginDialog},
   props: {
     work: Object,
   },
   data() {
     return {
+      showLogin: false,
+
       openWorkDialog: false,
       liked: '',
       likeNum: '',
@@ -87,6 +92,8 @@ export default {
       if (result.success) {
         this.liked = result.liked;
         this.likeNum = result.likeNum;
+      } else if (result.notLogged) {
+        this.showLogin = true;
       }
     },
   },

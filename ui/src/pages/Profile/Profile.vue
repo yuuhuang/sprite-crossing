@@ -8,7 +8,7 @@
         'flex-center': login === false,
        }"
     >
-      <login-card v-if="login === false" @login="init"></login-card>
+      <login-dialog v-if="login === false" ref="login" @close="init"></login-dialog>
       <div v-if="login === true">
         <v-img
           :src="backgroundSrc"
@@ -47,6 +47,14 @@
           </v-col>
         </v-row>
       </div>
+      <div v-if="login === false" class="flex-center" style="height: 64px">
+        <span
+          class="pointer-cursor"
+          style="color: #ff4785;text-decoration: none;font-size: larger;font-weight: bolder;"
+          @click="$refs.login.show=true"
+        >Login</span>
+        &nbsp;to become part of Sprite-Crossing.
+      </div>
     </v-container>
     <profile-dialog v-if="showProfile" @close="showProfile=false"></profile-dialog>
     <edit-dialog v-if="showEdit" @close="showEdit=false" @edit-success="init"></edit-dialog>
@@ -62,7 +70,7 @@ import {reqGetUser, reqGetUserWork} from '@/require/user';
 import WorkTimeLine from '@/pages/Profile/WorkTimeLine';
 import EditDialog from '@/pages/Profile/EditDialog';
 import UploadDialog from '@/pages/Profile/UploadDialog';
-import LoginCard from '@/components/Dialog/LoginCard';
+import LoginDialog from '@/components/Dialog/LoginDialog';
 import ExitConfirm from './ExitConfirm';
 import ProfileDialog from '@/components/Dialog/ProfileDialog';
 
@@ -73,7 +81,7 @@ export default {
   components: {
     ProfileDialog,
     ExitConfirm,
-    LoginCard,
+    LoginDialog,
     UploadDialog,
     EditDialog,
     WorkTimeLine,
@@ -95,9 +103,11 @@ export default {
   methods: {
     async init() {
       this.login = await reqCheckLogin();
-      this.user = await reqGetUser();
-      const result = await reqGetUserWork(this.nickname);
-      this.worksList = result.works;
+      if (this.login) {
+        this.user = await reqGetUser();
+        const result = await reqGetUserWork(this.nickname);
+        this.worksList = result.works;
+      }
     },
 
     openProfile() {

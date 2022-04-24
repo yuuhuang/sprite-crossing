@@ -5,7 +5,7 @@
         v-if="avatar"
         class="elevation-6"
         alt="avatar"
-        :src="`${$store.state.host}/image/avatar/${avatar}`"
+        :src="avatar ? `${$store.state.host}/image/avatar/${avatar}` : ''"
       >
         <template v-slot:placeholder>
           <account class="gray-filter"></account>
